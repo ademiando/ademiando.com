@@ -1,0 +1,123 @@
+{
+    "skills": [
+        "HTML/CSS",
+        "JavaScript",
+        "React",
+        "Vue.js",
+        "UI/UX Design",
+        "Figma",
+        "Node.js",
+        "Animasi Web",
+        "Responsive Design",
+        "Git"
+    ],
+    
+    "projects": [
+        {
+            "title": "Aplikasi Fintech Mobile",
+            "description": "Aplikasi keuangan mobile dengan fitur budgeting, investasi, dan analisis pengeluaran.",
+            "tags": ["React Native", "Redux", "REST API"],
+            "link": "#"
+        },
+        {
+            "title": "Sistem Manajemen Konten",
+            "description": "Platform CMS yang dapat disesuaikan dengan editor drag-and-drop dan integrasi media sosial.",
+            "tags": ["Vue.js", "Express", "Firebase"],
+            "link": "#"
+        },
+        {
+            "title": "E-commerce Modern",
+            "description": "Platform belanja online dengan antarmuka pengguna yang intuitif dan sistem manajemen inventaris yang kuat.",
+            "tags": ["React", "Node.js", "MongoDB"],
+            "link": "#"
+        },
+        {
+            "title": "Platform Edukasi Online",
+            "description": "Sistem pembelajaran online dengan fitur kursus interaktif dan pelacakan kemajuan siswa.",
+            "tags": ["Laravel", "Vue.js", "MySQL"],
+            "link": "#"
+        }
+    ],
+    
+    "contact": [
+        {
+            "title": "Email",
+            "value": "ademiando@example.com",
+            "link": "mailto:ademiando@example.com",
+            "icon": "fas fa-envelope"
+        },
+        {
+            "title": "Telepon",
+            "value": "+62 812 3456 789",
+            "link": "tel:+628123456789",
+            "icon": "fas fa-phone"
+        },
+        {
+            "title": "Lokasi",
+            "value": "Jakarta, Indonesia",
+            "link": null,
+            "icon": "fas fa-map-marker-alt"
+        }
+    ],
+    
+    "social": [
+        {
+            "icon": "fab fa-instagram",
+            "link": "#"
+        },
+        {
+            "icon": "fab fa-linkedin-in",
+            "link": "#"
+        },
+        {
+            "icon": "fab fa-github",
+            "link": "#"
+        },
+        {
+            "icon": "fab fa-dribbble",
+            "link": "#"
+        }
+    ],
+    
+    "footerNav": [
+        {
+            "title": "Beranda",
+            "link": "#home"
+        },
+        {
+            "title": "Tentang Saya",
+            "link": "#about"
+        },
+        {
+            "title": "Proyek",
+            "link": "#projects"
+        },
+        {
+            "title": "Kontak",
+            "link": "#contact"
+        }
+    ],
+    
+    "services": [
+        {
+            "title": "Desain Web",
+            "link": "#"
+        },
+        {
+            "title": "Pengembangan Web",
+            "link": "#"
+        },
+        {
+            "title": "Aplikasi Mobile",
+            "link": "#"
+        },
+        {
+            "title": "UI/UX Design",
+            "link": "#"
+        },
+        {
+            "title": "Animasi Web",
+            "link": "#"
+        }
+    ]
+}
