@@ -2,7 +2,8 @@ const coinSelect = document.getElementById('coin-select'); const fgValue = docum
 
 async function fetchFearGreed() { const res = await fetch('https://api.alternative.me/fng/'); const data = await res.json(); fgValue.textContent = data.data[0].value + ' (' + data.data[0].value_classification + ')'; }
 
-function loadTradingView(coin) { // Hapus widget lama jika ada document.getElementById('tv-chart').innerHTML = ''; const script = document.createElement('script'); script.src = 'https://s3.tradingview.com/tv.js'; script.onload = () => { new TradingView.widget({ "width": "100%", "height": "400", "symbol": "BINANCE:" + coin + "USDT", "interval": "D", "timezone": "Etc/UTC", "theme": "light", "style": "1", "locale": "en", "toolbar_bg": "#f1f3f6", "enable_publishing": false, "container_id": "tv-chart" }); }; document.body.appendChild(script); }
+function loadTradingView(coin) {
+document.getElementById('tv-chart').innerHTML = ''; const script = document.createElement('script'); script.src = 'https://s3.tradingview.com/tv.js'; script.onload = () => { new TradingView.widget({ "width": "100%", "height": "400", "symbol": "BINANCE:" + coin + "USDT", "interval": "D", "timezone": "Etc/UTC", "theme": "light", "style": "1", "locale": "en", "toolbar_bg": "#f1f3f6", "enable_publishing": false, "container_id": "tv-chart" }); }; document.body.appendChild(script); }
 
 async function fetchOnChain(coin) { // Placeholder: ganti API_KEY dan endpoint sesuai Glassnode atau CryptoQuant free tier const apiKey = 'YOUR_GLASSNODE_API_KEY'; // Fetch MVRV const mvrvRes = await fetch(https://api.glassnode.com/v1/metrics/market/mvrv_z_score?api_key=${apiKey}&a=${coin}); const mvrv = await mvrvRes.json(); document.getElementById('mvrv').textContent = mvrv.pop()[1].toFixed(2); // NUPL, Exchange balance serupa... }
 
