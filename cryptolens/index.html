@@ -727,17 +727,73 @@
             </div>
         </div>
         
-        <footer>
-            <p>Real-time cryptocurrency market analysis dashboard</p>
-            <div class="sources">
-                <div class="source-badge">CoinMarketCap</div>
-                <div class="source-badge">TradingView</div>
-                <div class="source-badge">Alternative.me</div>
-                <div class="source-badge">CryptoQuant</div>
-                <div class="source-badge">Coinglass</div>
-                <div class="source-badge">Whale Alert</div>
-            </div>
-        </footer>
+
+
+<footer>
+    <p>Real-time cryptocurrency market analysis dashboard</p>
+    <div class="sources">
+        <a href="https://coinmarketcap.com/" target="_blank" rel="noopener noreferrer" title="CoinMarketCap">
+            <img src="https://s2.coinmarketcap.com/static/cloud/img/coinmarketcap_1.svg" alt="CoinMarketCap Logo">
+        </a>
+        <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer" title="TradingView">
+            <img src="https://s3.tradingview.com/tv.js/static/images/logo.svg" alt="TradingView Logo">
+        </a>
+        <a href="https://alternative.me/" target="_blank" rel="noopener noreferrer" title="Alternative.me">
+            <img src="https://alternative.me/images/alternative-me-logo.png" alt="Alternative.me Logo">
+        </a>
+        <a href="https://cryptoquant.com/" target="_blank" rel="noopener noreferrer" title="CryptoQuant">
+            <img src="https://static.cryptoquant.com/production/cq-logo.c810c88.svg" alt="CryptoQuant Logo">
+        </a>
+        <a href="https://www.coinglass.com/" target="_blank" rel="noopener noreferrer" title="Coinglass">
+            <img src="https://www.coinglass.com/favicon.ico" onerror="this.src='https://www.coinglass.com/images/logo.png'" alt="Coinglass Logo">
+        </a>
+        <a href="https://whale-alert.io/" target="_blank" rel="noopener noreferrer" title="Whale Alert">
+            <img src="https://whale-alert.io/static/logo.png" alt="Whale Alert Logo">
+        </a>
+        <a href="https://www.coingecko.com/" target="_blank" rel="noopener noreferrer" title="CoinGecko">
+            <img src="https://static.coingecko.com/s/coingecko-logo-8903d34ce19ca4be1c81f0db30b924bf0eb4ca038b012e5d5cef763b6393b22f.png" alt="CoinGecko Logo">
+        </a>
+    </div>
+</footer>
+
+<style>
+.sources {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.sources a {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.sources a:hover {
+    transform: translateY(-3px);
+}
+
+.sources img {
+    height: 100%;
+    width: auto;
+    max-width: 120px;
+    object-fit: contain;
+    filter: grayscale(30%);
+}
+
+.sources img:hover {
+    filter: none;
+}
+</style>
+        
+
+
+
+
     </div>
     
     <script>
