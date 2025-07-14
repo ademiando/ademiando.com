@@ -1,0 +1,144 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BTC Sentinel Dashboard</title>
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^3/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- TradingView Widget -->
+  <script src="https://s3.tradingview.com/tv.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+  <header class="bg-white shadow-md p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold">BTC Sentinel</h1>
+    <nav class="space-x-4">
+      <a href="#chart" class="text-blue-600 hover:underline">Chart</a>
+      <a href="#sentiment" class="text-blue-600 hover:underline">Sentimen</a>
+      <a href="#onchain" class="text-blue-600 hover:underline">On-Chain</a>
+      <a href="#derivatives" class="text-blue-600 hover:underline">Derivatif</a>
+      <a href="#whale" class="text-blue-600 hover:underline">Whale</a>
+      <a href="#altseason" class="text-blue-600 hover:underline">Altseason</a>
+    </nav>
+  </header>  <main class="flex-1 p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- BTC Price Chart -->
+    <section id="chart" class="bg-white p-4 rounded-lg shadow">
+      <h2 class="text-lg font-semibold mb-2">BTC Price (1h)</h2>
+      <div id="tradingview_btc" style="height:300px;"></div>
+    </section><!-- Fear & Greed -->
+<section id="sentiment" class="bg-white p-4 rounded-lg shadow">
+  <h2 class="text-lg font-semibold mb-2">Fear & Greed Index</h2>
+  <iframe src="https://widgets.coinmarketcap.com/fear-and-greed-index/?theme=light" width="100%" height="200" frameborder="0"></iframe>
+</section>
+
+<!-- On-Chain Metric -->
+<section id="onchain" class="bg-white p-4 rounded-lg shadow">
+  <h2 class="text-lg font-semibold mb-2">MVRV Z-Score</h2>
+  <canvas id="onchain_chart_canvas" height="200"></canvas>
+</section>
+
+<!-- Futures Open Interest -->
+<section id="derivatives" class="bg-white p-4 rounded-lg shadow">
+  <h2 class="text-lg font-semibold mb-2">Futures Open Interest</h2>
+  <canvas id="futures_oi_canvas" height="200"></canvas>
+</section>
+
+<!-- Whale Activity -->
+<section id="whale" class="bg-white p-4 rounded-lg shadow">
+  <h2 class="text-lg font-semibold mb-2">Whale Inflows</h2>
+  <canvas id="whale_canvas" height="200"></canvas>
+</section>
+
+<!-- Altseason Metric -->
+<section id="altseason" class="bg-white p-4 rounded-lg shadow">
+  <h2 class="text-lg font-semibold mb-2">BTC Dominance</h2>
+  <canvas id="dominance_canvas" height="200"></canvas>
+</section>
+
+  </main>  <footer class="bg-white p-4 text-center text-sm text-gray-600">
+    © 2025 BTC Sentinel
+  </footer>  <script>
+    // Utility fetch wrapper
+    async function fetchJSON(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`Error fetching ${url}: ${res.status}`);
+      return res.json();
+    }
+
+    // TradingView init
+    function initTradingView() {
+      new TradingView.widget({
+        container_id: 'tradingview_btc',
+        width: '100%',
+        height: '100%',
+        symbol: 'BINANCE:BTCUSDT',
+        interval: '60',
+        timezone: 'Etc/UTC',
+        theme: 'light',
+        style: '1',
+        withdateranges: true,
+        hide_side_toolbar: false,
+        allow_symbol_change: true,
+      });
+    }
+
+    // Chart.js init helpers
+    function createLineChart(ctx, label, data, labels) {
+      return new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets: [{ label, data, fill: false, tension: 0.1 }] },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+    }
+
+    // On-Chain MVRV
+    async function initOnChain() {
+      const url = 'YOUR_ONCHAIN_API_ENDPOINT';
+      const json = await fetchJSON(url);
+      const labels = json.map(pt => pt.date);
+      const data = json.map(pt => pt.value);
+      const ctx = document.getElementById('onchain_chart_canvas').getContext('2d');
+      createLineChart(ctx, 'MVRV Z-Score', data, labels);
+    }
+
+    // Futures Open Interest
+    async function initFuturesOI() {
+      const url = 'YOUR_FUTURES_OI_API_ENDPOINT';
+      const json = await fetchJSON(url);
+      const labels = json.map(pt => pt.date);
+      const data = json.map(pt => pt.oi);
+      const ctx = document.getElementById('futures_oi_canvas').getContext('2d');
+      createLineChart(ctx, 'Open Interest', data, labels);
+    }
+
+    // Whale Inflows
+    async function initWhale() {
+      const url = 'YOUR_WHALE_API_ENDPOINT';
+      const json = await fetchJSON(url);
+      const labels = json.map(pt => pt.timestamp);
+      const data = json.map(pt => pt.amount);
+      const ctx = document.getElementById('whale_canvas').getContext('2d');
+      createLineChart(ctx, 'Whale Inflows', data, labels);
+    }
+
+    // BTC Dominance
+    async function initDominance() {
+      const url = 'YOUR_DOMINANCE_API_ENDPOINT';
+      const json = await fetchJSON(url);
+      const labels = json.map(pt => pt.date);
+      const data = json.map(pt => pt.dominance);
+      const ctx = document.getElementById('dominance_canvas').getContext('2d');
+      createLineChart(ctx, 'BTC Dominance (%)', data, labels);
+    }
+
+    // Initialize all
+    window.addEventListener('DOMContentLoaded', () => {
+      initTradingView();
+      initOnChain();
+      initFuturesOI();
+      initWhale();
+      initDominance();
+    });
+  </script></body>
+</html>
