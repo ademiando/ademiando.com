@@ -1,0 +1,9 @@
+/* style.css / / Variables and base styles retained from previous version / :root { / ...variables... */ }
+
+{ margin:0;padding:0;box-sizing:border-box; } body { /* ... / } / Header, container, stats-bar, .card, grid etc. same as before / / Ensure chart-card spans full width on landscape */ .chart-card { grid-column: 1 / -1; } .chart-container { position: relative; } .chart-loading { display:flex;align-items:center;justify-content:center;height:100%;color:var(--gray); } .chart-footer { display:flex;align-items:center;padding:0.5rem;gap:0.5rem;background:rgba(0,0,0,0.1);border-radius:0 0 var(--border-radius) var(--border-radius); } .coin-info img { width:24px;height:24px; }
+
+
+/* Loading fallback styles for gauge, data-grid, activity-list, radar etc. */
+
+/* Mobile responsive adjustments / @media(max-width:768px){ / ... */ }
+
