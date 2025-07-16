@@ -1,3 +1,4 @@
+
 import { COINGECKO_BASE, abbreviateNumber, formatCurrency } from './main.js';
 
 // Elemen DOM
