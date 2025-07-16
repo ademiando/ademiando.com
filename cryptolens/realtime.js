@@ -10,18 +10,14 @@ const sentimentDescription = document.getElementById('sentiment-description');
 const whaleActivity = document.getElementById('whale-activity');
 const chartActions = document.querySelectorAll('.chart-actions .btn');
 
-// Base URLs for APIs
 const COINGECKO_BASE = 'https://api.coingecko.com/api/v3';
 const FNG_API = 'https://api.alternative.me/fng/?limit=1';
-const WHALE_API_KEY = 'YOUR_WHALE_ALERT_KEY'; // Replace with your actual key
+const WHALE_API_KEY = 'YOUR_WHALE_ALERT_KEY'; // Ganti dengan API key asli
 const WHALE_ENDPOINT = 'https://api.whale-alert.io/v1/transactions';
 const ALTSEASON_API = 'https://api.blockchaincenter.net/altcoin-season-index/';
-const GLASSNODE_BASE = 'https://api.glassnode.com/v1';
-const GLASSNODE_API_KEY = 'YOUR_GLASSNODE_KEY'; // Replace with your actual key
-const COINGLASS_BASE = 'https://open-api.coinglass.com/api/pro/v1';
-const COINGLASS_API_KEY = 'YOUR_COINGLASS_KEY'; // Replace with your actual key
+const DERIVATIVES_API = 'https://fapi.coinglass.com/api/futures/home';
 
-// Ensure TradingView script is loaded
+// Fungsi untuk memastikan TradingView dimuat
 function ensureTradingViewLoaded() {
   return new Promise((resolve) => {
     if (window.TradingView) {
@@ -36,27 +32,26 @@ function ensureTradingViewLoaded() {
   });
 }
 
-// Load TradingView chart
+// Fungsi untuk memuat chart TradingView
 async function loadTradingView(coin = 'BTC', interval = '1D') {
   const chartContainer = document.getElementById('tv-chart');
+  
+  // Hapus konten lama
   chartContainer.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Loading chart...</p></div>';
   
   try {
+    // Pastikan library TradingView sudah dimuat
     await ensureTradingViewLoaded();
     
-    // Clear previous chart
-    while (chartContainer.firstChild) {
-      chartContainer.removeChild(chartContainer.firstChild);
-    }
-    
-    // Create new chart container
+    // Buat container baru
     const chartDiv = document.createElement('div');
     chartDiv.id = 'tradingview-widget';
     chartDiv.style.width = '100%';
     chartDiv.style.height = '400px';
+    chartContainer.innerHTML = '';
     chartContainer.appendChild(chartDiv);
     
-    // Initialize TradingView widget
+    // Buat widget TradingView
     new TradingView.widget({
       width: '100%',
       height: 400,
@@ -71,8 +66,7 @@ async function loadTradingView(coin = 'BTC', interval = '1D') {
       hide_top_toolbar: false,
       hide_legend: false,
       container_id: 'tradingview-widget',
-      autosize: true,
-      studies: ['RSI@tv-basicstudies', 'Volume@tv-basicstudies'],
+      autosize: true
     });
   } catch (error) {
     console.error('TradingView error:', error);
@@ -80,7 +74,7 @@ async function loadTradingView(coin = 'BTC', interval = '1D') {
   }
 }
 
-// Helper function to format large numbers
+// Format angka besar menjadi singkat (1.2B, 3.4M)
 function abbreviateNumber(value) {
   const num = parseFloat(value);
   if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T';
@@ -90,7 +84,7 @@ function abbreviateNumber(value) {
   return num.toFixed(2);
 }
 
-// Format currency
+// Format mata uang
 function formatCurrency(value, currency = 'USD') {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -100,10 +94,11 @@ function formatCurrency(value, currency = 'USD') {
   }).format(value);
 }
 
-// Fetch Bitcoin price
+// Ambil harga Bitcoin dan perubahan
 async function fetchBitcoinPrice() {
   try {
-    const resp = await fetch(`${COINGECKO_BASE}/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true`);
+    const timestamp = Date.now();
+    const resp = await fetch(`${COINGECKO_BASE}/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true&t=${timestamp}`);
     const data = await resp.json();
     
     if (data.bitcoin) {
@@ -121,7 +116,7 @@ async function fetchBitcoinPrice() {
   }
 }
 
-// Fetch market data
+// Ambil data pasar global
 async function fetchMarketData() {
   try {
     const resp = await fetch(`${COINGECKO_BASE}/global`);
@@ -142,7 +137,7 @@ async function fetchMarketData() {
   }
 }
 
-// Fetch Fear & Greed Index
+// Ambil Fear & Greed Index
 async function fetchFearGreedIndex() {
   try {
     const resp = await fetch(FNG_API);
@@ -176,12 +171,12 @@ async function fetchFearGreedIndex() {
   }
 }
 
-// Fetch whale alerts
+// Ambil aktivitas whale (ONCHAIN METRICS)
 async function fetchWhaleAlerts() {
   try {
     whaleActivity.innerHTML = '<div class="activity-item"><div class="activity-details">Loading whale activity...</div></div>';
     
-    // Get transactions from last hour
+    // Batasi 1 jam terakhir
     const startTime = Math.floor(Date.now() / 1000) - 3600;
     const url = `${WHALE_ENDPOINT}?api_key=${WHALE_API_KEY}&min_value=1000000&start=${startTime}`;
     
@@ -197,7 +192,7 @@ async function fetchWhaleAlerts() {
     
     whaleActivity.innerHTML = '';
     
-    // Display latest 5 transactions
+    // Ambil 5 transaksi terbaru
     data.transactions.slice(0, 5).forEach(tx => {
       const item = document.createElement('div');
       item.className = 'activity-item';
@@ -233,115 +228,76 @@ async function fetchWhaleAlerts() {
   }
 }
 
-// Fetch on-chain metrics
-async function fetchOnChainMetrics() {
+// Ambil data futures & derivatives
+async function fetchDerivativesData() {
   try {
-    // Fetch Glassnode data (requires API key)
-    const today = Math.floor(Date.now() / 1000);
-    const oneWeekAgo = today - 604800;
+    // Menggunakan API CoinGecko untuk futures
+    const resp = await fetch(`${COINGECKO_BASE}/derivatives/exchanges`);
+    const data = await resp.json();
     
-    // Fetch network growth
-    const growthResp = await fetch(`${GLASSNODE_BASE}/metrics/network/growth_sum?a=BTC&s=${oneWeekAgo}&u=${today}&api_key=${GLASSNODE_API_KEY}`);
-    const growthData = await growthResp.json();
-    const networkGrowth = growthData && growthData.length ? growthData[growthData.length - 1].v : 0;
+    if (!Array.isArray(data) || data.length === 0) {
+      throw new Error('Invalid derivatives data');
+    }
     
-    // Fetch active addresses
-    const activeResp = await fetch(`${GLASSNODE_BASE}/metrics/addresses/active_count?a=BTC&s=${oneWeekAgo}&u=${today}&api_key=${GLASSNODE_API_KEY}`);
-    const activeData = await activeResp.json();
-    const activeAddresses = activeData && activeData.length ? activeData[activeData.length - 1].v : 0;
+    // Hitung total volume 24h
+    const totalVolume = data.reduce((sum, exchange) => sum + (exchange.trade_volume_24h_btc || 0), 0);
     
-    // Fetch miner flows
-    const minerResp = await fetch(`${GLASSNODE_BASE}/metrics/mining/miner_outflow_multiple?a=BTC&s=${oneWeekAgo}&u=${today}&api_key=${GLASSNODE_API_KEY}`);
-    const minerData = await minerResp.json();
-    const minerOutflow = minerData && minerData.length ? minerData[minerData.length - 1].v : 0;
+    // Temukan BTC open interest
+    const btcOI = data.find(e => e.name === 'Binance')?.open_interest_btc || 0;
     
     // Update UI
-    document.getElementById('network-growth').textContent = abbreviateNumber(networkGrowth);
-    document.getElementById('active-addresses').textContent = abbreviateNumber(activeAddresses);
-    document.getElementById('miner-outflow').textContent = minerOutflow.toFixed(2);
+    document.getElementById('futures-volume').textContent = `${totalVolume.toFixed(0)} BTC`;
+    document.getElementById('open-interest').textContent = `${btcOI.toFixed(0)} BTC`;
+    
+    // Ambil funding rates
+    const binanceResp = await fetch('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT');
+    const binanceData = await binanceResp.json();
+    const fundingRate = binanceData.lastFundingRate * 100;
+    
+    document.getElementById('funding-rate').textContent = `${fundingRate.toFixed(4)}%`;
+    document.getElementById('funding-rate').className = fundingRate > 0 ? 'positive' : 'negative';
     
   } catch (error) {
-    console.error('On-chain metrics error:', error);
-    document.getElementById('network-growth').textContent = 'Error';
-    document.getElementById('active-addresses').textContent = 'Error';
-    document.getElementById('miner-outflow').textContent = 'Error';
-  }
-}
-
-// Fetch futures and derivatives data
-async function fetchFuturesData() {
-  try {
-    // Fetch funding rates
-    const fundingResp = await fetch(`${COINGLASS_BASE}/futures/funding_rates?symbol=BTC`, {
-      headers: { 'coinglassSecret': COINGLASS_API_KEY }
-    });
-    const fundingData = await fundingResp.json();
-    const btcFunding = fundingData.data && fundingData.data.length ? 
-      (fundingData.data[0].uMarginList[0].rate * 100).toFixed(4) + '%' : 'N/A';
-    
-    // Fetch open interest
-    const oiResp = await fetch(`${COINGLASS_BASE}/futures/openInterest?symbol=BTC`, {
-      headers: { 'coinglassSecret': COINGLASS_API_KEY }
-    });
-    const oiData = await oiResp.json();
-    const openInterest = oiData.data ? `$${abbreviateNumber(oiData.data.total * 10000)}` : 'N/A';
-    
-    // Fetch liquidation data
-    const liquidResp = await fetch(`${COINGLASS_BASE}/futures/liquidation?symbol=BTC`, {
-      headers: { 'coinglassSecret': COINGLASS_API_KEY }
-    });
-    const liquidData = await liquidResp.json();
-    const longLiquidations = liquidData.data ? `$${abbreviateNumber(liquidData.data.longVolUsd)}` : 'N/A';
-    const shortLiquidations = liquidData.data ? `$${abbreviateNumber(liquidData.data.shortVolUsd)}` : 'N/A';
-    
-    // Update UI
-    document.getElementById('funding-rate').textContent = btcFunding;
-    document.getElementById('open-interest').textContent = openInterest;
-    document.getElementById('long-liquidations').textContent = longLiquidations;
-    document.getElementById('short-liquidations').textContent = shortLiquidations;
-    
-  } catch (error) {
-    console.error('Futures data error:', error);
-    document.getElementById('funding-rate').textContent = 'Error';
+    console.error('Derivatives data error:', error);
+    document.getElementById('futures-volume').textContent = 'Error';
     document.getElementById('open-interest').textContent = 'Error';
-    document.getElementById('long-liquidations').textContent = 'Error';
-    document.getElementById('short-liquidations').textContent = 'Error';
+    document.getElementById('funding-rate').textContent = 'Error';
   }
 }
 
-// Fetch altseason metrics
+// Ambil metrik altseason
 async function fetchAltseasonMetrics() {
   try {
-    // Fetch BTC dominance
+    // Dominance BTC
     const globalResp = await fetch(`${COINGECKO_BASE}/global`);
     const globalData = await globalResp.json();
     const btcDominance = globalData.data.market_cap_percentage.btc.toFixed(1);
     document.getElementById('btc-dominance').textContent = `${btcDominance}%`;
 
-    // Fetch ETH/BTC ratio
+    // Rasio ETH/BTC
     const pricesResp = await fetch(`${COINGECKO_BASE}/simple/price?ids=bitcoin,ethereum&vs_currencies=usd`);
     const prices = await pricesResp.json();
     const ratio = (prices.ethereum.usd / prices.bitcoin.usd).toFixed(4);
     document.getElementById('eth-btc').textContent = ratio;
 
-    // Fetch altseason index
+    // Altseason index
     const altResp = await fetch(ALTSEASON_API);
     const altData = await altResp.json();
-    const index = altData.altcoinSeasonIndex || altData.value;
     
-    document.getElementById('altcoin-index').textContent = index;
+    // Tangani format respons yang berbeda
+    let index = altData.altcoinSeasonIndex;
+    if (!index && altData.data) {
+      index = altData.data.altcoinSeasonIndex;
+    }
     
-    // Determine altseason status
-    const sentimentElement = document.getElementById('altseason-sentiment');
-    if (index > 75) {
-      sentimentElement.textContent = 'Altseason 🔥';
-      sentimentElement.className = 'altseason-active';
-    } else if (index > 50) {
-      sentimentElement.textContent = 'Warming up';
-      sentimentElement.className = 'altseason-warming';
+    if (index) {
+      document.getElementById('altcoin-index').textContent = index;
+      document.getElementById('altseason-sentiment').textContent =
+        index > 75 ? 'Altseason 🔥' :
+        index > 50 ? 'Warming up' :
+        'Not yet';
     } else {
-      sentimentElement.textContent = 'Not yet';
-      sentimentElement.className = 'altseason-inactive';
+      throw new Error('Invalid altseason data');
     }
     
   } catch (error) {
@@ -351,26 +307,20 @@ async function fetchAltseasonMetrics() {
   }
 }
 
-// Initialize dashboard
+// Inisialisasi dashboard
 async function initDashboard() {
   try {
-    // Show loading states
-    document.querySelectorAll('.card-content').forEach(el => {
-      el.innerHTML = '<div class="loading-spinner"></div>';
-    });
-    
-    // Load initial data
+    // Muat data awal
     await Promise.all([
       fetchBitcoinPrice(),
       fetchMarketData(),
       fetchFearGreedIndex(),
       fetchWhaleAlerts(),
-      fetchOnChainMetrics(),
-      fetchFuturesData(),
+      fetchDerivativesData(),
       fetchAltseasonMetrics()
     ]);
     
-    // Load chart
+    // Muat chart setelah data awal
     await loadTradingView('BTC');
     
     // Setup event listeners
@@ -387,34 +337,33 @@ async function initDashboard() {
     });
     
     document.getElementById('refresh-sentiment').addEventListener('click', fetchFearGreedIndex);
-    document.getElementById('refresh-futures').addEventListener('click', fetchFuturesData);
-    document.getElementById('refresh-onchain').addEventListener('click', fetchOnChainMetrics);
     
-    // Setup intervals
-    setInterval(fetchBitcoinPrice, 30000);
-    setInterval(fetchMarketData, 120000);
-    setInterval(fetchFearGreedIndex, 300000);
-    setInterval(fetchWhaleAlerts, 300000);
-    setInterval(fetchOnChainMetrics, 600000);
-    setInterval(fetchFuturesData, 300000);
-    setInterval(fetchAltseasonMetrics, 600000);
+    // Setup interval untuk update data
+    setInterval(fetchBitcoinPrice, 30000);  // 30 detik
+    setInterval(fetchMarketData, 120000);   // 2 menit
+    setInterval(fetchFearGreedIndex, 300000); // 5 menit
+    setInterval(fetchWhaleAlerts, 300000);  // 5 menit
+    setInterval(fetchDerivativesData, 300000); // 5 menit
+    setInterval(fetchAltseasonMetrics, 600000); // 10 menit
     
   } catch (error) {
     console.error('Initialization error:', error);
-    
-    // Show error in UI
+    // Tampilkan pesan error di UI
     const errorContainer = document.getElementById('error-container');
     if (errorContainer) {
-      errorContainer.textContent = `Failed to initialize: ${error.message}`;
+      errorContainer.textContent = 'Failed to initialize dashboard. Please try again later.';
       errorContainer.style.display = 'block';
     }
     
-    // Show error in cards
-    document.querySelectorAll('.card-content').forEach(el => {
-      el.innerHTML = '<div class="error">Failed to load data</div>';
+    // Tampilkan pesan error di setiap card
+    document.querySelectorAll('.metric-card').forEach(card => {
+      const content = card.querySelector('.card-content');
+      if (content) {
+        content.innerHTML = '<div class="error">Failed to load data</div>';
+      }
     });
   }
 }
 
-// Start when DOM is ready
+// Mulai dashboard saat DOM siap
 document.addEventListener('DOMContentLoaded', initDashboard);
