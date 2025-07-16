@@ -10,6 +10,7 @@ const sentimentDescription = document.getElementById('sentiment-description');
 const whaleActivity = document.getElementById('whale-activity');
 const chartActions = document.querySelectorAll('.chart-actions .btn');
 
+
 const COINGECKO_BASE = 'https://api.coingecko.com/api/v3';
 const FNG_API = 'https://api.alternative.me/fng/?limit=1';
 const WHALE_API_KEY = 'YOUR_WHALE_ALERT_KEY';
