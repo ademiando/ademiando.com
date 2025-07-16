@@ -1,3 +1,4 @@
+
 const WHALE_API_KEY = 'YOUR_WHALE_ALERT_KEY'; // Ganti dengan API key asli
 const WHALE_ENDPOINT = 'https://api.whale-alert.io/v1/transactions';
 const whaleActivity = document.getElementById('whale-activity');
