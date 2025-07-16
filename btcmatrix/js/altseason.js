@@ -1,3 +1,4 @@
+
 import { COINGECKO_BASE } from './main.js';
 
 const ALTSEASON_API = 'https://api.blockchaincenter.net/altcoin-season-index/';
