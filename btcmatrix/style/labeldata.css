@@ -1,0 +1,6 @@
+.data-label {
+    /* ... existing styles ... */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
