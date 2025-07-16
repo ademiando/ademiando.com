@@ -679,6 +679,11 @@ footer {
 
 
 
+
+
+
+
+
 .info-icon {
     position: relative;
     display: inline-flex;
@@ -692,6 +697,8 @@ footer {
     border: 1px solid var(--gray);
     border-radius: 50%;
     margin-left: 5px;
+    background-color: transparent;
+    line-height: 1; /* Fix dobel bulat */
 }
 
 .info-icon:hover::after {
@@ -711,13 +718,39 @@ footer {
     pointer-events: none;
 }
 
+/* --- FIXED SPACING SECTION ORDERBOOK, LIQUIDITYPOOL, SENTIMENT --- */
+.order-liquidity-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px; /* Added spacing bawah */
+}
 
-
-
-
-.data-label {
-    /* ... existing styles ... */
+.sentiment-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 1.5rem;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Extra spacing jika Market Sentiment berada di bawah section grid */
+.market-sentiment-section {
+    margin-top: 20px;
+}
+
+/* Responsive fix agar semua section tidak nempel di mobile */
+@media (max-width: 768px) {
+    .order-liquidity-container {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .sentiment-container {
+        margin-top: 20px;
+    }
 }
