@@ -1,3 +1,4 @@
+
 const FNG_API = 'https://api.alternative.me/fng/?limit=1';
 const fearGreedValue = document.getElementById('fear-greed-value');
 const fearGreedLabel = document.getElementById('fear-greed-label');
