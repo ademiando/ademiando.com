@@ -1,4 +1,4 @@
-// script.js
+
 // IIFE to encapsulate functionality
 (() => {
     // DOM Elements
