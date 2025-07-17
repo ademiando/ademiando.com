@@ -1,4 +1,4 @@
-// script.js
+
 // Placeholder for API keys (to be replaced in production)
 const COINGECKO_API_KEY = 'YOUR_COINGECKO_API_KEY';
 const GLASSNODE_API_KEY = 'YOUR_GLASSNODE_API_KEY';
