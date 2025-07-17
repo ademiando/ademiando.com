@@ -1,20 +1,21 @@
-
-// IIFE to encapsulate functionality
-(() => {
+// script.js
+document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     const themeToggle = document.getElementById('theme-switch');
     const tabButtons = document.querySelectorAll('.tab-btn');
     const panels = document.querySelectorAll('.panel');
-    const loader = document.querySelector('.loader');
+    const timeButtons = document.querySelectorAll('.time-btn');
     
     // State
-    let currentTheme = localStorage.getItem('theme') || 'light';
+    let currentTheme = localStorage.getItem('theme') || 'dark';
     let activeTab = 'chart';
+    let chartInstance = null;
     
     // Initialize Theme
     const initTheme = () => {
         document.documentElement.setAttribute('data-theme', currentTheme);
-        themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+        themeToggle.innerHTML = currentTheme === 'dark' ? 
+            '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
     };
     
     // Toggle Theme
@@ -44,53 +45,78 @@
         loadTabData(tabName);
     };
     
-    // Data Loading Functions
+    // Load data for specific tab
     const loadTabData = (tab) => {
         switch(tab) {
             case 'chart':
-                loadChartData();
+                loadChartData('1h');
                 break;
             case 'orderbook':
                 initOrderbook();
                 break;
-            case 'onchain':
-                fetchOnChainData();
+            case 'sentiment':
+                loadSentimentData();
+                break;
+            case 'blockchain':
+                // Data is static in this example
                 break;
             // Additional cases for other tabs...
         }
     };
     
-    // Chart Panel Implementation
-    const loadChartData = async () => {
-        const loader = document.querySelector('#chart-panel .loader');
-        loader.style.display = 'block';
+    // Load Chart Data
+    const loadChartData = (interval) => {
+        const loader = document.querySelector('#chart-loader');
+        loader.style.display = 'flex';
         
-        try {
-            const response = await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=30');
-            const data = await response.json();
+        // Simulate API call
+        setTimeout(() => {
+            // Generate mock data
+            const data = generateMockChartData(interval);
             
-            const ohlc = data.map(d => ({
-                time: d[0],
-                open: parseFloat(d[1]),
-                high: parseFloat(d[2]),
-                low: parseFloat(d[3]),
-                close: parseFloat(d[4])
-            }));
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
             
-            renderCandlestickChart(ohlc);
-        } catch (error) {
-            console.error('Failed to fetch OHLC data:', error);
-            showError('#chart-panel', 'Failed to load chart data');
-        } finally {
+            renderCandlestickChart(data);
             loader.style.display = 'none';
-        }
+        }, 800);
     };
     
+    // Generate mock chart data
+    const generateMockChartData = (interval) => {
+        const data = [];
+        let basePrice = 64000;
+        const points = interval === '1h' ? 24 : interval === '4h' ? 42 : 30;
+        
+        for (let i = 0; i < points; i++) {
+            const open = basePrice;
+            const close = open + (Math.random() - 0.5) * 1000;
+            const high = Math.max(open, close) + Math.random() * 500;
+            const low = Math.min(open, close) - Math.random() * 500;
+            const time = Date.now() - (points - i) * (interval === '1h' ? 3600000 : 
+                interval === '4h' ? 14400000 : 86400000);
+            
+            data.push({
+                time,
+                open,
+                high,
+                low,
+                close
+            });
+            
+            basePrice = close;
+        }
+        
+        return data;
+    };
+    
+    // Render Candlestick Chart
     const renderCandlestickChart = (data) => {
         const ctx = document.getElementById('ohlc-chart').getContext('2d');
-        const dates = data.map(d => new Date(d.time).toLocaleDateString());
+        const dates = data.map(d => new Date(d.time).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}));
         
-        new Chart(ctx, {
+        chartInstance = new Chart(ctx, {
             type: 'candlestick',
             data: {
                 labels: dates,
@@ -104,81 +130,129 @@
                         c: d.close
                     })),
                     color: {
-                        up: 'rgba(40, 167, 69, 1)',
-                        down: 'rgba(220, 53, 69, 1)',
-                        unchanged: 'rgba(108, 117, 125, 1)',
+                        up: 'rgba(16, 185, 129, 1)',
+                        down: 'rgba(239, 68, 68, 1)',
+                        unchanged: 'rgba(156, 163, 175, 1)',
                     }
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(100, 116, 139, 0.1)'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(100, 116, 139, 0.1)'
+                        }
+                    }
                 }
             }
         });
     };
     
-    // Orderbook Implementation
+    // Initialize Orderbook
     const initOrderbook = () => {
-        const depthChart = document.getElementById('depth-chart');
-        const loader = document.querySelector('#orderbook-panel .loader');
-        loader.style.display = 'block';
+        const loader = document.querySelector('#orderbook-loader');
+        loader.style.display = 'flex';
         
-        // Mock WebSocket connection
-        const socket = io.connect('wss://stream.binance.com:9443/ws');
-        
-        socket.on('connect', () => {
-            socket.emit('subscribe', 'btcusdt@depth');
-        });
-        
-        socket.on('depthUpdate', (data) => {
-            renderDepthChart(data.bids, data.asks);
+        // Simulate WebSocket connection
+        setTimeout(() => {
+            generateOrderbookData();
+            renderDepthChart();
             loader.style.display = 'none';
-        });
-        
-        socket.on('error', (err) => {
-            console.error('WebSocket error:', err);
-            showError('#orderbook-panel', 'Orderbook connection failed');
-            loader.style.display = 'none';
-        });
+        }, 1000);
     };
     
-    const renderDepthChart = (bids, asks) => {
-        // D3.js implementation would go here
-        document.getElementById('depth-chart').innerHTML = `
-            <div class="text-center p-2">
-                <h3>Order Book Depth</h3>
-                <p>Bids: ${bids.length} | Asks: ${asks.length}</p>
-                <p><em>D3.js visualization would render here</em></p>
+    // Generate mock orderbook data
+    const generateOrderbookData = () => {
+        const bidsList = document.getElementById('bids-list');
+        const asksList = document.getElementById('asks-list');
+        bidsList.innerHTML = '';
+        asksList.innerHTML = '';
+        
+        // Generate bids
+        let bidPrice = 64200;
+        for (let i = 0; i < 15; i++) {
+            const price = bidPrice - i * 10;
+            const amount = (Math.random() * 5 + 1).toFixed(3);
+            const total = (price * amount).toFixed(2);
+            
+            const row = document.createElement('div');
+            row.className = 'order-row bid';
+            row.innerHTML = `
+                <span>${price.toFixed(2)}</span>
+                <span>${amount}</span>
+                <span>${total}</span>
+            `;
+            bidsList.appendChild(row);
+        }
+        
+        // Generate asks
+        let askPrice = 64220;
+        for (let i = 0; i < 15; i++) {
+            const price = askPrice + i * 10;
+            const amount = (Math.random() * 5 + 1).toFixed(3);
+            const total = (price * amount).toFixed(2);
+            
+            const row = document.createElement('div');
+            row.className = 'order-row ask';
+            row.innerHTML = `
+                <span>${price.toFixed(2)}</span>
+                <span>${amount}</span>
+                <span>${total}</span>
+            `;
+            asksList.appendChild(row);
+        }
+        
+        // Update spread
+        document.getElementById('spread-value').textContent = (askPrice - bidPrice).toFixed(2);
+    };
+    
+    // Render Depth Chart
+    const renderDepthChart = () => {
+        const depthChart = document.getElementById('depth-chart');
+        
+        // In a real implementation, this would use D3.js
+        depthChart.innerHTML = `
+            <div class="text-center" style="padding: 2rem;">
+                <h3>Market Depth Visualization</h3>
+                <p><em>D3.js depth chart would render here</em></p>
+                <p class="text-secondary" style="margin-top: 1rem;">
+                    This area would show the order book depth chart with bids and asks.
+                </p>
             </div>
         `;
     };
     
-    // Blockchain Panel Implementation
-    const loadBlockchainData = async () => {
-        try {
-            const provider = new ethers.providers.JsonRpcProvider();
-            const network = await provider.getNetwork();
-            document.getElementById('node-stats').innerHTML = `
-                <div class="card">
-                    <h3>${network.name} Network</h3>
-                    <p>Chain ID: ${network.chainId}</p>
-                </div>
-            `;
-        } catch (error) {
-            console.error('Blockchain error:', error);
-            showError('#blockchain-panel', 'Failed to connect to blockchain');
-        }
-    };
-    
-    // Error Handling
-    const showError = (containerSelector, message) => {
-        const container = document.querySelector(containerSelector);
-        const errorEl = document.createElement('div');
-        errorEl.className = 'error';
-        errorEl.innerHTML = `<p class="error-text">⚠️ ${message}</p>`;
-        container.appendChild(errorEl);
+    // Load Sentiment Data
+    const loadSentimentData = () => {
+        // Simulate API call to Fear & Greed Index
+        setTimeout(() => {
+            const value = Math.floor(Math.random() * 100);
+            document.getElementById('gauge-value').textContent = value;
+            document.getElementById('gauge-fill').style.width = `${value}%`;
+            
+            let sentimentText = '';
+            if (value < 25) sentimentText = 'Extreme Fear';
+            else if (value < 45) sentimentText = 'Fear';
+            else if (value < 55) sentimentText = 'Neutral';
+            else if (value < 75) sentimentText = 'Greed';
+            else sentimentText = 'Extreme Greed';
+            
+            document.getElementById('sentiment-text').textContent = sentimentText;
+        }, 600);
     };
     
     // Event Listeners
@@ -191,10 +265,46 @@
         });
     });
     
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-        initTheme();
-        switchTab('chart');
-        loadBlockchainData();
+    timeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            timeButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            loadChartData(button.textContent.toLowerCase());
+        });
     });
-})();
+    
+    // Initialize
+    initTheme();
+    switchTab('chart');
+    
+    // Simulate live price updates
+    setInterval(() => {
+        const btcElement = document.getElementById('btc-price');
+        const ethElement = document.getElementById('eth-price');
+        
+        const btcPrice = parseFloat(btcElement.textContent.replace('$', '').replace(',', ''));
+        const ethPrice = parseFloat(ethElement.textContent.replace('$', '').replace(',', ''));
+        
+        const btcChange = (Math.random() - 0.5) * 100;
+        const ethChange = (Math.random() - 0.5) * 80;
+        
+        const newBtcPrice = btcPrice + btcChange;
+        const newEthPrice = ethPrice + ethChange;
+        
+        btcElement.textContent = `$${newBtcPrice.toFixed(2)}`;
+        ethElement.textContent = `$${newEthPrice.toFixed(2)}`;
+        
+        // Update percentage indicators
+        const btcPercent = (btcChange / btcPrice * 100).toFixed(1);
+        const ethPercent = (ethChange / ethPrice * 100).toFixed(1);
+        
+        const btcPctElement = btcElement.parentElement.querySelector('.positive, .negative');
+        const ethPctElement = ethElement.parentElement.querySelector('.positive, .negative');
+        
+        btcPctElement.textContent = `${btcChange >= 0 ? '+' : ''}${btcPercent}%`;
+        ethPctElement.textContent = `${ethChange >= 0 ? '+' : ''}${ethPercent}%`;
+        
+        btcPctElement.className = btcChange >= 0 ? 'positive' : 'negative';
+        ethPctElement.className = ethChange >= 0 ? 'positive' : 'negative';
+    }, 5000);
+});
