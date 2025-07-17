@@ -1,251 +1,313 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CryptoPro Dashboard</title>
-    
-    <!-- CDN Libraries -->
+    <title>BTC Dash | Bitcoin Analytics Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Local Files -->
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reconnecting-websocket@4.4.0/dist/reconnecting-websocket.min.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Theme Toggle -->
-        <div class="theme-toggle">
-            <button id="theme-switch" aria-label="Toggle theme">
-                <i class="fas fa-moon"></i>
-            </button>
+    <header>
+        <div class="logo">
+            <span class="logo-btc">₿</span>
+            <h1>BTC Dash</h1>
         </div>
-        
-        <!-- Header -->
-        <header role="banner">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fab fa-bitcoin"></i>
-                    <h1>CryptoPro Dashboard</h1>
-                </div>
-                <div class="market-data">
-                    <div class="ticker">
-                        <span>BTC: <span id="btc-price">$64,230.45</span></span>
-                        <span class="positive">+2.3%</span>
+        <button id="theme-toggle" aria-label="Toggle dark/light mode">
+            <span class="theme-icon">🌙</span>
+        </button>
+    </header>
+
+    <nav>
+        <ul class="tabs" role="tablist">
+            <li role="presentation">
+                <button class="tab active" role="tab" aria-selected="true" data-panel="overview">Overview</button>
+            </li>
+            <li role="presentation">
+                <button class="tab" role="tab" aria-selected="false" data-panel="chart">Chart</button>
+            </li>
+            <li role="presentation">
+                <button class="tab" role="tab" aria-selected="false" data-panel="orderbook">Orderbook</button>
+            </li>
+            <li role="presentation">
+                <button class="tab" role="tab" aria-selected="false" data-panel="onchain">OnChain</button>
+            </li>
+            <li role="presentation">
+                <button class="tab" role="tab" aria-selected="false" data-panel="sentiment">Sentiment</button>
+            </li>
+            <li role="presentation">
+                <button class="tab" role="tab" aria-selected="false" data-panel="derivatives">Derivatives</button>
+            </li>
+            <li role="presentation">
+                <button class="tab" role="tab" aria-selected="false" data-panel="macro">Macro</button>
+            </li>
+            <li role="presentation">
+                <button class="tab" role="tab" aria-selected="false" data-panel="blockchain">Blockchain</button>
+            </li>
+        </ul>
+    </nav>
+
+    <main>
+        <div id="overview-panel" class="panel active">
+            <div class="panel-header">
+                <h2>Bitcoin Market Overview</h2>
+                <div class="last-updated">Last updated: <span id="overview-updated">-</span></div>
+            </div>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Price (USD)</h3>
                     </div>
-                    <div class="ticker">
-                        <span>ETH: <span id="eth-price">$3,420.18</span></span>
-                        <span class="positive">+1.7%</span>
+                    <div class="card-body">
+                        <div class="metric-value" id="btc-price">$--</div>
+                        <div class="metric-change" id="btc-change">--%</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Market Cap</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="metric-value" id="market-cap">$--</div>
+                        <div class="metric-change" id="market-cap-change">--%</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>24h Volume</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="metric-value" id="volume">$--</div>
+                        <div class="metric-change" id="volume-change">--%</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>24h High/Low</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="metric-value" id="high-low">$-- / $--</div>
+                        <div class="metric-change">Range: --%</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Supply</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="metric-value" id="supply">-- BTC</div>
+                        <div class="metric-description">Circulating / Total</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Dominance</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="metric-value" id="dominance">--%</div>
+                        <div class="metric-change">Change: --%</div>
                     </div>
                 </div>
             </div>
-        </header>
-        
-        <!-- Navigation -->
-        <nav class="sidebar" role="navigation" aria-label="Main Navigation">
-            <ul class="tabs" role="tablist">
-                <li role="presentation">
-                    <button class="tab-btn active" data-tab="chart" role="tab" aria-selected="true">
-                        <i class="fas fa-chart-line"></i> Chart
-                    </button>
-                </li>
-                <li role="presentation">
-                    <button class="tab-btn" data-tab="orderbook" role="tab">
-                        <i class="fas fa-book"></i> Orderbook
-                    </button>
-                </li>
-                <li role="presentation">
-                    <button class="tab-btn" data-tab="onchain" role="tab">
-                        <i class="fas fa-link"></i> OnChain
-                    </button>
-                </li>
-                <li role="presentation">
-                    <button class="tab-btn" data-tab="sentiment" role="tab">
-                        <i class="fas fa-smile"></i> Sentiment
-                    </button>
-                </li>
-                <li role="presentation">
-                    <button class="tab-btn" data-tab="derivatives" role="tab">
-                        <i class="fas fa-exchange-alt"></i> Derivatives
-                    </button>
-                </li>
-                <li role="presentation">
-                    <button class="tab-btn" data-tab="macro" role="tab">
-                        <i class="fas fa-globe-americas"></i> Macro
-                    </button>
-                </li>
-                <li role="presentation">
-                    <button class="tab-btn" data-tab="blockchain" role="tab">
-                        <i class="fas fa-server"></i> Blockchain
-                    </button>
-                </li>
-            </ul>
-        </nav>
-        
-        <!-- Main Content -->
-        <main role="main">
-            <!-- Chart Panel -->
-            <section id="chart-panel" class="panel active" role="tabpanel" aria-labelledby="chart-tab">
+        </div>
+
+        <div id="chart-panel" class="panel">
+            <div class="panel-header">
+                <h2>BTC/USD Price Chart</h2>
+                <div class="chart-controls">
+                    <select id="timeframe-select">
+                        <option value="1h">1H</option>
+                        <option value="4h">4H</option>
+                        <option value="1d" selected>1D</option>
+                        <option value="1w">1W</option>
+                        <option value="1m">1M</option>
+                    </select>
+                    <button id="toggle-indicators">Show Indicators</button>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="price-chart"></canvas>
+            </div>
+        </div>
+
+        <div id="orderbook-panel" class="panel">
+            <div class="panel-header">
+                <h2>BTC/USD Order Book</h2>
+                <div class="exchange-select">
+                    <select id="exchange-select">
+                        <option value="binance">Binance</option>
+                        <option value="coinbase">Coinbase</option>
+                        <option value="kraken">Kraken</option>
+                    </select>
+                </div>
+            </div>
+            <div class="chart-container">
+                <div id="orderbook-chart"></div>
+            </div>
+        </div>
+
+        <div id="onchain-panel" class="panel">
+            <div class="panel-header">
+                <h2>On-Chain Analytics</h2>
+                <div class="onchain-metrics">
+                    <span>Hash Rate: <strong id="hash-rate">-- EH/s</strong></span>
+                    <span>Difficulty: <strong id="difficulty">-- T</strong></span>
+                </div>
+            </div>
+            <div class="card-grid">
                 <div class="card">
                     <div class="card-header">
-                        <h2><i class="fas fa-chart-line"></i> BTC/USDT Price Chart</h2>
-                        <div class="time-filters">
-                            <button class="time-btn active">1H</button>
-                            <button class="time-btn">4H</button>
-                            <button class="time-btn">1D</button>
-                            <button class="time-btn">1W</button>
-                        </div>
+                        <h3>Active Addresses</h3>
                     </div>
-                    <div class="loader" id="chart-loader">
-                        <div class="spinner"></div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="ohlc-chart"></canvas>
+                    <div class="card-body">
+                        <div class="metric-value" id="active-addresses">--</div>
+                        <div class="metric-change">30d: --%</div>
                     </div>
                 </div>
-            </section>
-            
-            <!-- Orderbook Panel -->
-            <section id="orderbook-panel" class="panel" role="tabpanel" aria-labelledby="orderbook-tab" hidden>
                 <div class="card">
                     <div class="card-header">
-                        <h2><i class="fas fa-book"></i> BTC/USDT Order Book</h2>
-                        <div class="orderbook-stats">
-                            <span>Spread: <span id="spread-value">2.50</span> USDT</span>
-                        </div>
+                        <h3>MVRV Ratio</h3>
                     </div>
-                    <div class="loader" id="orderbook-loader">
-                        <div class="spinner"></div>
-                    </div>
-                    <div class="orderbook-container">
-                        <div class="orderbook-layout">
-                            <div class="orderbook-section">
-                                <h3 class="bids-header">Bids</h3>
-                                <div id="bids-list" class="order-list"></div>
-                            </div>
-                            <div class="orderbook-section">
-                                <h3 class="asks-header">Asks</h3>
-                                <div id="asks-list" class="order-list"></div>
-                            </div>
-                        </div>
-                        <div class="depth-chart-container">
-                            <div id="depth-chart"></div>
-                        </div>
+                    <div class="card-body">
+                        <div class="metric-value" id="mvrv">--</div>
+                        <div class="metric-description">Market Value to Realized Value</div>
                     </div>
                 </div>
-            </section>
-            
-            <!-- Sentiment Panel -->
-            <section id="sentiment-panel" class="panel" role="tabpanel" aria-labelledby="sentiment-tab" hidden>
                 <div class="card">
                     <div class="card-header">
-                        <h2><i class="fas fa-smile"></i> Market Sentiment</h2>
+                        <h3>Exchange Flow</h3>
                     </div>
-                    <div class="sentiment-container">
+                    <div class="card-body">
+                        <div class="metric-value" id="exchange-flow">-- BTC</div>
+                        <div class="metric-change">Net: -- BTC</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="sentiment-panel" class="panel">
+            <div class="panel-header">
+                <h2>Market Sentiment</h2>
+                <div class="sentiment-score">
+                    Fear & Greed Index: <strong id="fgi-score">--</strong> (<span id="fgi-label">--</span>)
+                </div>
+            </div>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Fear & Greed Index</h3>
+                    </div>
+                    <div class="card-body">
                         <div class="gauge-container">
-                            <h3>Fear & Greed Index</h3>
                             <div class="gauge">
-                                <div class="gauge-fill" id="gauge-fill"></div>
-                                <div class="gauge-value" id="gauge-value">54</div>
+                                <div class="gauge-fill" id="fgi-gauge"></div>
                             </div>
                             <div class="gauge-labels">
-                                <span>Extreme Fear</span>
-                                <span>Neutral</span>
-                                <span>Extreme Greed</span>
-                            </div>
-                            <div class="sentiment-status" id="sentiment-text">Neutral</div>
-                        </div>
-                        <div class="sentiment-metrics">
-                            <div class="metric-card positive">
-                                <i class="fas fa-comments"></i>
-                                <h4>Social Sentiment</h4>
-                                <div class="metric-value">72% Positive</div>
-                            </div>
-                            <div class="metric-card negative">
-                                <i class="fas fa-newspaper"></i>
-                                <h4>News Sentiment</h4>
-                                <div class="metric-value">34% Positive</div>
+                                <span>0</span>
+                                <span>25</span>
+                                <span>50</span>
+                                <span>75</span>
+                                <span>100</span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-            
-            <!-- Blockchain Panel -->
-            <section id="blockchain-panel" class="panel" role="tabpanel" aria-labelledby="blockchain-tab" hidden>
                 <div class="card">
                     <div class="card-header">
-                        <h2><i class="fas fa-server"></i> Blockchain Health</h2>
+                        <h3>Social Media Sentiment</h3>
                     </div>
-                    <div class="blockchain-stats">
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <i class="fab fa-bitcoin"></i>
-                                <h3>Bitcoin Network</h3>
-                            </div>
-                            <div class="stat-grid">
-                                <div class="stat-item">
-                                    <span>Hash Rate</span>
-                                    <strong>198 EH/s</strong>
-                                </div>
-                                <div class="stat-item">
-                                    <span>Difficulty</span>
-                                    <strong>27.5 T</strong>
-                                </div>
-                                <div class="stat-item">
-                                    <span>Transactions</span>
-                                    <strong>324,560</strong>
-                                </div>
-                                <div class="stat-item">
-                                    <span>Avg. Fee</span>
-                                    <strong>$1.85</strong>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <i class="fab fa-ethereum"></i>
-                                <h3>Ethereum Network</h3>
-                            </div>
-                            <div class="stat-grid">
-                                <div class="stat-item">
-                                    <span>Gas Price</span>
-                                    <strong>32 Gwei</strong>
-                                </div>
-                                <div class="stat-item">
-                                    <span>Staked ETH</span>
-                                    <strong>27.4M</strong>
-                                </div>
-                                <div class="stat-item">
-                                    <span>Transactions</span>
-                                    <strong>1.2M</strong>
-                                </div>
-                                <div class="stat-item">
-                                    <span>Active Nodes</span>
-                                    <strong>8,420</strong>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="card-body">
+                        <canvas id="sentiment-chart"></canvas>
                     </div>
                 </div>
-            </section>
-            
-            <!-- Other Panels -->
-            <!-- Additional panels would follow the same structure -->
-        </main>
-        
-        <!-- Footer -->
-        <footer role="contentinfo">
-            <p>CryptoPro Dashboard &copy; 2023 | Real-time cryptocurrency analytics</p>
-            <div class="footer-links">
-                <a href="#"><i class="fab fa-github"></i> GitHub</a>
-                <a href="#"><i class="fas fa-question-circle"></i> Documentation</a>
             </div>
-        </footer>
+        </div>
+
+        <div id="derivatives-panel" class="panel">
+            <div class="panel-header">
+                <h2>Derivatives Market</h2>
+                <div class="derivatives-metrics">
+                    <span>Open Interest: <strong id="open-interest">--</strong></span>
+                    <span>Funding Rate: <strong id="funding-rate">--%</strong></span>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="derivatives-chart"></canvas>
+            </div>
+        </div>
+
+        <div id="macro-panel" class="panel">
+            <div class="panel-header">
+                <h2>Macroeconomic Correlation</h2>
+                <div class="macro-controls">
+                    <select id="macro-asset-select">
+                        <option value="dxy">DXY (USD Index)</option>
+                        <option value="gold">Gold</option>
+                        <option value="sp500">S&P 500</option>
+                    </select>
+                    <select id="correlation-period">
+                        <option value="30">30 Days</option>
+                        <option value="90" selected>90 Days</option>
+                        <option value="180">180 Days</option>
+                    </select>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="correlation-chart"></canvas>
+            </div>
+        </div>
+
+        <div id="blockchain-panel" class="panel">
+            <div class="panel-header">
+                <h2>Blockchain Metrics</h2>
+                <div class="blockchain-metrics">
+                    <span>Block Height: <strong id="block-height">--</strong></span>
+                    <span>Avg Fee: <strong id="avg-fee">-- sat/vB</strong></span>
+                </div>
+            </div>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Network Hash Rate</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="hashrate-chart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Transaction Volume</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="tx-volume-chart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Mempool Size</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="mempool-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>© 2025 BTC Dash</p>
+            <a href="#" aria-label="Privacy Policy">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Loading data...</p>
     </div>
 
     <script src="script.js"></script>
