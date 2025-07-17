@@ -1,84 +1,252 @@
-
+<!-- index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Analytics Dashboard</title>
+    <title>CryptoPro Dashboard</title>
     
-    <!-- External Libraries -->
+    <!-- CDN Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Local Files -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Theme Toggle -->
-    <div class="theme-toggle">
-        <button id="theme-switch" aria-label="Toggle dark mode">🌓</button>
+    <div class="app-container">
+        <!-- Theme Toggle -->
+        <div class="theme-toggle">
+            <button id="theme-switch" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+        
+        <!-- Header -->
+        <header role="banner">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fab fa-bitcoin"></i>
+                    <h1>CryptoPro Dashboard</h1>
+                </div>
+                <div class="market-data">
+                    <div class="ticker">
+                        <span>BTC: <span id="btc-price">$64,230.45</span></span>
+                        <span class="positive">+2.3%</span>
+                    </div>
+                    <div class="ticker">
+                        <span>ETH: <span id="eth-price">$3,420.18</span></span>
+                        <span class="positive">+1.7%</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Navigation -->
+        <nav class="sidebar" role="navigation" aria-label="Main Navigation">
+            <ul class="tabs" role="tablist">
+                <li role="presentation">
+                    <button class="tab-btn active" data-tab="chart" role="tab" aria-selected="true">
+                        <i class="fas fa-chart-line"></i> Chart
+                    </button>
+                </li>
+                <li role="presentation">
+                    <button class="tab-btn" data-tab="orderbook" role="tab">
+                        <i class="fas fa-book"></i> Orderbook
+                    </button>
+                </li>
+                <li role="presentation">
+                    <button class="tab-btn" data-tab="onchain" role="tab">
+                        <i class="fas fa-link"></i> OnChain
+                    </button>
+                </li>
+                <li role="presentation">
+                    <button class="tab-btn" data-tab="sentiment" role="tab">
+                        <i class="fas fa-smile"></i> Sentiment
+                    </button>
+                </li>
+                <li role="presentation">
+                    <button class="tab-btn" data-tab="derivatives" role="tab">
+                        <i class="fas fa-exchange-alt"></i> Derivatives
+                    </button>
+                </li>
+                <li role="presentation">
+                    <button class="tab-btn" data-tab="macro" role="tab">
+                        <i class="fas fa-globe-americas"></i> Macro
+                    </button>
+                </li>
+                <li role="presentation">
+                    <button class="tab-btn" data-tab="blockchain" role="tab">
+                        <i class="fas fa-server"></i> Blockchain
+                    </button>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- Main Content -->
+        <main role="main">
+            <!-- Chart Panel -->
+            <section id="chart-panel" class="panel active" role="tabpanel" aria-labelledby="chart-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-chart-line"></i> BTC/USDT Price Chart</h2>
+                        <div class="time-filters">
+                            <button class="time-btn active">1H</button>
+                            <button class="time-btn">4H</button>
+                            <button class="time-btn">1D</button>
+                            <button class="time-btn">1W</button>
+                        </div>
+                    </div>
+                    <div class="loader" id="chart-loader">
+                        <div class="spinner"></div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="ohlc-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Orderbook Panel -->
+            <section id="orderbook-panel" class="panel" role="tabpanel" aria-labelledby="orderbook-tab" hidden>
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-book"></i> BTC/USDT Order Book</h2>
+                        <div class="orderbook-stats">
+                            <span>Spread: <span id="spread-value">2.50</span> USDT</span>
+                        </div>
+                    </div>
+                    <div class="loader" id="orderbook-loader">
+                        <div class="spinner"></div>
+                    </div>
+                    <div class="orderbook-container">
+                        <div class="orderbook-layout">
+                            <div class="orderbook-section">
+                                <h3 class="bids-header">Bids</h3>
+                                <div id="bids-list" class="order-list"></div>
+                            </div>
+                            <div class="orderbook-section">
+                                <h3 class="asks-header">Asks</h3>
+                                <div id="asks-list" class="order-list"></div>
+                            </div>
+                        </div>
+                        <div class="depth-chart-container">
+                            <div id="depth-chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Sentiment Panel -->
+            <section id="sentiment-panel" class="panel" role="tabpanel" aria-labelledby="sentiment-tab" hidden>
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-smile"></i> Market Sentiment</h2>
+                    </div>
+                    <div class="sentiment-container">
+                        <div class="gauge-container">
+                            <h3>Fear & Greed Index</h3>
+                            <div class="gauge">
+                                <div class="gauge-fill" id="gauge-fill"></div>
+                                <div class="gauge-value" id="gauge-value">54</div>
+                            </div>
+                            <div class="gauge-labels">
+                                <span>Extreme Fear</span>
+                                <span>Neutral</span>
+                                <span>Extreme Greed</span>
+                            </div>
+                            <div class="sentiment-status" id="sentiment-text">Neutral</div>
+                        </div>
+                        <div class="sentiment-metrics">
+                            <div class="metric-card positive">
+                                <i class="fas fa-comments"></i>
+                                <h4>Social Sentiment</h4>
+                                <div class="metric-value">72% Positive</div>
+                            </div>
+                            <div class="metric-card negative">
+                                <i class="fas fa-newspaper"></i>
+                                <h4>News Sentiment</h4>
+                                <div class="metric-value">34% Positive</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Blockchain Panel -->
+            <section id="blockchain-panel" class="panel" role="tabpanel" aria-labelledby="blockchain-tab" hidden>
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-server"></i> Blockchain Health</h2>
+                    </div>
+                    <div class="blockchain-stats">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <i class="fab fa-bitcoin"></i>
+                                <h3>Bitcoin Network</h3>
+                            </div>
+                            <div class="stat-grid">
+                                <div class="stat-item">
+                                    <span>Hash Rate</span>
+                                    <strong>198 EH/s</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span>Difficulty</span>
+                                    <strong>27.5 T</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span>Transactions</span>
+                                    <strong>324,560</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span>Avg. Fee</span>
+                                    <strong>$1.85</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <i class="fab fa-ethereum"></i>
+                                <h3>Ethereum Network</h3>
+                            </div>
+                            <div class="stat-grid">
+                                <div class="stat-item">
+                                    <span>Gas Price</span>
+                                    <strong>32 Gwei</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span>Staked ETH</span>
+                                    <strong>27.4M</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span>Transactions</span>
+                                    <strong>1.2M</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span>Active Nodes</span>
+                                    <strong>8,420</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Other Panels -->
+            <!-- Additional panels would follow the same structure -->
+        </main>
+        
+        <!-- Footer -->
+        <footer role="contentinfo">
+            <p>CryptoPro Dashboard &copy; 2023 | Real-time cryptocurrency analytics</p>
+            <div class="footer-links">
+                <a href="#"><i class="fab fa-github"></i> GitHub</a>
+                <a href="#"><i class="fas fa-question-circle"></i> Documentation</a>
+            </div>
+        </footer>
     </div>
-    
-    <!-- Header -->
-    <header role="banner">
-        <h1>Crypto Market Dashboard</h1>
-    </header>
-    
-    <!-- Navigation -->
-    <nav class="sidebar" role="navigation" aria-label="Main Navigation">
-        <ul class="tabs" role="tablist">
-            <li role="presentation"><button class="tab-btn active" data-tab="chart" role="tab" aria-selected="true">Chart</button></li>
-            <li role="presentation"><button class="tab-btn" data-tab="orderbook" role="tab">Orderbook</button></li>
-            <li role="presentation"><button class="tab-btn" data-tab="onchain" role="tab">OnChain</button></li>
-            <li role="presentation"><button class="tab-btn" data-tab="sentiment" role="tab">Sentiment</button></li>
-            <li role="presentation"><button class="tab-btn" data-tab="derivatives" role="tab">Derivatives</button></li>
-            <li role="presentation"><button class="tab-btn" data-tab="macro" role="tab">Macro</button></li>
-            <li role="presentation"><button class="tab-btn" data-tab="blockchain" role="tab">Blockchain</button></li>
-        </ul>
-    </nav>
-    
-    <!-- Main Content -->
-    <main role="main">
-        <!-- Chart Panel -->
-        <section id="chart-panel" class="panel active" role="tabpanel" aria-labelledby="chart-tab">
-            <div class="card">
-                <h2>Price Chart</h2>
-                <div class="loader"></div>
-                <canvas id="ohlc-chart"></canvas>
-            </div>
-        </section>
-        
-        <!-- Other Panels (initially hidden) -->
-        <section id="orderbook-panel" class="panel" role="tabpanel" aria-labelledby="orderbook-tab" hidden>
-            <div class="card">
-                <h2>Order Book Depth</h2>
-                <div class="loader"></div>
-                <div id="depth-chart"></div>
-            </div>
-        </section>
-        
-        <!-- Remaining panels follow same structure -->
-        <section id="onchain-panel" class="panel" role="tabpanel" hidden>
-            <!-- Onchain metrics will go here -->
-        </section>
-        
-        <!-- More sections for other tabs... -->
-        
-        <!-- Blockchain Panel -->
-        <section id="blockchain-panel" class="panel" role="tabpanel" hidden>
-            <div class="card">
-                <h2>Network Status</h2>
-                <div id="node-stats"></div>
-            </div>
-        </section>
-    </main>
-    
-    <!-- Footer -->
-    <footer role="contentinfo">
-        <p>Crypto Analytics Dashboard &copy; 2023</p>
-    </footer>
 
     <script src="script.js"></script>
 </body>
