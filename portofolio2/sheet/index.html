@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Spreadsheet Template</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        header {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .instructions {
+            padding: 30px 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .instructions h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .step-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #3498db;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .step-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .step-card p {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .template-section {
+            padding: 30px 20px;
+            overflow-x: auto;
+        }
+        
+        .template-section h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+        
+        .spreadsheet {
+            min-width: 1000px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+        }
+        
+        .sheet-tabs {
+            display: flex;
+            background: #f1f3f4;
+            padding: 10px 15px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .sheet-tab {
+            padding: 10px 20px;
+            background: #e8eaed;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            margin-right: 5px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        
+        .sheet-tab.active {
+            background: white;
+            border: 1px solid #ddd;
+            border-bottom: none;
+        }
+        
+        .sheet-content {
+            padding: 20px;
+        }
+        
+        .sheet-grid {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(150px, 1fr));
+            gap: 1px;
+            background: #e0e0e0;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .header-cell, .data-cell {
+            padding: 12px 15px;
+            background: white;
+        }
+        
+        .header-cell {
+            background: #f1f3f4;
+            font-weight: bold;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .data-cell {
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .formula {
+            font-size: 0.85rem;
+            color: #666;
+            font-style: italic;
+            background: #f9f9f9;
+            padding: 5px;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            padding: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 14px 35px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #27ae60, #2ecc71);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            font-size: 1rem;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+        
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Investment Portfolio Template</h1>
+            <p class="subtitle">Template Google Sheets untuk melacak investasi dan menghitung kinerja portofolio</p>
+        </header>
+        
+        <div class="instructions">
+            <h2>Bagaimana Menggunakan Template Ini</h2>
+            <div class="steps">
+                <div class="step-card">
+                    <h3><span class="step-number">1</span> Salin Template</h3>
+                    <p>Buka Google Sheets baru dan salin struktur template di bawah ini. Pastikan kolom dan formula disalin dengan benar.</p>
+                </div>
+                <div class="step-card">
+                    <h3><span class="step-number">2</span> Masukkan Data Transaksi</h3>
+                    <p>Catat semua transaksi beli dan jual di sheet "Transactions". Isi tanggal, aset, jenis transaksi, kuantitas, dan harga per unit.</p>
+                </div>
+                <div class="step-card">
+                    <h3><span class="step-number">3</span> Perbarui Harga Aset</h3>
+                    <p>Di sheet "Asset Prices", tambahkan simbol aset dan perbarui harga terkini secara berkala untuk akurasi perhitungan.</p>
+                </div>
+                <div class="step-card">
+                    <h3><span class="step-number">4</span> Analisis Portofolio</h3>
+                    <p>Sheet "Portfolio Summary" akan otomatis menghitung nilai investasi, profit/loss, dan alokasi aset berdasarkan data Anda.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="template-section">
+            <h2>Template Spreadsheet</h2>
+            <div class="spreadsheet">
+                <div class="sheet-tabs">
+                    <div class="sheet-tab active">Transactions</div>
+                    <div class="sheet-tab">Asset Prices</div>
+                    <div class="sheet-tab">Portfolio Summary</div>
+                </div>
+                
+                <div class="sheet-content">
+                    <!-- Transactions Sheet -->
+                    <div class="sheet-grid">
+                        <div class="header-cell">Date</div>
+                        <div class="header-cell">Asset</div>
+                        <div class="header-cell">Type</div>
+                        <div class="header-cell">Quantity</div>
+                        <div class="header-cell">Price per Unit</div>
+                        <div class="header-cell">Total Amount</div>
+                        
+                        <div class="data-cell">2023-07-15</div>
+                        <div class="data-cell">BTC</div>
+                        <div class="data-cell">Buy</div>
+                        <div class="data-cell">0.5</div>
+                        <div class="data-cell">$30,000</div>
+                        <div class="data-cell">$15,000</div>
+                        
+                        <div class="data-cell">2023-08-01</div>
+                        <div class="data-cell">ETH</div>
+                        <div class="data-cell">Buy</div>
+                        <div class="data-cell">10</div>
+                        <div class="data-cell">$1,800</div>
+                        <div class="data-cell">$18,000</div>
+                        
+                        <div class="data-cell">2023-08-20</div>
+                        <div class="data-cell">NVDA</div>
+                        <div class="data-cell">Buy</div>
+                        <div class="data-cell">20</div>
+                        <div class="data-cell">$450</div>
+                        <div class="data-cell">$9,000</div>
+                        
+                        <div class="data-cell">2023-09-05</div>
+                        <div class="data-cell">GOTO</div>
+                        <div class="data-cell">Buy</div>
+                        <div class="data-cell">5000</div>
+                        <div class="data-cell">$0.05</div>
+                        <div class="data-cell">$250</div>
+                    </div>
+                    
+                    <div class="formula">
+                        <strong>Formula:</strong> Total Amount = Quantity × Price per Unit
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button class="btn btn-primary">
+                <i class="fas fa-copy"></i> Salin Template ke Google Sheets
+            </button>
+            <button class="btn btn-secondary">
+                <i class="fas fa-download"></i> Download Template Excel
+            </button>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Template ini dirancang untuk integrasi dengan dashboard investasi Ademiando. Setelah diisi dengan data transaksi Anda, spreadsheet dapat diintegrasikan melalui API untuk ditampilkan di dashboard investasi.</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.sheet-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.sheet-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Here you would normally switch sheet content
+                // For this demo, we'll just show a message
+                alert(`Anda memilih sheet: "${this.textContent}". Pada implementasi nyata, ini akan menampilkan konten sheet yang sesuai.`);
+            });
+        });
+        
+        // Copy button functionality
+        document.querySelector('.btn-primary').addEventListener('click', function() {
+            alert('Template telah disalin ke clipboard! Buka Google Sheets baru dan tempel untuk mulai menggunakan.');
+        });
+        
+        // Download button functionality
+        document.querySelector('.btn-secondary').addEventListener('click', function() {
+            alert('Template akan didownload dalam format Excel. Silakan periksa folder download Anda.');
+            // In a real implementation, this would trigger a file download
+        });
+    </script>
+</body>
+</html>
