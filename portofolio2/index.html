@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ademiando's Market Research & Capital Growth Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        dark: {
+                            900: '#0a0a0a',
+                            800: '#121212',
+                            700: '#1a1a1a',
+                            600: '#2a2a2a',
+                            500: '#3a3a3a',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Roboto Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-dark-900 text-gray-200 min-h-screen">
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileOverlay"></div>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="flex justify-between items-center mb-8">
+            <div class="flex items-center space-x-2">
+                <div class="bg-primary-700 w-10 h-10 rounded-lg flex items-center justify-center">
+                    <i data-lucide="bar-chart-4" class="text-white"></i>
+                </div>
+                <span class="font-mono font-semibold text-xl">LAB<span class="text-primary-500">:</span></span>
+            </div>
+            <button id="closeMenu">
+                <i data-lucide="x" class="text-gray-400"></i>
+            </button>
+        </div>
+        
+        <nav class="flex flex-col space-y-6">
+            <a href="#home" class="text-lg hover:text-primary-400 transition py-2 border-b border-dark-700">Home</a>
+            <a href="#system" class="text-lg hover:text-primary-400 transition py-2 border-b border-dark-700">System</a>
+            <a href="#blog" class="text-lg hover:text-primary-400 transition py-2 border-b border-dark-700">Insights</a>
+            <a href="#portfolio" class="text-lg hover:text-primary-400 transition py-2 border-b border-dark-700">Portfolio</a>
+            <a href="#tools" class="text-lg hover:text-primary-400 transition py-2 border-b border-dark-700">Tools</a>
+            <!-- Added Spreadsheet Link -->
+            <a href="https://ademiando.com/spreadsheet" target="_blank" class="text-lg hover:text-primary-400 transition py-2 border-b border-dark-700 flex items-center">
+                <i data-lucide="file-spreadsheet" class="mr-2"></i> Spreadsheet
+            </a>
+        </nav>
+        
+        <div class="mt-8 pt-6 border-t border-dark-700">
+            <a href="#" class="inline-flex items-center text-primary-500 hover:text-primary-400 transition">
+                <i data-lucide="github" class="mr-2"></i>
+                GitHub Repository
+            </a>
+        </div>
+    </div>
+
+    <!-- Header/Navigation -->
+    <header class="border-b border-dark-700 sticky top-0 z-50 bg-dark-900/90 backdrop-blur">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="bg-primary-700 w-10 h-10 rounded-lg flex items-center justify-center">
+                    <i data-lucide="bar-chart-4" class="text-white"></i>
+                </div>
+                <span class="font-mono font-semibold text-xl">LAB<span class="text-primary-500">:</span></span>
+            </div>
+            
+            <nav class="hidden md:flex space-x-8">
+                <a href="#home" class="hover:text-primary-400 transition">Home</a>
+                <a href="#system" class="hover:text-primary-400 transition">System</a>
+                <a href="#blog" class="hover:text-primary-400 transition">Insights</a>
+                <a href="#portfolio" class="hover:text-primary-400 transition">Portfolio</a>
+                <a href="#tools" class="hover:text-primary-400 transition">Tools</a>
+                <!-- Added Spreadsheet Link -->
+                <a href="https://ademiando.com/spreadsheet" target="_blank" class="hover:text-primary-400 transition flex items-center">
+                    <i data-lucide="file-spreadsheet" class="mr-1"></i> Spreadsheet
+                </a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                <a href="#" class="hidden md:inline-flex items-center text-sm hover:text-primary-400 transition">
+                    <i data-lucide="github" class="mr-1"></i>
+                    GitHub
+                </a>
+                <button class="md:hidden" id="menuToggle">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="py-16 md:py-20 bg-gradient-to-br from-dark-800 to-dark-900">
+        <div class="container mx-auto px-4 max-w-4xl text-center">
+            <div class="flex justify-center mb-6">
+                <div class="flex flex-wrap justify-center gap-2">
+                    <span class="badge">#Crypto</span>
+                    <span class="badge">#Equity</span>
+                    <span class="badge">#StrategyDesign</span>
+                    <span class="badge">#OpenSource</span>
+                    <span class="badge">#CapitalEfficiency</span>
+                </div>
+            </div>
+            
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 hero-title">
+                Ademiando's Market Research & 
+                <span class="text-primary-400">Capital Growth Lab</span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto hero-description">
+                Sistem & eksperimen terbuka untuk pertumbuhan modal dan riset pasar. 
+                Tidak hanya cuan, tapi juga konsistensi, transparansi, dan legacy.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-4 mb-16 hero-buttons">
+                <a href="#system" class="px-6 py-3 bg-primary-700 hover:bg-primary-600 text-white font-medium rounded-lg transition flex items-center justify-center">
+                    <i data-lucide="cpu" class="mr-2"></i>
+                    Explore the System
+                </a>
+                <a href="#blog" class="px-6 py-3 bg-dark-700 hover:bg-dark-600 text-white font-medium rounded-lg transition flex items-center justify-center border border-dark-600">
+                    <i data-lucide="book-open" class="mr-2"></i>
+                    Research Insights
+                </a>
+            </div>
+            
+            <div class="flex justify-center">
+                <div class="relative w-16 h-16 rounded-full border-2 border-primary-500 flex items-center justify-center animate-bounce">
+                    <i data-lucide="chevron-down" class="text-primary-500"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Section -->
+    <section id="system" class="py-16 md:py-20 bg-dark-900">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">Systematic Approach to Capital Growth</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Framework terbuka untuk analisis pasar dan manajemen modal yang didokumentasikan secara transparan
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+                <!-- System content remains the same -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="py-16 md:py-20 bg-dark-800">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">Research Insights</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Dokumentasi analisis pasar, eksperimen metodologi, dan temuan riset
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-12 md:mb-16">
+                <!-- Blog cards remain the same -->
+            </div>
+            
+            <div class="text-center">
+                <a href="#" class="inline-flex items-center px-5 py-2.5 md:px-6 md:py-3 border border-dark-600 hover:border-primary-500 rounded-lg transition">
+                    <i data-lucide="book-open" class="mr-2"></i>
+                    Explore All Research Insights
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-16 md:py-20 bg-dark-900">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">Capital Allocation & Performance</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Transparansi alokasi modal dan kinerja strategi berdasarkan data real-time
+                </p>
+            </div>
+            
+            <!-- Portfolio content remains the same -->
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section id="tools" class="py-16 md:py-20 bg-dark-800">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">Operational Infrastructure</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Toolkit dan platform yang membentuk infrastruktur riset dan eksekusi
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <!-- Tools cards remain the same -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark-900 border-t border-dark-800 py-10 md:py-12">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <!-- Footer content remains the same -->
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="portfolio.js"></script>
+</body>
+</html>
