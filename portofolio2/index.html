@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ademiando's Market Research & Capital Growth Lab</title>
+    <title>Ademiando's Investment Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -64,24 +64,12 @@
             </button>
         </div>
         
+        <!-- Only Spreadsheet Link -->
         <nav class="flex flex-col space-y-6">
-            <a href="#home" class="text-lg hover:text-primary-400 transition py-2 border-b border-dark-700">Home</a>
-            <a href="#system" class="text-lg hover:text-primary-400 transition py-2 border-b border-dark-700">System</a>
-            <a href="#blog" class="text-lg hover:text-primary-400 transition py-2 border-b border-dark-700">Insights</a>
-            <a href="#portfolio" class="text-lg hover:text-primary-400 transition py-2 border-b border-dark-700">Portfolio</a>
-            <a href="#tools" class="text-lg hover:text-primary-400 transition py-2 border-b border-dark-700">Tools</a>
-            <!-- Added Spreadsheet Link -->
-            <a href="https://ademiando.com/spreadsheet" target="_blank" class="text-lg hover:text-primary-400 transition py-2 border-b border-dark-700 flex items-center">
+            <a href="https://ademiando.com/spreadsheet" target="_blank" class="text-lg hover:text-primary-400 transition py-2 border-b border-dark-700 flex items-center justify-center">
                 <i data-lucide="file-spreadsheet" class="mr-2"></i> Spreadsheet
             </a>
         </nav>
-        
-        <div class="mt-8 pt-6 border-t border-dark-700">
-            <a href="#" class="inline-flex items-center text-primary-500 hover:text-primary-400 transition">
-                <i data-lucide="github" class="mr-2"></i>
-                GitHub Repository
-            </a>
-        </div>
     </div>
 
     <!-- Header/Navigation -->
@@ -100,17 +88,12 @@
                 <a href="#blog" class="hover:text-primary-400 transition">Insights</a>
                 <a href="#portfolio" class="hover:text-primary-400 transition">Portfolio</a>
                 <a href="#tools" class="hover:text-primary-400 transition">Tools</a>
-                <!-- Added Spreadsheet Link -->
                 <a href="https://ademiando.com/spreadsheet" target="_blank" class="hover:text-primary-400 transition flex items-center">
                     <i data-lucide="file-spreadsheet" class="mr-1"></i> Spreadsheet
                 </a>
             </nav>
             
             <div class="flex items-center space-x-4">
-                <a href="#" class="hidden md:inline-flex items-center text-sm hover:text-primary-400 transition">
-                    <i data-lucide="github" class="mr-1"></i>
-                    GitHub
-                </a>
                 <button class="md:hidden" id="menuToggle">
                     <i data-lucide="menu"></i>
                 </button>
@@ -171,7 +154,102 @@
             </div>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-                <!-- System content remains the same -->
+                <div>
+                    <div class="mb-6 md:mb-8">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center">
+                            <i data-lucide="zap" class="mr-2 text-primary-500"></i>
+                            Entry/Exit Logic
+                        </h3>
+                        <div class="bg-dark-800 p-4 md:p-6 rounded-lg border border-dark-700">
+                            <pre class="font-mono text-sm overflow-x-auto">
+<span class="text-green-400">function</span> <span class="text-blue-400">executeTrade</span>(marketConditions) {
+  <span class="text-green-400">const</span> entrySignal = detectEntrySignal(marketConditions);
+  <span class="text-green-400">const</span> exitSignal = detectExitSignal(marketConditions);
+  
+  <span class="text-purple-400">if</span> (entrySignal && !currentPosition) {
+    executeOrder(<span class="text-yellow-400">'BUY'</span>, calculatePositionSize());
+    <span class="text-gray-500">// Didukung oleh konfirmasi volume dan momentum</span>
+  }
+  
+  <span class="text-purple-400">if</span> (exitSignal && currentPosition) {
+    executeOrder(<span class="text-yellow-400">'SELL'</span>, currentPositionSize);
+    <span class="text-gray-500">// Triggered oleh target profit atau stop loss</span>
+  }
+}</pre>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6 md:mb-8">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center">
+                            <i data-lucide="shield" class="mr-2 text-primary-500"></i>
+                            Risk Management Framework
+                        </h3>
+                        <div class="bg-dark-800 p-4 md:p-6 rounded-lg border border-dark-700">
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <i data-lucide="check-circle" class="mr-2 mt-0.5 text-green-500 flex-shrink-0"></i>
+                                    <span>Eksposur maksimum 2% modal per posisi</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i data-lucide="check-circle" class="mr-2 mt-0.5 text-green-500 flex-shrink-0"></i>
+                                    <span>Stop loss otomatis berdasarkan volatilitas pasar</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i data-lucide="check-circle" class="mr-2 mt-0.5 text-green-500 flex-shrink-0"></i>
+                                    <span>Diversifikasi aset lintas korelasi rendah</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i data-lucide="check-circle" class="mr-2 mt-0.5 text-green-500 flex-shrink-0"></i>
+                                    <span>Pengaturan ukuran posisi dinamis berdasarkan confidence level</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i data-lucide="bar-chart-2" class="mr-2 text-primary-500"></i>
+                        Market Analysis Framework
+                    </h3>
+                    <div class="tradingview-widget-container mb-6 md:mb-8">
+                        <div class="tradingview-widget-container__widget"></div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+                        {
+                            "autosize": true,
+                            "symbol": "BINANCE:BTCUSDT",
+                            "interval": "D",
+                            "timezone": "Etc/UTC",
+                            "theme": "dark",
+                            "style": "1",
+                            "locale": "en",
+                            "enable_publishing": false,
+                            "hide_top_toolbar": true,
+                            "hide_legend": true,
+                            "withdateranges": true,
+                            "studies": [
+                                "STD;RSI",
+                                "STD;EMA"
+                            ],
+                            "support_host": "https://www.tradingview.com"
+                        }
+                        </script>
+                    </div>
+                    
+                    <div class="bg-dark-800 p-4 md:p-6 rounded-lg border border-dark-700">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center">
+                            <i data-lucide="github" class="mr-2 text-primary-500"></i>
+                            Open Source Framework
+                        </h3>
+                        <p class="mb-4">
+                            Seluruh metodologi dan framework analisis tersedia secara publik di repositori GitHub:
+                        </p>
+                        <a href="#" class="inline-flex items-center text-primary-500 hover:text-primary-400 transition">
+                            github.com/ademiando/capital-growth-framework
+                            <i data-lucide="arrow-up-right" class="ml-1 text-sm"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -187,7 +265,73 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-12 md:mb-16">
-                <!-- Blog cards remain the same -->
+                <div class="card p-5 md:p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-dark-700 text-gray-400 text-xs px-3 py-1 rounded">
+                            Capital Strategy
+                        </div>
+                        <div class="text-gray-500 text-sm ml-auto">July 18, 2025</div>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Kenapa Saya Tidak Menyebut Diri Saya Trader</h3>
+                    <p class="text-gray-400 mb-4">
+                        Eksplorasi filosofis tentang pendekatan berbasis riset dan pengelolaan modal yang berbeda dengan aktivitas trading spekulatif...
+                    </p>
+                    <a href="#" class="text-primary-500 hover:text-primary-400 transition flex items-center">
+                        Read Analysis
+                        <i data-lucide="arrow-right" class="ml-1 text-sm"></i>
+                    </a>
+                </div>
+                
+                <div class="card p-5 md:p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-dark-700 text-gray-400 text-xs px-3 py-1 rounded">
+                            Market Structure
+                        </div>
+                        <div class="text-gray-500 text-sm ml-auto">July 10, 2025</div>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Quantifying Market Regime Shifts</h3>
+                    <p class="text-gray-400 mb-4">
+                        Framework matematis untuk mengidentifikasi transisi fase pasar menggunakan analisis momentum dan volume...
+                    </p>
+                    <a href="#" class="text-primary-500 hover:text-primary-400 transition flex items-center">
+                        Read Analysis
+                        <i data-lucide="arrow-right" class="ml-1 text-sm"></i>
+                    </a>
+                </div>
+                
+                <div class="card p-5 md:p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-dark-700 text-gray-400 text-xs px-3 py-1 rounded">
+                            Portfolio Strategy
+                        </div>
+                        <div class="text-gray-500 text-sm ml-auto">June 28, 2025</div>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Optimizing Asset Allocation in Volatile Markets</h3>
+                    <p class="text-gray-400 mb-4">
+                        Pendekatan berbasis data untuk mengoptimalkan alokasi aset selama periode volatilitas tinggi...
+                    </p>
+                    <a href="#" class="text-primary-500 hover:text-primary-400 transition flex items-center">
+                        Read Analysis
+                        <i data-lucide="arrow-right" class="ml-1 text-sm"></i>
+                    </a>
+                </div>
+                
+                <div class="card p-5 md:p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-dark-700 text-gray-400 text-xs px-3 py-1 rounded">
+                            Risk Management
+                        </div>
+                        <div class="text-gray-500 text-sm ml-auto">June 15, 2025</div>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Dynamic Position Sizing Based on Market Conditions</h3>
+                    <p class="text-gray-400 mb-4">
+                        Model adaptif untuk penyesuaian ukuran posisi berdasarkan volatilitas dan kondisi pasar...
+                    </p>
+                    <a href="#" class="text-primary-500 hover:text-primary-400 transition flex items-center">
+                        Read Analysis
+                        <i data-lucide="arrow-right" class="ml-1 text-sm"></i>
+                    </a>
+                </div>
             </div>
             
             <div class="text-center">
@@ -199,17 +343,80 @@
         </div>
     </section>
 
-    <!-- Portfolio Section -->
+    <!-- Portfolio Section - Investment Dashboard -->
     <section id="portfolio" class="py-16 md:py-20 bg-dark-900">
         <div class="container mx-auto px-4 max-w-6xl">
             <div class="text-center mb-12 md:mb-16">
-                <h2 class="text-2xl md:text-3xl font-bold mb-4">Capital Allocation & Performance</h2>
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">Investment Dashboard</h2>
                 <p class="text-gray-400 max-w-2xl mx-auto">
-                    Transparansi alokasi modal dan kinerja strategi berdasarkan data real-time
+                    Real-time tracking of your investment portfolio
                 </p>
             </div>
             
-            <!-- Portfolio content remains the same -->
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="card p-6">
+                    <h3 class="text-lg font-semibold mb-2 text-gray-400">Total Invested</h3>
+                    <div class="text-2xl font-bold" id="total-invested">Loading...</div>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-lg font-semibold mb-2 text-gray-400">Current Value</h3>
+                    <div class="text-2xl font-bold" id="current-value">Loading...</div>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-lg font-semibold mb-2 text-gray-400">Profit/Loss</h3>
+                    <div class="text-2xl font-bold" id="profit-loss">Loading...</div>
+                </div>
+            </div>
+            
+            <!-- Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="card p-6">
+                    <h3 class="text-lg font-semibold mb-4">Asset Allocation</h3>
+                    <div class="h-80">
+                        <canvas id="allocation-chart"></canvas>
+                    </div>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-lg font-semibold mb-4">Profit/Loss Trend</h3>
+                    <div class="h-80">
+                        <canvas id="profit-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filters -->
+            <div class="flex flex-wrap gap-2 mb-6">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="1d">1D</button>
+                <button class="filter-btn" data-filter="7d">7D</button>
+                <button class="filter-btn" data-filter="30d">30D</button>
+                <button class="filter-btn" data-filter="ytd">YTD</button>
+            </div>
+            
+            <!-- Transaction Table -->
+            <div class="card p-6">
+                <h3 class="text-lg font-semibold mb-4">Transaction History</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr>
+                                <th class="text-left py-3 px-4">Date</th>
+                                <th class="text-left py-3 px-4">Asset</th>
+                                <th class="text-left py-3 px-4">Type</th>
+                                <th class="text-left py-3 px-4">Quantity</th>
+                                <th class="text-left py-3 px-4">Buy Price</th>
+                                <th class="text-left py-3 px-4">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transaction-table">
+                            <tr>
+                                <td colspan="6" class="text-center py-8 text-gray-500">Loading data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -224,7 +431,95 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                <!-- Tools cards remain the same -->
+                <div class="card p-5 md:p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-primary-900/20 w-10 h-10 rounded-lg flex items-center justify-center mr-3 md:mr-4">
+                            <i data-lucide="activity" class="text-primary-500"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">TradingView</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Platform utama untuk analisis teknis multi-timeframe dan pengembangan strategi melalui Pine Script.
+                    </p>
+                    <div class="text-sm text-gray-500">
+                        <span class="font-medium">Integrasi:</span> Webhooks, Alert Automation, Backtesting
+                    </div>
+                </div>
+                
+                <div class="card p-5 md:p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-primary-900/20 w-10 h-10 rounded-lg flex items-center justify-center mr-3 md:mr-4">
+                            <i data-lucide="database" class="text-primary-500"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">Google Sheets</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Pusat data untuk log transaksi, analisis kinerja, dan dashboard monitoring portofolio.
+                    </p>
+                    <div class="text-sm text-gray-500">
+                        <span class="font-medium">Integrasi:</span> API Custom, App Script, Data Studio
+                    </div>
+                </div>
+                
+                <div class="card p-5 md:p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-primary-900/20 w-10 h-10 rounded-lg flex items-center justify-center mr-3 md:mr-4">
+                            <i data-lucide="bitcoin" class="text-primary-500"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">Binance/Tokocrypto</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Platform eksekusi utama untuk aset kripto dengan akses ke likuiditas global dan instrumen derivatif.
+                    </p>
+                    <div class="text-sm text-gray-500">
+                        <span class="font-medium">Integrasi:</span> API Trading, WebSocket, Historical Data
+                    </div>
+                </div>
+                
+                <div class="card p-5 md:p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-primary-900/20 w-10 h-10 rounded-lg flex items-center justify-center mr-3 md:mr-4">
+                            <i data-lucide="wallet" class="text-primary-500"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">Phantom</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Wallet utama untuk interaksi dengan ekosistem Solana dan aplikasi DeFi berbasis blockchain.
+                    </p>
+                    <div class="text-sm text-gray-500">
+                        <span class="font-medium">Integrasi:</span> DApp Connectivity, Token Management
+                    </div>
+                </div>
+                
+                <div class="card p-5 md:p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-primary-900/20 w-10 h-10 rounded-lg flex items-center justify-center mr-3 md:mr-4">
+                            <i data-lucide="server" class="text-primary-500"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">Ledger</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Penyimpanan dingin untuk aset kripto jangka panjang dengan manajemen kunci pribadi yang aman.
+                    </p>
+                    <div class="text-sm text-gray-500">
+                        <span class="font-medium">Integrasi:</span> Multi-Asset Support, Offline Storage
+                    </div>
+                </div>
+                
+                <div class="card p-5 md:p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-primary-900/20 w-10 h-10 rounded-lg flex items-center justify-center mr-3 md:mr-4">
+                            <i data-lucide="globe" class="text-primary-500"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">CoinMarketCap</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Sumber data untuk screening aset, analisis fundamental, dan pemantauan sentimen pasar.
+                    </p>
+                    <div class="text-sm text-gray-500">
+                        <span class="font-medium">Integrasi:</span> API Data, Portfolio Tracking
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -232,7 +527,43 @@
     <!-- Footer -->
     <footer class="bg-dark-900 border-t border-dark-800 py-10 md:py-12">
         <div class="container mx-auto px-4 max-w-6xl">
-            <!-- Footer content remains the same -->
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="bg-primary-700 w-8 h-8 rounded-lg flex items-center justify-center">
+                            <i data-lucide="bar-chart-4" class="text-white"></i>
+                        </div>
+                        <span class="font-mono font-semibold text-lg">Ademiando's Capital Growth Lab</span>
+                    </div>
+                    <p class="text-gray-500 max-w-xs">
+                        Sistem & eksperimen terbuka untuk pertumbuhan modal dan riset pasar
+                    </p>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-500 hover:text-gray-300 transition">
+                        <i data-lucide="github"></i>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-gray-300 transition">
+                        <i data-lucide="twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-gray-300 transition">
+                        <i data-lucide="linkedin"></i>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-gray-300 transition">
+                        <i data-lucide="mail"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-dark-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm">
+                    © 2025 Ademiando's Market Research & Capital Growth Lab
+                </p>
+                <p class="text-gray-500 text-sm mt-4 md:mt-0 italic">
+                    "Growth through transparency and rigorous research."
+                </p>
+            </div>
         </div>
     </footer>
 
