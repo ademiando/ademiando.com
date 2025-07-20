@@ -23,5 +23,5 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.addEventListener("scroll", scrollReveal);
-  scrollReveal(); // jalanin pas pertama kali load
+  scrollReveal();
 });
