@@ -96,6 +96,7 @@ body {
 /* Improved spacing for Research Insights */
 #blog .card {
     margin-bottom: 1.5rem;
+    matgin-top: 50px;
 }
 
 #blog .grid {
