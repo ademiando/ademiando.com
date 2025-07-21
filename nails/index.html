@@ -3,81 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>nailsbypwettyy | Premium Nail Art Home Service - Sakra Barat, Lombok Timur</title>
+    <title>nailsbypwettyy | Premium Nail Art Home Service</title>
     <meta name="description" content="Layanan nail art home service premium di Sakra Barat, Lombok Timur. Jam buka 09.00-20.00 WITA. Booking via WhatsApp sekarang!">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
-<body class="font-sans bg-rose-50 text-gray-800">
+<body>
     <!-- Sticky Social Buttons -->
-    <div class="fixed right-4 bottom-4 z-50 flex flex-col gap-3">
-        <a href="https://wa.me/6281234567890" target="_blank" class="w-14 h-14 rounded-full bg-green-500 flex items-center justify-center text-white shadow-lg transform transition hover:scale-110 hover:shadow-xl">
-            <i class="fab fa-whatsapp text-2xl"></i>
+    <div class="sticky-social">
+        <a href="https://wa.me/6281234567890" target="_blank" class="social-btn whatsapp">
+            <img src="assets/icons/whatsapp.svg" alt="WhatsApp">
         </a>
-        <a href="https://instagram.com/nailsbypwettyy" target="_blank" class="w-14 h-14 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white shadow-lg transform transition hover:scale-110 hover:shadow-xl">
-            <i class="fab fa-instagram text-2xl"></i>
+        <a href="https://instagram.com/nailsbypwettyy" target="_blank" class="social-btn instagram">
+            <img src="assets/icons/instagram.svg" alt="Instagram">
         </a>
     </div>
 
-    <!-- Header -->
-    <header class="fixed top-0 w-full bg-white bg-opacity-90 backdrop-blur-sm z-40 shadow-sm">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-pink-600">nailsbypwettyy</a>
-            <nav class="hidden md:block">
-                <ul class="flex space-x-8">
-                    <li><a href="#about" class="text-gray-700 hover:text-pink-600 transition">Tentang</a></li>
-                    <li><a href="#gallery" class="text-gray-700 hover:text-pink-600 transition">Galeri</a></li>
-                    <li><a href="#pricing" class="text-gray-700 hover:text-pink-600 transition">Harga</a></li>
-                    <li><a href="#location" class="text-gray-700 hover:text-pink-600 transition">Lokasi</a></li>
-                    <li><a href="#booking" class="bg-pink-500 text-white px-4 py-2 rounded-full hover:bg-pink-600 transition">Booking</a></li>
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="container">
+            <a href="#" class="logo">nailsbypwettyy</a>
+            <nav class="nav">
+                <ul>
+                    <li><a href="#about">Tentang</a></li>
+                    <li><a href="#gallery">Galeri</a></li>
+                    <li><a href="#pricing">Harga</a></li>
+                    <li><a href="#booking">Booking</a></li>
+                    <li><a href="#location">Lokasi</a></li>
                 </ul>
             </nav>
-            <button id="mobile-menu" class="md:hidden text-gray-700">
-                <i class="fas fa-bars text-2xl"></i>
+            <button class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
             </button>
         </div>
     </header>
 
-    <!-- Mobile Menu -->
-    <div id="mobile-nav" class="fixed inset-0 bg-white z-50 hidden">
-        <div class="container mx-auto px-4 py-8">
-            <div class="flex justify-between items-center mb-12">
-                <div class="text-2xl font-bold text-pink-600">nailsbypwettyy</div>
-                <button id="close-menu" class="text-gray-700">
-                    <i class="fas fa-times text-2xl"></i>
-                </button>
-            </div>
-            <nav>
-                <ul class="space-y-6 text-xl">
-                    <li><a href="#about" class="block py-3 text-gray-700 hover:text-pink-600 transition">Tentang</a></li>
-                    <li><a href="#gallery" class="block py-3 text-gray-700 hover:text-pink-600 transition">Galeri</a></li>
-                    <li><a href="#pricing" class="block py-3 text-gray-700 hover:text-pink-600 transition">Harga</a></li>
-                    <li><a href="#location" class="block py-3 text-gray-700 hover:text-pink-600 transition">Lokasi</a></li>
-                    <li><a href="#booking" class="block mt-8 bg-pink-500 text-white px-6 py-3 rounded-full text-center hover:bg-pink-600 transition">Booking</a></li>
-                </ul>
-            </nav>
-        </div>
-    </div>
-
     <!-- Hero Section -->
-    <section id="hero" class="min-h-screen flex items-center pt-16">
-        <div class="container mx-auto px-4 py-12 md:py-24 flex flex-col md:flex-row items-center">
-            <div class="md:w-1/2 mb-12 md:mb-0">
-                <h1 class="text-4xl md:text-6xl font-bold mb-4 text-pink-600">nailsbypwettyy</h1>
-                <p class="text-xl md:text-2xl mb-8 text-gray-700">Layanan Nail Art Home Service Premium di Sakra Barat, Lombok Timur</p>
-                <a href="#booking" class="inline-block bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-8 rounded-full text-lg transform transition duration-300 hover:scale-105">
-                    Booking Sekarang
-                </a>
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">nailsbypwettyy</h1>
+                <p class="hero-subtitle">Layanan Nail Art Home Service Premium di Sakra Barat</p>
+                <a href="#booking" class="hero-cta">Booking Sekarang</a>
             </div>
-            <div class="md:w-1/2 flex justify-center">
+            <div class="hero-animation">
                 <lottie-player 
-                    src="https://assets7.lottiefiles.com/packages/lf20_2pKGH2.json" 
+                    src="assets/hero-animation.json" 
                     background="transparent" 
                     speed="1" 
-                    style="width: 100%; max-width: 500px; height: auto;" 
                     loop 
                     autoplay>
                 </lottie-player>
@@ -86,30 +63,20 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-pink-600">Tentang Saya</h2>
-                <div class="w-24 h-1 bg-pink-500 mx-auto"></div>
-            </div>
-            
-            <div class="flex flex-col md:flex-row items-center gap-12">
-                <div class="md:w-1/2">
-                    <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-96"></div>
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">Tentang Saya</h2>
+            <div class="about-content">
+                <div class="about-image">
+                    <div class="image-placeholder"></div>
                 </div>
-                <div class="md:w-1/2">
-                    <h3 class="text-2xl font-bold mb-4">Seniman Nail Art Profesional</h3>
-                    <p class="mb-6 text-gray-700 leading-relaxed">
-                        Halo! Saya Putri, seniman nail art profesional dengan pengalaman lebih dari 5 tahun. Saya memiliki passion untuk menciptakan desain kuku yang indah dan unik sesuai dengan kepribadian setiap klien.
-                    </p>
-                    <p class="mb-6 text-gray-700 leading-relaxed">
-                        Saya menawarkan layanan home service di area Sakra Barat, Lombok Timur. Dengan peralatan premium dan bahan berkualitas tinggi, saya menjamin hasil nail art yang tahan lama dan memuaskan.
-                    </p>
-                    
-                    <div class="bg-pink-50 rounded-lg p-6 border border-pink-100">
-                        <h4 class="font-bold text-lg mb-3 text-pink-600">Jam Layanan</h4>
-                        <p class="mb-2"><i class="far fa-clock text-pink-500 mr-2"></i> Setiap Hari: 09.00 - 20.00 WITA</p>
-                        <p><i class="fas fa-map-marker-alt text-pink-500 mr-2"></i> Sakra Barat, Lombok Timur</p>
+                <div class="about-text">
+                    <p>Halo! Saya Putri, seniman nail art profesional dengan pengalaman lebih dari 5 tahun. Saya memiliki passion untuk menciptakan desain kuku yang indah dan unik sesuai dengan kepribadian setiap klien.</p>
+                    <p>Saya menawarkan layanan home service di area Sakra Barat, Lombok Timur. Dengan peralatan premium dan bahan berkualitas tinggi, saya menjamin hasil nail art yang tahan lama dan memuaskan.</p>
+                    <div class="info-box">
+                        <h3>Jam Layanan</h3>
+                        <p><i class="icon clock"></i> Setiap Hari: 09.00 - 20.00 WITA</p>
+                        <p><i class="icon location"></i> Sakra Barat, Lombok Timur</p>
                     </div>
                 </div>
             </div>
@@ -117,71 +84,59 @@
     </section>
 
     <!-- Gallery Section -->
-    <section id="gallery" class="py-16 bg-rose-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-pink-600">Galeri Karya</h2>
-                <div class="w-24 h-1 bg-pink-500 mx-auto mb-8"></div>
-                
-                <div class="flex flex-wrap justify-center gap-3 mb-12">
-                    <button class="filter-btn active px-4 py-2 rounded-full bg-pink-500 text-white" data-filter="all">Semua</button>
-                    <button class="filter-btn px-4 py-2 rounded-full bg-white hover:bg-pink-100" data-filter="marble">Marble</button>
-                    <button class="filter-btn px-4 py-2 rounded-full bg-white hover:bg-pink-100" data-filter="simple">Simple</button>
-                    <button class="filter-btn px-4 py-2 rounded-full bg-white hover:bg-pink-100" data-filter="cute">Cute</button>
-                    <button class="filter-btn px-4 py-2 rounded-full bg-white hover:bg-pink-100" data-filter="premium">Premium</button>
-                </div>
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <h2 class="section-title">Galeri Karya</h2>
+            <div class="gallery-filters">
+                <button class="filter-btn active" data-filter="all">Semua</button>
+                <button class="filter-btn" data-filter="marble">Marble</button>
+                <button class="filter-btn" data-filter="simple">Simple</button>
+                <button class="filter-btn" data-filter="cute">Cute</button>
+                <button class="filter-btn" data-filter="premium">Premium</button>
             </div>
-            
-            <div class="gallery-grid columns-1 sm:columns-2 lg:columns-3 gap-6">
-                <!-- Gallery items will be added by JavaScript -->
+            <div class="gallery-grid">
+                <!-- Gallery items will be loaded by JavaScript -->
             </div>
         </div>
     </section>
 
     <!-- Pricing Section -->
-    <section id="pricing" class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-pink-600">Paket & Harga</h2>
-                <div class="w-24 h-1 bg-pink-500 mx-auto mb-8"></div>
-                <p class="text-xl text-gray-700 max-w-2xl mx-auto">Layanan nail art premium dengan harga terjangkau. Mulai dari Rp35.000</p>
-            </div>
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <h2 class="section-title">Paket & Harga</h2>
+            <p class="section-subtitle">Layanan nail art premium dengan harga terjangkau. Mulai dari Rp35.000</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="pricing-card bg-white border border-pink-100 rounded-xl p-8 text-center hover:shadow-xl transition-shadow">
-                    <h3 class="text-2xl font-bold mb-4 text-pink-600">Basic Care</h3>
-                    <div class="text-4xl font-bold mb-6 text-gray-800">Rp35.000</div>
-                    <ul class="mb-8 space-y-3">
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <h3>Basic Care</h3>
+                    <div class="price">Rp35.000</div>
+                    <ul>
                         <li>Pembersihan kuku</li>
                         <li>Manicure dasar</li>
                         <li>Warna solid</li>
                         <li>Finishing</li>
                     </ul>
-                    <a href="#booking" class="inline-block bg-pink-100 hover:bg-pink-200 text-pink-600 font-bold py-2 px-6 rounded-full transition">
-                        Pilih Paket
-                    </a>
+                    <a href="#booking" class="pricing-btn">Pilih Paket</a>
                 </div>
                 
-                <div class="pricing-card bg-gradient-to-br from-pink-500 to-purple-500 text-white rounded-xl p-8 text-center transform hover:-translate-y-2 transition duration-300 relative z-10 shadow-lg">
-                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-pink-600 text-white text-sm font-bold px-4 py-1 rounded-full">POPULER</div>
-                    <h3 class="text-2xl font-bold mb-4">Design Simple</h3>
-                    <div class="text-4xl font-bold mb-6">Rp75.000</div>
-                    <ul class="mb-8 space-y-3">
+                <div class="pricing-card popular">
+                    <div class="popular-badge">POPULER</div>
+                    <h3>Design Simple</h3>
+                    <div class="price">Rp75.000</div>
+                    <ul>
                         <li>Semua dalam Basic Care</li>
                         <li>1 desain nail art</li>
                         <li>Pilihan warna premium</li>
                         <li>Finishing glossy/matte</li>
                         <li>Perawatan kutikula</li>
                     </ul>
-                    <a href="#booking" class="inline-block bg-white hover:bg-rose-50 text-pink-600 font-bold py-2 px-6 rounded-full transition">
-                        Pilih Paket
-                    </a>
+                    <a href="#booking" class="pricing-btn">Pilih Paket</a>
                 </div>
                 
-                <div class="pricing-card bg-white border border-pink-100 rounded-xl p-8 text-center hover:shadow-xl transition-shadow">
-                    <h3 class="text-2xl font-bold mb-4 text-pink-600">Premium Design</h3>
-                    <div class="text-4xl font-bold mb-6 text-gray-800">Rp150.000+</div>
-                    <ul class="mb-8 space-y-3">
+                <div class="pricing-card">
+                    <h3>Premium Design</h3>
+                    <div class="price">Rp150.000+</div>
+                    <ul>
                         <li>Semua dalam Design Simple</li>
                         <li>Desain kompleks</li>
                         <li>Hiasan 3D</li>
@@ -189,114 +144,87 @@
                         <li>Produk premium</li>
                         <li>Garansi 2 minggu</li>
                     </ul>
-                    <a href="#booking" class="inline-block bg-pink-100 hover:bg-pink-200 text-pink-600 font-bold py-2 px-6 rounded-full transition">
-                        Pilih Paket
-                    </a>
+                    <a href="#booking" class="pricing-btn">Pilih Paket</a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Booking Section -->
-    <section id="booking" class="py-16 bg-gradient-to-r from-pink-500 to-purple-500 text-white">
-        <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-3xl md:text-4xl font-bold mb-6">Booking Layanan Sekarang</h2>
-                <p class="text-xl mb-10 max-w-2xl mx-auto">Pesan layanan nail art premium langsung ke rumah Anda di Sakra Barat, Lombok Timur</p>
-                
-                <a href="https://wa.me/6281234567890" target="_blank" class="cta-button inline-block bg-white text-pink-600 font-bold py-4 px-12 rounded-full text-xl transform transition duration-300 hover:scale-105 hover:bg-rose-50 shadow-lg">
-                    <i class="fab fa-whatsapp mr-3"></i> Booking via WhatsApp
-                </a>
-                
-                <p class="mt-8 text-pink-100">Respon cepat dalam 1 jam pada jam operasional</p>
-            </div>
+    <section id="booking" class="booking">
+        <div class="container">
+            <h2 class="section-title">Booking Layanan Sekarang</h2>
+            <p class="section-subtitle">Pesan layanan nail art premium langsung ke rumah Anda di Sakra Barat</p>
+            
+            <a href="https://wa.me/6281234567890" class="booking-btn">
+                <i class="whatsapp-icon"></i> Booking via WhatsApp
+            </a>
+            
+            <p class="booking-note">Respon cepat dalam 1 jam pada jam operasional</p>
         </div>
     </section>
 
     <!-- Instagram Section -->
-    <section class="py-16 bg-rose-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-pink-600">Ikuti Kami di Instagram</h2>
-                <div class="w-24 h-1 bg-pink-500 mx-auto mb-8"></div>
-                <a href="https://instagram.com/nailsbypwettyy" target="_blank" class="text-xl text-pink-600 hover:text-pink-700 font-bold">
-                    <i class="fab fa-instagram mr-2"></i> @nailsbypwettyy
-                </a>
-            </div>
+    <section class="instagram">
+        <div class="container">
+            <h2 class="section-title">Ikuti Kami di Instagram</h2>
+            <a href="https://instagram.com/nailsbypwettyy" target="_blank" class="instagram-link">
+                @nailsbypwettyy
+            </a>
             
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-                <!-- Instagram placeholder images -->
-                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-48"></div>
-                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-48"></div>
-                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-48"></div>
-                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-48"></div>
+            <div class="instagram-grid">
+                <div class="instagram-item"></div>
+                <div class="instagram-item"></div>
+                <div class="instagram-item"></div>
+                <div class="instagram-item"></div>
             </div>
         </div>
     </section>
 
     <!-- Location Section -->
-    <section id="location" class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-pink-600">Lokasi Layanan</h2>
-                <div class="w-24 h-1 bg-pink-500 mx-auto mb-8"></div>
-                <p class="text-xl text-gray-700 max-w-2xl mx-auto">Melayani home service di wilayah Sakra Barat, Lombok Timur dan sekitarnya</p>
-            </div>
+    <section id="location" class="location">
+        <div class="container">
+            <h2 class="section-title">Lokasi Layanan</h2>
+            <p class="section-subtitle">Melayani home service di wilayah Sakra Barat, Lombok Timur dan sekitarnya</p>
             
-            <div class="flex flex-col lg:flex-row gap-8">
-                <div class="lg:w-1/2">
-                    <div class="bg-gray-200 h-96 rounded-xl overflow-hidden">
-                        <!-- Google Maps Embed -->
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d252721.62307465636!2d116.37653854999999!3d-8.6520714!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dcdb7d23be25473%3A0x1c1b5f5d0b7c3d1e!2sSakra%20Barat%2C%20Lombok%20Timur%2C%20Nusa%20Tenggara%20Bar.!5e0!3m2!1sid!2sid!4v1680000000000!5m2!1sid!2sid" 
-                            width="100%" 
-                            height="100%" 
-                            style="border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
-                    </div>
+            <div class="location-content">
+                <div class="map-container">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d252721.62307465636!2d116.37653854999999!3d-8.6520714!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dcdb7d23be25473%3A0x1c1b5f5d0b7c3d1e!2sSakra%20Barat%2C%20Lombok%20Timur%2C%20Nusa%20Tenggara%20Bar.!5e0!3m2!1sid!2sid!4v1680000000000!5m2!1sid!2sid" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
                 </div>
                 
-                <div class="lg:w-1/2">
-                    <div class="bg-pink-50 rounded-xl p-8 h-full">
-                        <h3 class="text-2xl font-bold mb-6 text-pink-600">Area Layanan</h3>
-                        
-                        <div class="space-y-6">
-                            <div>
-                                <h4 class="font-bold text-lg mb-2">Sakra Barat</h4>
-                                <p class="text-gray-700">Melayani seluruh area Kecamatan Sakra Barat, Lombok Timur</p>
-                            </div>
-                            
-                            <div>
-                                <h4 class="font-bold text-lg mb-2">Sakra Timur</h4>
-                                <p class="text-gray-700">Area terbatas di Sakra Timur dengan tambahan biaya transport</p>
-                            </div>
-                            
-                            <div>
-                                <h4 class="font-bold text-lg mb-2">Luar Kota</h4>
-                                <p class="text-gray-700">Layanan luar kota tersedia dengan minimal booking 5 orang</p>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-8 bg-white rounded-lg p-6 border border-pink-100">
-                            <h4 class="font-bold text-lg mb-3 text-pink-600">Catatan Penting</h4>
-                            <ul class="space-y-2 text-gray-700">
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-pink-500 mt-1 mr-2"></i>
-                                    <span>Booking minimal H-1</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-pink-500 mt-1 mr-2"></i>
-                                    <span>Durasi layanan 1-2 jam tergantung desain</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-pink-500 mt-1 mr-2"></i>
-                                    <span>Pembayaran cash atau transfer setelah layanan selesai</span>
-                                </li>
-                            </ul>
-                        </div>
+                <div class="location-info">
+                    <h3>Area Layanan</h3>
+                    
+                    <div class="location-area">
+                        <h4>Sakra Barat</h4>
+                        <p>Melayani seluruh area Kecamatan Sakra Barat, Lombok Timur</p>
+                    </div>
+                    
+                    <div class="location-area">
+                        <h4>Sakra Timur</h4>
+                        <p>Area terbatas di Sakra Timur dengan tambahan biaya transport</p>
+                    </div>
+                    
+                    <div class="location-area">
+                        <h4>Luar Kota</h4>
+                        <p>Layanan luar kota tersedia dengan minimal booking 5 orang</p>
+                    </div>
+                    
+                    <div class="location-notes">
+                        <h4>Catatan Penting</h4>
+                        <ul>
+                            <li>Booking minimal H-1</li>
+                            <li>Durasi layanan 1-2 jam tergantung desain</li>
+                            <li>Pembayaran cash atau transfer setelah layanan selesai</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -304,215 +232,33 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white pt-16 pb-8">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-12">
-                <div class="mb-8 md:mb-0">
-                    <h3 class="text-2xl font-bold text-pink-400 mb-4">nailsbypwettyy</h3>
-                    <p class="max-w-md text-gray-400">Layanan nail art home service premium di Sakra Barat, Lombok Timur. Jam buka 09.00-20.00 WITA.</p>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>nailsbypwettyy</h3>
+                    <p>Layanan nail art home service premium di Sakra Barat, Lombok Timur. Jam buka 09.00-20.00 WITA.</p>
                 </div>
                 
-                <div class="flex flex-col items-center">
-                    <button id="scroll-top" class="w-14 h-14 rounded-full bg-pink-500 flex items-center justify-center text-white shadow-lg transform transition hover:scale-110 hover:bg-pink-600 mb-4">
-                        <i class="fas fa-arrow-up"></i>
-                    </button>
-                    <span class="text-gray-400">Kembali ke Atas</span>
+                <div class="footer-social">
+                    <a href="https://wa.me/6281234567890" target="_blank" class="social-link">
+                        <i class="whatsapp-icon"></i>
+                    </a>
+                    <a href="https://instagram.com/nailsbypwettyy" target="_blank" class="social-link">
+                        <i class="instagram-icon"></i>
+                    </a>
                 </div>
             </div>
             
-            <div class="border-t border-gray-800 pt-8">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-400 mb-4 md:mb-0">&copy; 2023 nailsbypwettyy. All rights reserved.</p>
-                    <div class="flex space-x-6">
-                        <a href="https://wa.me/6281234567890" target="_blank" class="text-gray-400 hover:text-pink-400">
-                            <i class="fab fa-whatsapp text-xl"></i>
-                        </a>
-                        <a href="https://instagram.com/nailsbypwettyy" target="_blank" class="text-gray-400 hover:text-pink-400">
-                            <i class="fab fa-instagram text-xl"></i>
-                        </a>
-                    </div>
-                </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 nailsbypwettyy. All rights reserved.</p>
+                <button id="scroll-top" class="scroll-top-btn">
+                    <i class="arrow-up"></i>
+                </button>
             </div>
         </div>
     </footer>
 
-    <script>
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobile-menu');
-        const mobileNav = document.getElementById('mobile-nav');
-        const closeMenuBtn = document.getElementById('close-menu');
-        
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileNav.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        });
-        
-        closeMenuBtn.addEventListener('click', () => {
-            mobileNav.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        });
-        
-        // Gallery Filter
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const galleryItems = [
-            { category: 'marble', title: 'Marble Design' },
-            { category: 'simple', title: 'Simple Elegant' },
-            { category: 'cute', title: 'Cute Floral' },
-            { category: 'premium', title: 'Premium Glitter' },
-            { category: 'cute', title: 'Cute Animal' },
-            { category: 'marble', title: 'Marble Effect' },
-            { category: 'premium', title: 'Premium French' },
-            { category: 'simple', title: 'Simple Color' },
-            { category: 'premium', title: 'Premium Gemstone' }
-        ];
-        
-        const galleryGrid = document.querySelector('.gallery-grid');
-        
-        // Generate gallery items
-        galleryItems.forEach((item, index) => {
-            const galleryItem = document.createElement('div');
-            galleryItem.className = `gallery-item mb-6 ${item.category} relative overflow-hidden rounded-xl group`;
-            galleryItem.innerHTML = `
-                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-64"></div>
-                <div class="absolute inset-0 bg-black bg-opacity-0 flex items-center justify-center transition-all duration-300 group-hover:bg-opacity-60">
-                    <div class="text-white text-center transform translate-y-8 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                        <h4 class="font-bold text-xl">${item.title}</h4>
-                        <p class="text-pink-300 mt-2">${item.category.charAt(0).toUpperCase() + item.category.slice(1)}</p>
-                    </div>
-                </div>
-            `;
-            galleryGrid.appendChild(galleryItem);
-        });
-        
-        // Filter functionality
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Update active button
-                filterBtns.forEach(b => b.classList.remove('active', 'bg-pink-500', 'text-white'));
-                btn.classList.add('active', 'bg-pink-500', 'text-white');
-                
-                const filter = btn.dataset.filter;
-                const items = document.querySelectorAll('.gallery-item');
-                
-                items.forEach(item => {
-                    if (filter === 'all' || item.classList.contains(filter)) {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-            });
-        });
-        
-        // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    window.scrollTo({
-                        top: target.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                    
-                    // Close mobile menu if open
-                    if (!mobileNav.classList.contains('hidden')) {
-                        mobileNav.classList.add('hidden');
-                        document.body.style.overflow = 'auto';
-                    }
-                }
-            });
-        });
-        
-        // Scroll to top
-        document.getElementById('scroll-top').addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-        
-        // GSAP Animations
-        gsap.registerPlugin(ScrollTrigger);
-        
-        // Hero animation
-        gsap.from('#hero h1', {
-            duration: 1,
-            y: 50,
-            opacity: 0,
-            ease: 'power3.out'
-        });
-        
-        gsap.from('#hero p', {
-            duration: 1,
-            y: 30,
-            opacity: 0,
-            delay: 0.3,
-            ease: 'power3.out'
-        });
-        
-        gsap.from('#hero a', {
-            duration: 1,
-            y: 30,
-            opacity: 0,
-            delay: 0.6,
-            ease: 'power3.out'
-        });
-        
-        // Section animations
-        const sections = document.querySelectorAll('section');
-        sections.forEach(section => {
-            gsap.from(section, {
-                scrollTrigger: {
-                    trigger: section,
-                    start: 'top 80%'
-                },
-                opacity: 0,
-                y: 50,
-                duration: 0.8
-            });
-        });
-        
-        // Gallery item animations
-        const galleryItemsEl = document.querySelectorAll('.gallery-item');
-        galleryItemsEl.forEach((item, i) => {
-            gsap.from(item, {
-                scrollTrigger: {
-                    trigger: item,
-                    start: 'top 90%'
-                },
-                opacity: 0,
-                y: 30,
-                duration: 0.6,
-                delay: i * 0.1
-            });
-        });
-        
-        // Pricing card animations
-        const pricingCards = document.querySelectorAll('.pricing-card');
-        pricingCards.forEach((card, i) => {
-            gsap.from(card, {
-                scrollTrigger: {
-                    trigger: card,
-                    start: 'top 85%'
-                },
-                opacity: 0,
-                y: 40,
-                duration: 0.7,
-                delay: i * 0.15
-            });
-        });
-        
-        // CTA button animation
-        const ctaButton = document.querySelector('.cta-button');
-        gsap.to(ctaButton, {
-            yoyo: true,
-            repeat: -1,
-            scale: 1.05,
-            duration: 1.5,
-            ease: 'power1.inOut'
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
