@@ -41,6 +41,7 @@
       display: none;
       flex-direction: column;
       padding: 1rem;
+      z-index: 200;
     }
     .menu a {
       color: white;
@@ -71,7 +72,7 @@
     .main .buttons button:hover {
       background: #00cccc;
     }
-    #background3d {
+    #container {
       position: fixed;
       top: 0;
       left: 0;
@@ -97,17 +98,110 @@
       <button onclick="switchTo('masterpiece')">Karya</button>
       <button onclick="switchTo('development')">Development</button>
     </div>
-  </div>  <div id="background3d"></div>  <!-- LIBS -->  <script src="https://unpkg.com/three@0.160.1/build/three.min.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/renderers/CSS3DRenderer.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/controls/TrackballControls.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/libs/tween.min.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/objects/CSS3DObject.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/css3d_periodictable.js"></script>  <script>
-    let menuVisible = false;
+  </div>  <div id="container"></div>  <!-- LIBS -->  <script src="https://unpkg.com/three@0.160.1/build/three.min.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/renderers/CSS3DRenderer.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/controls/TrackballControls.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/libs/tween.min.js"></script>  <script>
+    // Variables for 3D scene
+    let camera, scene, renderer, controls;
+    let objects = [];
+    let targets = { table: [], sphere: [], helix: [], grid: [] };
+
+    init();
+    animate();
+
+    function init() {
+      const container = document.getElementById('container');
+
+      camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
+      camera.position.z = 3000;
+
+      scene = new THREE.Scene();
+
+      renderer = new THREE.CSS3DRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(renderer.domElement);
+
+      // Element data (simple placeholders)
+      const elements = [];
+      for (let i = 0; i < 100; i++) {
+        elements.push(["H", "Hydrogen", i + 1, "H"]);
+      }
+
+      for (let i = 0; i < elements.length; i++) {
+        const element = document.createElement('div');
+        element.className = 'element';
+        element.style.width = '120px';
+        element.style.height = '160px';
+        element.style.background = 'rgba(0,127,127,0.75)';
+        element.style.border = '1px solid #fff';
+        element.style.color = '#fff';
+        element.style.textAlign = 'center';
+        element.style.lineHeight = '160px';
+        element.style.fontSize = '40px';
+        element.textContent = elements[i][0];
+
+        const objectCSS = new THREE.CSS3DObject(element);
+        objectCSS.position.x = Math.random() * 4000 - 2000;
+        objectCSS.position.y = Math.random() * 4000 - 2000;
+        objectCSS.position.z = Math.random() * 4000 - 2000;
+        scene.add(objectCSS);
+
+        objects.push(objectCSS);
+
+        const object = new THREE.Object3D();
+        object.position.x = (i % 10) * 400 - 1800;
+        object.position.y = -(Math.floor(i / 10) % 10) * 400 + 1600;
+        object.position.z = 0;
+
+        targets.table.push(object);
+      }
+
+      controls = new THREE.TrackballControls(camera, renderer.domElement);
+      controls.minDistance = 500;
+      controls.maxDistance = 6000;
+
+      transform(targets.table, 2000);
+
+      window.addEventListener('resize', onWindowResize);
+    }
+
+    function transform(targets, duration) {
+      TWEEN.removeAll();
+
+      for (let i = 0; i < objects.length; i++) {
+        const object = objects[i];
+        const target = targets[i];
+
+        new TWEEN.Tween(object.position)
+          .to({ x: target.position.x, y: target.position.y, z: target.position.z }, duration)
+          .easing(TWEEN.Easing.Exponential.InOut)
+          .start();
+
+        new TWEEN.Tween(object.rotation)
+          .to({ x: target.rotation.x || 0, y: target.rotation.y || 0, z: target.rotation.z || 0 }, duration)
+          .easing(TWEEN.Easing.Exponential.InOut)
+          .start();
+      }
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      TWEEN.update();
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
     function toggleMenu() {
       const menu = document.getElementById('menu');
-      menu.style.display = menuVisible ? 'none' : 'flex';
-      menuVisible = !menuVisible;
+      menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
     }
 
     function switchTo(section) {
       document.body.style.background = 'black';
-      scene.background = new THREE.Color(0x000000);
       TWEEN.removeAll();
       if (section === 'about') {
         transform(targets.helix, 2000);
