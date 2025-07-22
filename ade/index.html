@@ -47,58 +47,60 @@
   </style>
 </head>
 <body>
-  <div id="container"></div>  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/examples/js/renderers/CSS3DRenderer.js"></script>  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/examples/js/controls/OrbitControls.js"></script>  <script>
-    const container = document.getElementById('container');
+  <div id="container"></div>  <!-- Three.js core -->  <script src="https://unpkg.com/three@0.160.1/build/three.min.js"></script>  <!-- Backup CDN untuk CSS3DRenderer dan OrbitControls -->  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/renderers/CSS3DRenderer.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/controls/OrbitControls.js"></script>  <script>
+    window.onload = () => {
+      const container = document.getElementById('container');
 
-    const scene = new THREE.Scene();
+      const scene = new THREE.Scene();
 
-    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
-    camera.position.set(0, 0, 800);
+      const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+      camera.position.set(0, 0, 800);
 
-    const renderer = new THREE.CSS3DRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    container.appendChild(renderer.domElement);
+      const renderer = new THREE.CSS3DRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(renderer.domElement);
 
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.1;
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.1;
 
-    const modules = [
-      { title: 'About Me', desc: 'Get to know me.' },
-      { title: 'Projects', desc: 'What I\'ve built.' },
-      { title: 'Skills', desc: 'What I can do.' },
-      { title: 'Contact', desc: 'Let\'s get in touch.' },
-      { title: 'Resume', desc: 'Download my CV.' },
-    ];
+      const modules = [
+        { title: 'About Me', desc: 'Get to know me.' },
+        { title: 'Projects', desc: 'What I\'ve built.' },
+        { title: 'Skills', desc: 'What I can do.' },
+        { title: 'Contact', desc: 'Let\'s get in touch.' },
+        { title: 'Resume', desc: 'Download my CV.' },
+      ];
 
-    modules.forEach((mod, i) => {
-      const div = document.createElement('div');
-      div.className = 'element';
-      div.innerHTML = `<h3>${mod.title}</h3><p>${mod.desc}</p>`;
+      modules.forEach((mod, i) => {
+        const div = document.createElement('div');
+        div.className = 'element';
+        div.innerHTML = `<h3>${mod.title}</h3><p>${mod.desc}</p>`;
 
-      div.addEventListener('click', () => {
-        alert(`${mod.title} clicked!`);
+        div.addEventListener('click', () => {
+          alert(`${mod.title} clicked!`);
+        });
+
+        const obj = new THREE.CSS3DObject(div);
+        obj.position.x = (i - 2) * 200;
+        obj.position.y = 0;
+        obj.position.z = 0;
+        scene.add(obj);
       });
 
-      const obj = new THREE.CSS3DObject(div);
-      obj.position.x = (i - 2) * 200;
-      obj.position.y = 0;
-      obj.position.z = 0;
-      scene.add(obj);
-    });
+      function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+      }
 
-    function animate() {
-      requestAnimationFrame(animate);
-      controls.update();
-      renderer.render(scene, camera);
+      animate();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
     }
-
-    animate();
-
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
   </script></body>
 </html>
