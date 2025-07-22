@@ -1,106 +1,670 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Modular Portfolio</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background-color: #111;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
-    #container {
-      width: 100vw;
-      height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-    }
-    .element {
-      width: 160px;
-      height: 160px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid #aaa;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(255,255,255,0.2);
-      text-align: center;
-      color: white;
-      backdrop-filter: blur(4px);
-      transition: all 0.3s ease;
-    }
-    .element:hover {
-      background: rgba(255,255,255,0.15);
-      transform: scale(1.05);
-    }
-    .element h3 {
-      margin: 16px 0 8px;
-      font-size: 18px;
-    }
-    .element p {
-      margin: 0;
-      font-size: 14px;
-      color: #ccc;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio 3D - Profesional Kreatif</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            height: 100vh;
+        }
+
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #info {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            z-index: 100;
+            color: white;
+            padding: 10px;
+            pointer-events: none;
+        }
+
+        #info h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+        }
+
+        #info p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+        }
+
+        .portfolio-box {
+            width: 180px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transform-style: preserve-3d;
+        }
+
+        .portfolio-box:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .portfolio-box i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ff7e5f;
+        }
+
+        .portfolio-box h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .portfolio-box p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: rgba(30, 30, 40, 0.95);
+            width: 80%;
+            max-width: 800px;
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.5s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.6);
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #ff7e5f;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-header i {
+            font-size: 3rem;
+            margin-right: 20px;
+            color: #ff7e5f;
+        }
+
+        .modal-header h2 {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .modal-body {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f2027;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader {
+            width: 80px;
+            height: 80px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top: 5px solid #ff7e5f;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .portfolio-box {
+                width: 140px;
+                height: 160px;
+                padding: 15px;
+            }
+            
+            .portfolio-box i {
+                font-size: 2.2rem;
+            }
+            
+            .portfolio-box h3 {
+                font-size: 1.1rem;
+            }
+            
+            #info h1 {
+                font-size: 1.8rem;
+            }
+            
+            #info p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <!-- Ikon Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-  <div id="container"></div>  <!-- Three.js core -->  <script src="https://unpkg.com/three@0.160.1/build/three.min.js"></script>  <!-- Backup CDN untuk CSS3DRenderer dan OrbitControls -->  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/renderers/CSS3DRenderer.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/controls/OrbitControls.js"></script>  <script>
-    window.onload = () => {
-      const container = document.getElementById('container');
+    <div id="loading">
+        <div class="loader"></div>
+    </div>
+    
+    <div id="info">
+        <h1>Portofolio Profesional Kreatif</h1>
+        <p>Jelajahi modul portofolio saya dengan mengklik salah satu kotak. Gunakan mouse/touch untuk memutar dan memperbesar tampilan.</p>
+    </div>
+    
+    <div id="container"></div>
+    
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <div class="modal-header">
+                <i id="modal-icon"></i>
+                <h2 id="modal-title">Judul Modul</h2>
+            </div>
+            <div class="modal-body" id="modal-body">
+                Konten akan dimuat di sini...
+            </div>
+        </div>
+    </div>
 
-      const scene = new THREE.Scene();
+    <script>
+        // Modul portofolio - mudah untuk ditambah/dimodifikasi
+        const portfolioModules = [
+            {
+                id: 'about',
+                title: 'Tentang Saya',
+                icon: 'fa-solid fa-user',
+                description: 'Desainer dan pengembang dengan fokus pada pengalaman pengguna yang luar biasa',
+                modalContent: `
+                    <p>Saya seorang profesional kreatif dengan pengalaman lebih dari 5 tahun di bidang desain UI/UX dan pengembangan front-end.</p>
+                    <p>Spesialisasi saya mencakup pembuatan antarmuka yang intuitif, animasi interaktif, dan pengalaman pengguna yang menarik.</p>
+                    <p>Pendekatan saya menggabungkan pemikiran desain yang strategis dengan eksekusi teknis yang cermat untuk menciptakan solusi digital yang berdampak.</p>
+                    <h3>Pendidikan</h3>
+                    <ul>
+                        <li>Sarjana Desain Interaksi - Institut Teknologi Digital, 2018</li>
+                        <li>Sertifikasi Pengembangan Web Modern - Akademi Online, 2020</li>
+                    </ul>
+                `
+            },
+            {
+                id: 'projects',
+                title: 'Proyek',
+                icon: 'fa-solid fa-laptop-code',
+                description: 'Lihat karya terbaik saya dalam desain dan pengembangan',
+                modalContent: `
+                    <h3>Proyek Unggulan</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+                            <h4>Sistem Manajemen Konten</h4>
+                            <p>Platform CMS yang dirancang khusus untuk penerbit digital, meningkatkan efisiensi editorial hingga 40%.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+                            <h4>Aplikasi E-Commerce</h4>
+                            <p>Solusi belanja mobile dengan UI personalisasi, meningkatkan konversi sebesar 25%.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+                            <h4>Dashboard Analitik</h4>
+                            <p>Visualisasi data real-time untuk perusahaan SaaS dengan 50+ metrik bisnis penting.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+                            <h4>Branding Perusahaan</h4>
+                            <p>Identitas merek lengkap untuk startup teknologi termasuk logo, panduan gaya, dan aset digital.</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 'skills',
+                title: 'Keahlian',
+                icon: 'fa-solid fa-code',
+                description: 'Teknologi dan alat yang saya kuasai',
+                modalContent: `
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                        <div style="text-align: center;">
+                            <i class="fa-brands fa-html5" style="font-size: 3rem; color: #e44d26;"></i>
+                            <p>HTML5</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fa-brands fa-css3-alt" style="font-size: 3rem; color: #264de4;"></i>
+                            <p>CSS3</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fa-brands fa-js" style="font-size: 3rem; color: #f0db4f;"></i>
+                            <p>JavaScript</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fa-brands fa-react" style="font-size: 3rem; color: #61dafb;"></i>
+                            <p>React</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fa-brands fa-node-js" style="font-size: 3rem; color: #68a063;"></i>
+                            <p>Node.js</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fa-brands fa-figma" style="font-size: 3rem; color: #a259ff;"></i>
+                            <p>Figma</p>
+                        </div>
+                    </div>
+                    <h3 style="margin-top: 30px;">Kemampuan Lain</h3>
+                    <ul>
+                        <li>Desain UI/UX</li>
+                        <li>Animasi Web</li>
+                        <li>Responsive Design</li>
+                        <li>Manajemen Proyek</li>
+                        <li>Pengujian Pengguna</li>
+                    </ul>
+                `
+            },
+            {
+                id: 'contact',
+                title: 'Kontak',
+                icon: 'fa-solid fa-envelope',
+                description: 'Hubungi saya untuk proyek kolaborasi',
+                modalContent: `
+                    <p>Saya selalu terbuka untuk peluang baru dan kolaborasi menarik. Jangan ragu untuk menghubungi saya!</p>
+                    <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h3>Informasi Kontak</h3>
+                            <ul style="list-style: none; padding: 0; margin-top: 15px;">
+                                <li style="margin-bottom: 15px;">
+                                    <i class="fa-solid fa-envelope" style="margin-right: 10px; color: #ff7e5f;"></i>
+                                    email@profesional.com
+                                </li>
+                                <li style="margin-bottom: 15px;">
+                                    <i class="fa-solid fa-phone" style="margin-right: 10px; color: #ff7e5f;"></i>
+                                    +62 123 4567 8910
+                                </li>
+                                <li style="margin-bottom: 15px;">
+                                    <i class="fa-brands fa-linkedin" style="margin-right: 10px; color: #ff7e5f;"></i>
+                                    linkedin.com/in/profesional
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3>Kirim Pesan</h3>
+                            <form style="margin-top: 15px;">
+                                <input type="text" placeholder="Nama Anda" style="width: 100%; padding: 10px; margin-bottom: 10px; background: rgba(255,255,255,0.1); border: none; border-radius: 5px; color: white;">
+                                <input type="email" placeholder="Email Anda" style="width: 100%; padding: 10px; margin-bottom: 10px; background: rgba(255,255,255,0.1); border: none; border-radius: 5px; color: white;">
+                                <textarea placeholder="Pesan Anda" style="width: 100%; padding: 10px; margin-bottom: 10px; background: rgba(255,255,255,0.1); border: none; border-radius: 5px; color: white; height: 100px;"></textarea>
+                                <button style="background: #ff7e5f; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%;">Kirim Pesan</button>
+                            </form>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 'resume',
+                title: 'Resume',
+                icon: 'fa-solid fa-file-alt',
+                description: 'Unduh resume lengkap saya',
+                modalContent: `
+                    <h3>Pengalaman Profesional</h3>
+                    <div style="margin-top: 20px; border-left: 2px solid #ff7e5f; padding-left: 20px;">
+                        <div style="margin-bottom: 30px;">
+                            <h4>Lead UI/UX Designer - Perusahaan Inovasi</h4>
+                            <p style="color: #ff7e5f; margin: 5px 0;">2020 - Sekarang</p>
+                            <p>Memimpin tim desain dalam menciptakan solusi digital untuk klien Fortune 500. Bertanggung jawab atas strategi desain dan implementasi UI.</p>
+                        </div>
+                        <div style="margin-bottom: 30px;">
+                            <h4>Desainer Produk Digital - Studio Kreatif</h4>
+                            <p style="color: #ff7e5f; margin: 5px 0;">2018 - 2020</p>
+                            <p>Mendesain antarmuka pengguna untuk aplikasi mobile dan web. Berkolaborasi dengan pengembang untuk memastikan implementasi yang akurat.</p>
+                        </div>
+                        <div>
+                            <h4>Desainer Grafis Junior - Agensi Digital</h4>
+                            <p style="color: #ff7e5f; margin: 5px 0;">2016 - 2018</p>
+                            <p>Membuat aset visual untuk kampanye pemasaran digital dan materi promosi.</p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 30px; text-align: center;">
+                        <a href="#" style="display: inline-block; background: #ff7e5f; color: white; padding: 12px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 20px;">
+                            <i class="fa-solid fa-download" style="margin-right: 10px;"></i>Unduh Resume Lengkap
+                        </a>
+                    </div>
+                `
+            },
+            {
+                id: 'testimonials',
+                title: 'Testimoni',
+                icon: 'fa-solid fa-comments',
+                description: 'Apa kata klien dan rekan tentang saya',
+                modalContent: `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 20px;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px;">
+                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                <div style="width: 50px; height: 50px; background: #ff7e5f; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 15px; font-weight: bold;">AM</div>
+                                <div>
+                                    <h4 style="margin: 0;">Andi Maulana</h4>
+                                    <p style="margin: 0; color: #ff7e5f;">CEO, Startup Teknologi</p>
+                                </div>
+                            </div>
+                            <p>"Desain yang dibuat mengubah cara pengguna berinteraksi dengan produk kami. Peningkatan konversi signifikan!"</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px;">
+                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                <div style="width: 50px; height: 50px; background: #ff7e5f; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 15px; font-weight: bold;">BS</div>
+                                <div>
+                                    <h4 style="margin: 0;">Budi Santoso</h4>
+                                    <p style="margin: 0; color: #ff7e5f;">Direktur Pemasaran</p>
+                                </div>
+                            </div>
+                            <p>"Kemampuan teknis dan kreativitas luar biasa. Selalu memberikan lebih dari yang diharapkan."</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px;">
+                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                <div style="width: 50px; height: 50px; background: #ff7e5f; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 15px; font-weight: bold;">CD</div>
+                                <div>
+                                    <h4 style="margin: 0;">Citra Dewi</h4>
+                                    <p style="margin: 0; color: #ff7e5f;">Manajer Produk</p>
+                                </div>
+                            </div>
+                            <p>"Kolaborasi yang sangat baik dan selalu memenuhi tenggat waktu. Hasil kerja sangat profesional."</p>
+                        </div>
+                    </div>
+                `
+            }
+        ];
 
-      const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
-      camera.position.set(0, 0, 800);
-
-      const renderer = new THREE.CSS3DRenderer();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      container.appendChild(renderer.domElement);
-
-      const controls = new THREE.OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.1;
-
-      const modules = [
-        { title: 'About Me', desc: 'Get to know me.' },
-        { title: 'Projects', desc: 'What I\'ve built.' },
-        { title: 'Skills', desc: 'What I can do.' },
-        { title: 'Contact', desc: 'Let\'s get in touch.' },
-        { title: 'Resume', desc: 'Download my CV.' },
-      ];
-
-      modules.forEach((mod, i) => {
-        const div = document.createElement('div');
-        div.className = 'element';
-        div.innerHTML = `<h3>${mod.title}</h3><p>${mod.desc}</p>`;
-
-        div.addEventListener('click', () => {
-          alert(`${mod.title} clicked!`);
+        // Inisialisasi scene Three.js
+        let scene, camera, renderer;
+        let objects = [];
+        let targets = { table: [], sphere: [], helix: [], grid: [] };
+        let currentLayout = 'spiral';
+        
+        // Inisialisasi variabel untuk animasi
+        let animationId;
+        let isAnimating = false;
+        
+        function init() {
+            // Buat scene
+            scene = new THREE.Scene();
+            
+            // Buat camera
+            camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
+            camera.position.z = 3000;
+            
+            // Buat elemen untuk modul portofolio
+            createPortfolioElements();
+            
+            // Buat CSS3D renderer
+            renderer = new THREE.CSS3DRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.domElement.style.position = 'absolute';
+            document.getElementById('container').appendChild(renderer.domElement);
+            
+            // Atur tata letak spiral
+            arrangeSpiral();
+            
+            // Tambahkan event listener
+            window.addEventListener('resize', onWindowResize);
+            window.addEventListener('click', onDocumentClick);
+            
+            // Sembunyikan loading screen setelah delay
+            setTimeout(() => {
+                document.getElementById('loading').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loading').style.display = 'none';
+                }, 500);
+                
+                // Animasikan masuknya elemen
+                animateElementsIn();
+            }, 1500);
+            
+            // Mulai animasi
+            animate();
+        }
+        
+        // Buat elemen portofolio
+        function createPortfolioElements() {
+            for (let i = 0; i < portfolioModules.length; i++) {
+                const module = portfolioModules[i];
+                
+                // Buat elemen div untuk modul
+                const element = document.createElement('div');
+                element.className = 'portfolio-box';
+                element.dataset.id = module.id;
+                
+                // Isi konten modul
+                element.innerHTML = `
+                    <i class="${module.icon}"></i>
+                    <h3>${module.title}</h3>
+                    <p>${module.description}</p>
+                `;
+                
+                // Buat CSS3D object
+                const object = new THREE.CSS3DObject(element);
+                scene.add(object);
+                objects.push(object);
+                
+                // Tambahkan target untuk tata letak spiral
+                const objectTarget = new THREE.Object3D();
+                targets.sphere.push(objectTarget);
+            }
+        }
+        
+        // Atur tata letak spiral
+        function arrangeSpiral() {
+            const radius = 1000;
+            const height = 1000;
+            const count = objects.length;
+            
+            for (let i = 0; i < count; i++) {
+                const phi = Math.acos(-1 + (2 * i) / count);
+                const theta = Math.sqrt(count * Math.PI) * phi;
+                
+                const objectTarget = targets.sphere[i];
+                
+                objectTarget.position.x = radius * Math.cos(theta) * Math.sin(phi);
+                objectTarget.position.y = radius * Math.sin(theta) * Math.sin(phi);
+                objectTarget.position.z = radius * Math.cos(phi);
+                
+                // Atur rotasi untuk menghadap ke pusat
+                objectTarget.lookAt(scene.position);
+            }
+        }
+        
+        // Animasikan elemen masuk satu per satu
+        function animateElementsIn() {
+            objects.forEach((obj, index) => {
+                obj.scale.set(0.1, 0.1, 0.1);
+                obj.rotation.y = Math.PI * 2;
+                
+                // Gunakan GSAP untuk animasi
+                gsap.to(obj.scale, {
+                    x: 1,
+                    y: 1,
+                    z: 1,
+                    duration: 0.8,
+                    delay: index * 0.1,
+                    ease: "back.out(1.7)"
+                });
+                
+                gsap.to(obj.rotation, {
+                    y: 0,
+                    duration: 1.2,
+                    delay: index * 0.1,
+                    ease: "power3.out"
+                });
+            });
+        }
+        
+        // Animasi utama
+        function animate() {
+            animationId = requestAnimationFrame(animate);
+            
+            // Rotasi spiral secara perlahan
+            const time = Date.now() * 0.0002;
+            
+            for (let i = 0; i < objects.length; i++) {
+                const object = objects[i];
+                const target = targets.sphere[i];
+                
+                // Animasi ke posisi target
+                object.position.x += (target.position.x - object.position.x) * 0.1;
+                object.position.y += (target.position.y - object.position.y) * 0.1;
+                object.position.z += (target.position.z - object.position.z) * 0.1;
+                
+                // Tambahkan sedikit rotasi untuk efek dinamis
+                object.rotation.y += 0.005 * Math.sin(time + i);
+                object.rotation.x += 0.003 * Math.cos(time + i);
+            }
+            
+            // Update kamera untuk efek parallax ringan
+            camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY * 0.5 - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Tangani resize window
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        // Tangani klik pada modul
+        function onDocumentClick(event) {
+            event.preventDefault();
+            
+            // Cek apakah yang diklik adalah modul portofolio
+            if (event.target.closest('.portfolio-box')) {
+                const box = event.target.closest('.portfolio-box');
+                const moduleId = box.dataset.id;
+                
+                // Temukan modul yang sesuai
+                const module = portfolioModules.find(m => m.id === moduleId);
+                if (module) {
+                    showModal(module);
+                }
+            }
+        }
+        
+        // Tampilkan modal dengan konten modul
+        function showModal(module) {
+            const modal = document.getElementById('modal');
+            const modalIcon = document.getElementById('modal-icon');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            
+            // Isi konten modal
+            modalIcon.className = module.icon;
+            modalTitle.textContent = module.title;
+            modalBody.innerHTML = module.modalContent;
+            
+            // Tampilkan modal
+            modal.classList.add('active');
+            
+            // Nonaktifkan scroll body
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Tangani interaksi mouse untuk efek parallax
+        let mouseX = 0;
+        let mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+        
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - windowHalfX);
+            mouseY = (event.clientY - windowHalfY);
         });
-
-        const obj = new THREE.CSS3DObject(div);
-        obj.position.x = (i - 2) * 200;
-        obj.position.y = 0;
-        obj.position.z = 0;
-        scene.add(obj);
-      });
-
-      function animate() {
-        requestAnimationFrame(animate);
-        controls.update();
-        renderer.render(scene, camera);
-      }
-
-      animate();
-
-      window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      });
-    }
-  </script></body>
+        
+        // Setup event listener untuk modal
+        document.getElementById('close-modal').addEventListener('click', () => {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('active');
+            
+            // Aktifkan kembali scroll body
+            document.body.style.overflow = '';
+        });
+        
+        // Inisialisasi saat halaman dimuat
+        window.onload = init;
+    </script>
+</body>
 </html>
