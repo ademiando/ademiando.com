@@ -2,144 +2,120 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3D Portfolio by Ade</title>
+  <title>Ademiando</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      background: #0d0d0d;
-      font-family: Arial, sans-serif;
       overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+      background: #000;
+      color: white;
     }
-    #container {
-      width: 100vw;
-      height: 100vh;
+    header {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+    .hamburger {
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .menu {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: #111;
+      border-radius: 8px;
+      display: none;
+      flex-direction: column;
+      padding: 1rem;
+    }
+    .menu a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 0;
+    }
+    .main {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      top: 30vh;
+    }
+    .main h2 {
+      font-size: 48px;
+      margin-bottom: 2rem;
+    }
+    .main .buttons button {
+      margin: 0 1rem;
+      padding: 1rem 2rem;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #00ffff;
+      color: black;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .main .buttons button:hover {
+      background: #00cccc;
+    }
+    #background3d {
       position: fixed;
       top: 0;
       left: 0;
-    }
-    .element {
-      width: 160px;
-      height: 160px;
-      background: rgba(0, 255, 255, 0.05);
-      border: 1px solid #00ffff44;
-      border-radius: 12px;
-      box-shadow: 0 0 24px rgba(0, 255, 255, 0.2);
-      text-align: center;
-      color: #fff;
-      backdrop-filter: blur(3px);
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    .element:hover {
-      background: rgba(0, 255, 255, 0.15);
-      transform: scale(1.05);
-      box-shadow: 0 0 30px #00ffff88;
-    }
-    .element h3 {
-      margin: 16px 0 8px;
-      font-size: 18px;
-    }
-    .element p {
-      margin: 0;
-      font-size: 14px;
-      color: #aaa;
-    }
-    .modal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #111;
-      color: #fff;
-      padding: 30px;
-      border-radius: 8px;
-      z-index: 10;
-      box-shadow: 0 0 20px #00ffffaa;
-      display: none;
-    }
-    .modal.active {
-      display: block;
-    }
-    .modal button {
-      background: #00ffff;
-      border: none;
-      padding: 10px 20px;
-      color: #111;
-      font-weight: bold;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 20px;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
     }
   </style>
 </head>
 <body>
-  <div id="container"></div>
-  <div id="modal" class="modal">
-    <div id="modal-content">Hello from Ade's Portfolio</div>
-    <button onclick="closeModal()">Close</button>
-  </div>  <!-- Libs -->  <script src="https://unpkg.com/three@0.160.1/build/three.min.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/renderers/CSS3DRenderer.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/controls/OrbitControls.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/20.0.0/tween.umd.js"></script>  <script>
-    const container = document.getElementById('container');
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 5000);
-    camera.position.set(0, 0, 800);
-
-    const renderer = new THREE.CSS3DRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    container.appendChild(renderer.domElement);
-
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.1;
-
-    const modules = [
-      { title: 'About Me', desc: 'Get to know me.' },
-      { title: 'Projects', desc: 'What I\'ve built.' },
-      { title: 'Skills', desc: 'My technical stack.' },
-      { title: 'Contact', desc: 'Let\'s connect.' },
-      { title: 'Resume', desc: 'Download my CV.' },
-    ];
-
-    modules.forEach((mod, i) => {
-      const div = document.createElement('div');
-      div.className = 'element';
-      div.innerHTML = `<h3>${mod.title}</h3><p>${mod.desc}</p>`;
-
-      div.addEventListener('click', () => {
-        document.getElementById('modal-content').innerText = `${mod.title}\n\n${mod.desc}`;
-        document.getElementById('modal').classList.add('active');
-      });
-
-      const obj = new THREE.CSS3DObject(div);
-      obj.position.x = (i - 2) * 220;
-      obj.position.y = 500;
-      obj.position.z = 0;
-      scene.add(obj);
-
-      new TWEEN.Tween(obj.position)
-        .to({ y: 0 }, 1200)
-        .delay(i * 200)
-        .easing(TWEEN.Easing.Elastic.Out)
-        .start();
-    });
-
-    function animate() {
-      requestAnimationFrame(animate);
-      TWEEN.update();
-      controls.update();
-      renderer.render(scene, camera);
+  <header>
+    <h1>Ademiando</h1>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <nav class="menu" id="menu">
+      <a href="#" onclick="switchTo('about')">About Me</a>
+      <a href="#" onclick="switchTo('development')">Development</a>
+      <a href="#" onclick="switchTo('masterpiece')">Masterpiece</a>
+    </nav>
+  </header>  <div class="main">
+    <h2>Ademiando</h2>
+    <div class="buttons">
+      <button onclick="switchTo('about')">About</button>
+      <button onclick="switchTo('masterpiece')">Karya</button>
+      <button onclick="switchTo('development')">Development</button>
+    </div>
+  </div>  <div id="background3d"></div>  <!-- LIBS -->  <script src="https://unpkg.com/three@0.160.1/build/three.min.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/renderers/CSS3DRenderer.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/controls/TrackballControls.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/libs/tween.min.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/objects/CSS3DObject.js"></script>  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/js/css3d_periodictable.js"></script>  <script>
+    let menuVisible = false;
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      menu.style.display = menuVisible ? 'none' : 'flex';
+      menuVisible = !menuVisible;
     }
-    animate();
 
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-
-    function closeModal() {
-      document.getElementById('modal').classList.remove('active');
+    function switchTo(section) {
+      document.body.style.background = 'black';
+      scene.background = new THREE.Color(0x000000);
+      TWEEN.removeAll();
+      if (section === 'about') {
+        transform(targets.helix, 2000);
+      } else if (section === 'development') {
+        transform(targets.grid, 2000);
+      } else if (section === 'masterpiece') {
+        transform(targets.sphere, 2000);
+      }
     }
   </script></body>
 </html>
