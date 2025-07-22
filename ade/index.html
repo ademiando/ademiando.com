@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,65 +9,74 @@
       margin: 0;
       padding: 0;
       overflow: hidden;
-      font-family: Arial, sans-serif;
+      height: 100%;
       background: #111;
-      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    #container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
     }
     .element {
       width: 160px;
       height: 160px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid #999;
-      border-radius: 10px;
-      box-shadow: 0 0 12px rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid #888;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
       text-align: center;
-      transition: transform 0.3s ease;
-      cursor: pointer;
       padding: 10px;
+      color: white;
+      transition: 0.3s ease;
+      backdrop-filter: blur(4px);
     }
     .element:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.05);
     }
     .element h3 {
       margin: 10px 0 5px;
       font-size: 18px;
-      color: #fff;
     }
     .element p {
       font-size: 14px;
       color: #ccc;
     }
-    #container {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
   </style>
 </head>
 <body>
-  <div id="container"></div>  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/examples/js/renderers/CSS3DRenderer.js"></script>  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/examples/js/controls/OrbitControls.js"></script>  <script>
+  <div id="container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/examples/js/renderers/CSS3DRenderer.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/examples/js/controls/OrbitControls.js"></script>
+  <script>
     const container = document.getElementById('container');
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = 600;
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
+    camera.position.z = 800;
 
     const renderer = new THREE.CSS3DRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.domElement.style.position = 'absolute';
     container.appendChild(renderer.domElement);
 
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
+    controls.dampingFactor = 0.1;
 
     const modules = [
       { title: 'About Me', desc: 'Get to know me.' },
-      { title: 'Projects', desc: 'What I've built.' },
+      { title: 'Projects', desc: 'What I\'ve built.' },
       { title: 'Skills', desc: 'What I can do.' },
-      { title: 'Contact', desc: 'Let's get in touch.' },
+      { title: 'Contact', desc: 'Let\'s get in touch.' },
       { title: 'Resume', desc: 'Download my CV.' },
     ];
 
-    const objects = [];
     modules.forEach((mod, i) => {
       const div = document.createElement('div');
       div.className = 'element';
@@ -76,13 +86,12 @@
         alert(`${mod.title} clicked!`);
       });
 
-      const objectCSS = new THREE.CSS3DObject(div);
-      objectCSS.position.x = (i - 2) * 180;
-      objectCSS.position.y = 0;
-      objectCSS.position.z = 0;
+      const object = new THREE.CSS3DObject(div);
+      object.position.x = (i - 2) * 200; // Spread out box spacing
+      object.position.y = 0;
+      object.position.z = 0;
 
-      scene.add(objectCSS);
-      objects.push(objectCSS);
+      scene.add(object);
     });
 
     function animate() {
@@ -98,5 +107,6 @@
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
-  </script></body>
+  </script>
+</body>
 </html>
