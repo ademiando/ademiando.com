@@ -1,68 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>3D Modular Portfolio</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      overflow: hidden;
       height: 100%;
-      background: #111;
+      background-color: #111;
       font-family: Arial, sans-serif;
+      overflow: hidden;
     }
     #container {
+      width: 100vw;
+      height: 100vh;
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
     }
     .element {
       width: 160px;
       height: 160px;
       background: rgba(255, 255, 255, 0.08);
-      border: 1px solid #888;
+      border: 1px solid #aaa;
       border-radius: 12px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+      box-shadow: 0 0 12px rgba(255,255,255,0.2);
       text-align: center;
-      padding: 10px;
       color: white;
-      transition: 0.3s ease;
       backdrop-filter: blur(4px);
+      transition: all 0.3s ease;
     }
     .element:hover {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255,255,255,0.15);
       transform: scale(1.05);
     }
     .element h3 {
-      margin: 10px 0 5px;
+      margin: 16px 0 8px;
       font-size: 18px;
     }
     .element p {
+      margin: 0;
       font-size: 14px;
       color: #ccc;
     }
   </style>
 </head>
 <body>
-  <div id="container"></div>
-
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/examples/js/renderers/CSS3DRenderer.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/examples/js/controls/OrbitControls.js"></script>
-  <script>
+  <div id="container"></div>  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/examples/js/renderers/CSS3DRenderer.js"></script>  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/examples/js/controls/OrbitControls.js"></script>  <script>
     const container = document.getElementById('container');
+
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
-    camera.position.z = 800;
+
+    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+    camera.position.set(0, 0, 800);
 
     const renderer = new THREE.CSS3DRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.domElement.style.position = 'absolute';
     container.appendChild(renderer.domElement);
 
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -86,12 +80,11 @@
         alert(`${mod.title} clicked!`);
       });
 
-      const object = new THREE.CSS3DObject(div);
-      object.position.x = (i - 2) * 200; // Spread out box spacing
-      object.position.y = 0;
-      object.position.z = 0;
-
-      scene.add(object);
+      const obj = new THREE.CSS3DObject(div);
+      obj.position.x = (i - 2) * 200;
+      obj.position.y = 0;
+      obj.position.z = 0;
+      scene.add(obj);
     });
 
     function animate() {
@@ -107,6 +100,5 @@
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
-  </script>
-</body>
+  </script></body>
 </html>
