@@ -888,6 +888,53 @@ body {
   font-size: 0.9rem;
 }
 
+/* ========== SCROLL TOP BUTTON ========== */
+
+.scroll-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+
+  /* Dark glassmorphism */
+  background: rgba(18, 18, 18, 0.4); /* gelap transparan */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255, 255, 255, 0.08); /* white low-opacity border */
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 999;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); /* bayangan gelap */
+  color: #fff; /* warna ikon putih */
+}
+
+.scroll-top:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+  background: rgba(18, 18, 18, 0.6);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* =============== RESPONSIVE STYLES =============== */
 /* Tablet */
 @media (max-width: 992px) {
