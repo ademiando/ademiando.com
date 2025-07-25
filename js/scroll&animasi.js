@@ -34,3 +34,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // 4. Observe tiap target
   targets.forEach(el => observer.observe(el));
 });
+
+
+  // Scroll to Top button show/hide and scroll up on click
+  const scrollTopBtn = document.querySelector('.scroll-top');
+
+  // Show/hide button on scroll
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 100) {
+      scrollTopBtn.style.display = 'flex';
+    } else {
+      scrollTopBtn.style.display = 'none';
+    }
+  });
+
+  // Scroll to top when button clicked
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
