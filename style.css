@@ -1,20 +1,20 @@
 /* style.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-/* ==================== VARIABLES ==================== */
+/* =============== VARIABLES =============== */
 :root {
-  --primary-color: #0a0a0a;         /* black */
-  --secondary-color: #121212;       /* dark gray */
-  --accent-color: #95AE98;          /* soft olive */
-  --accent-dark: #7A8D7C;           /* Darker olive */
-  --text-color: #F0F0EC;            /* Soft white */
-  --text-secondary: #C8C8C2;        /* Muted gray */
+  --primary-color: #0a0a0a;
+  --secondary-color: #121212;
+  --accent-color: #95AE98;
+  --accent-dark: #7A8D7C;
+  --text-color: #F0F0EC;
+  --text-secondary: #C8C8C2;
   --glass-bg: rgba(25, 25, 25, 0.6);
   --glass-border: rgba(149, 174, 152, 0.3);
   --transition: all 0.4s ease;
 }
 
-/* ==================== RESET & BASE STYLES ==================== */
+/* =============== RESET & BASE STYLES =============== */
 * {
   margin: 0;
   padding: 0;
@@ -30,8 +30,7 @@ body {
   position: relative;
 }
 
-/* ==================== LAYOUT COMPONENTS ==================== */
-/* Particles Container */
+/* =============== PARTIKEL BACKGROUND =============== */
 .particles-container {
   position: fixed;
   top: 0;
@@ -41,7 +40,7 @@ body {
   z-index: -1;
 }
 
-/* Glassmorphism Effect */
+/* =============== GLASSMORPHISM EFFECT =============== */
 .glass-card {
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
@@ -53,7 +52,7 @@ body {
   transition: var(--transition);
 }
 
-/* Floating Animation */
+/* =============== FLOATING ANIMATION =============== */
 .floating {
   animation: float 6s ease-in-out infinite;
 }
@@ -64,7 +63,7 @@ body {
   100% { transform: translateY(0px); }
 }
 
-/* ==================== NAVIGATION ==================== */
+/* =============== NAVIGATION =============== */
 .glass-nav {
   position: fixed;
   top: 0;
@@ -151,7 +150,7 @@ body {
   transition: var(--transition);
 }
 
-/* ==================== HERO SECTION ==================== */
+/* =============== HERO SECTION =============== */
 .hero-section {
   min-height: 100vh;
   display: flex;
@@ -171,22 +170,6 @@ body {
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: 20px;
-}
-
-.highlight {
-  color: var(--accent-color);
-  position: relative;
-}
-
-.highlight::after {
-  content: '';
-  position: absolute;
-  bottom: 5px;
-  left: 0;
-  width: 100%;
-  height: 10px;
-  background: rgba(255, 215, 0, 0.3);
-  z-index: -1;
 }
 
 .hero-subtitle {
@@ -221,16 +204,6 @@ body {
 .cta-btn:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
-}
-
-.wa-btn {
-  background: linear-gradient(45deg, #128C7E, #25D366);
-  color: #fff;
-  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-}
-
-.wa-btn:hover {
-  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5);
 }
 
 .hero-animation {
@@ -279,7 +252,7 @@ body {
 .face.left   { transform: rotateY(-90deg) translateZ(150px); }
 .face.right  { transform: rotateY(90deg) translateZ(150px); }
 
-/* ==================== COMMON SECTION STYLES ==================== */
+/* =============== SECTION STYLES =============== */
 .section {
   padding: 100px 20px;
   position: relative;
@@ -303,8 +276,7 @@ body {
   margin: 0 auto;
 }
 
-/* ==================== PORTFOLIO SECTION ==================== */
-/* Technical Foundation */
+/* =============== PORTFOLIO SECTION =============== */
 .tech-foundation {
   margin: 20px 0 10px;
   font-weight: 600;
@@ -312,7 +284,6 @@ body {
   color: var(--accent-color);
 }
 
-/* Freedom List */
 .freedom-list {
   list-style: none;
   padding: 0;
@@ -334,7 +305,6 @@ body {
   text-align: center;
 }
 
-/* Portfolio Grid */
 .portfolio-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -401,7 +371,7 @@ body {
   gap: 12px;
 }
 
-/* ==================== PACKAGES SECTION ==================== */
+/* =============== PACKAGES SECTION =============== */
 .paket-section {
   background: radial-gradient(circle at top, #1a1a1a, #000000);
 }
@@ -498,7 +468,7 @@ body {
   box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
 }
 
-/* ==================== ADD-ONS SECTION ==================== */
+/* =============== ADD-ONS SECTION =============== */
 .addons-section {
   background: radial-gradient(circle at bottom, #1a1a1a, #000000);
 }
@@ -574,7 +544,7 @@ body {
   border-bottom: none;
 }
 
-/* ==================== ORDER SECTION ==================== */
+/* =============== ORDER SECTION =============== */
 .order-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -677,6 +647,16 @@ body {
   margin-bottom: 30px;
 }
 
+.cta-btn.wa-btn {
+  background: linear-gradient(45deg, #128C7E, #25D366);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+.cta-btn.wa-btn:hover {
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5);
+}
+
 .process-steps {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -720,7 +700,91 @@ body {
   color: var(--text-secondary);
 }
 
-/* ==================== FOOTER ==================== */
+/* =============== POWERED BY SECTION =============== */
+.powered-by { 
+  padding: 1.5rem 1rem; 
+  text-align: center; 
+  background: rgba(255, 255, 255, 0.05); 
+  border-radius: 1rem; 
+  backdrop-filter: blur(16px); 
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25), 0 0 20px rgba(78, 84, 200, 0.2); 
+  margin: 2rem auto; 
+  max-width: 1100px; 
+  border: 1px solid rgba(255, 255, 255, 0.12); 
+  position: relative; 
+  overflow: hidden; 
+}
+
+.powered-logos { 
+  overflow: hidden; 
+  position: relative; 
+  padding: 0.5rem 0; 
+} 
+
+.logos-track { 
+  display: flex; 
+  gap: 1.8rem; 
+  padding: 0.8rem 0; 
+  justify-content: flex-start; 
+  width: max-content; 
+  animation: scroll 120s linear infinite; 
+}
+
+.tech-logo { 
+  min-width: 130px; 
+  text-align: center; 
+  flex-shrink: 0; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  background: rgba(255, 255, 255, 0.08); 
+  border-radius: 14px; 
+  padding: 1.2rem 1rem; 
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+  border: 1px solid rgba(255, 255, 255, 0.15); 
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.2); 
+  backdrop-filter: blur(4px); 
+}
+
+.tech-logo:hover { 
+  transform: translateY(-7px) scale(1.05); 
+  background: rgba(255, 255, 255, 0.15); 
+  box-shadow: 0 10px 25px rgba(78, 84, 200, 0.3); 
+  border-color: rgba(143, 148, 251, 0.35); 
+}
+
+.tech-logo img { 
+  height: 36px; 
+  margin-bottom: 0.7rem; 
+  transition: all 0.3s ease; 
+  object-fit: contain; 
+}
+
+.tech-logo:hover img { 
+  transform: scale(1.15); 
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); 
+}
+
+.tech-logo span { 
+  color: #e0e0ff; 
+  font-size: 0.92rem; 
+  font-weight: 500; 
+  white-space: nowrap; 
+  transition: color 0.3s ease; 
+}
+
+.tech-logo:hover span { 
+  color: #fff; 
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2); 
+}
+
+@keyframes scroll { 
+  0% { transform: translateX(0); } 
+  100% { transform: translateX(calc(-100% + 100vw)); } 
+}
+
+/* =============== FOOTER =============== */
 .glass-footer {
   background: radial-gradient(circle at bottom, #1a1a1a, #000000);
   padding: 60px 20px 0;
@@ -824,8 +888,8 @@ body {
   font-size: 0.9rem;
 }
 
-/* ==================== RESPONSIVE STYLES ==================== */
-/* Tablet & Small Desktop */
+/* =============== RESPONSIVE STYLES =============== */
+/* Tablet */
 @media (max-width: 992px) {
   .hero-section {
     flex-direction: column;
@@ -850,9 +914,8 @@ body {
   }
 }
 
-/* Tablet */
+/* Small Tablet */
 @media (max-width: 768px) {
-  /* Navigation */
   .nav-links {
     position: fixed;
     top: 70px;
@@ -910,7 +973,7 @@ body {
     display: none;
   }
   
-  /* Portfolio Horizontal Scroll */
+  /* Horizontal Scroll */
   #portfolio .portfolio-grid {
     display: flex;
     flex-wrap: nowrap;
@@ -924,10 +987,8 @@ body {
   #portfolio .portfolio-card {
     flex: 0 0 80%;
     scroll-snap-align: start;
-    margin-right: 0;
   }
 
-  /* Packages Horizontal Scroll */
   #paket .paket-container {
     display: flex;
     flex-wrap: nowrap;
@@ -941,48 +1002,18 @@ body {
   #paket .paket-card {
     flex: 0 0 80%;
     scroll-snap-align: start;
-    margin-right: 0;
   }
 
-  /* Hide scrollbar on WebKit browsers */
+  /* Hide scrollbar */
   #portfolio .portfolio-grid::-webkit-scrollbar,
   #paket .paket-container::-webkit-scrollbar {
     display: none;
   }
   
-  /* Typography & Buttons */
-  #paket .section-header h2 {
-    font-size: 1.5rem;
-  }
-  
-  #paket .section-header p {
-    font-size: 0.9rem;
-  }
-
-  #paket .paket-features li {
-    font-size: 0.8rem;
-    line-height: 1.3;
-  }
-
-  #paket .paket-price {
-    font-size: 1.2rem;
-  }
-
-  #paket .cta-wa {
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    font-size: 0.9rem;
-    padding: 0.6rem 0;
-    border-radius: 0.5rem;
-    box-sizing: border-box;
-  }
-  
   /* Disable floating animation */
-  #paket .paket-card.floating,
-  #paket .paket-card.floating * {
-    animation: none !important;
-    transition: none !important;
+  #paket .paket-card.floating {
+    animation: none;
+    transition: none;
     transform: none !important;
   }
 }
@@ -1023,13 +1054,12 @@ body {
 
 /* Small Mobile */
 @media (max-width: 480px) {
-  /* Hero Section */
   .hero-section {
-    padding: 100px 20px 30px !important;
+    padding: 100px 20px 30px;
   }
   
   .hero-title {
-    font-size: 2rem !important;
+    font-size: 2rem;
     line-height: 1.3;
   }
   
@@ -1047,7 +1077,6 @@ body {
     justify-content: center;
   }
   
-  /* Floating cube */
   .floating-cube {
     width: 150px;
     height: 150px;
@@ -1068,16 +1097,10 @@ body {
   .face.left   { transform: rotateY(-90deg) translateZ(100px); }
   .face.right  { transform: rotateY(90deg) translateZ(100px); }
   
-  /* Navigation */
   .nav-container {
     padding: 12px 15px;
   }
   
-  .logo {
-    font-size: 1.4rem;
-  }
-  
-  /* Sections */
   .section {
     padding: 60px 15px;
   }
@@ -1086,17 +1109,14 @@ body {
     font-size: 1.8rem;
   }
   
-  /* Portfolio Grid */
   .portfolio-grid {
     grid-template-columns: 1fr;
   }
   
-  /* Packages Section */
   .paket-container {
     grid-template-columns: 1fr;
   }
   
-  /* Order Section */
   .order-form,
   .order-info {
     padding: 20px;
@@ -1107,7 +1127,6 @@ body {
     padding: 12px;
   }
   
-  /* Process Steps */
   .process-steps {
     grid-template-columns: repeat(2, 1fr);
     row-gap: 30px;
@@ -1117,24 +1136,28 @@ body {
     display: none;
   }
   
-  /* Footer */
   .footer-container {
     gap: 30px;
   }
   
-  .footer-links,
-  .footer-contact {
-    margin-top: 20px;
+  /* Powered By adjustments */
+  .tech-logo {
+    min-width: 110px;
+    padding: 1rem 0.8rem;
+  }
+  
+  .tech-logo img {
+    height: 32px;
+  }
+  
+  .tech-logo span {
+    font-size: 0.85rem;
   }
 }
 
 @media (max-width: 768px) {
   .hero-section {
     padding: 120px 30px 40px;
-  }
-  
-  .hero-title {
-    font-size: 2.5rem;
   }
 }
 
