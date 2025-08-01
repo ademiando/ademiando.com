@@ -1,5 +1,3 @@
-// animation.js
-
 gsap.registerPlugin(ScrollTrigger);
 
 gsap.utils.toArray(".stage").forEach((section, i) => { const media = section.querySelector("video, img");
