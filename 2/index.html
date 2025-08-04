@@ -3,27 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portofolio Interaktif - Kubus 3D</title>
+    <title>Portofolio Interaktif 3D Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
+        :root {
+            --primary: #00ffaa;
+            --primary-glow: 0 0 15px rgba(0, 255, 170, 0.7);
+            --glass-bg: rgba(16, 22, 36, 0.6);
+            --glass-border: rgba(0, 255, 200, 0.15);
+            --dark-bg: #0a0f1a;
+        }
+
         body {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            background: linear-gradient(135deg, #0a0f1a, #0d1525, #0a0f1a);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #e0f0ff;
             overflow: hidden;
             position: relative;
         }
-        
+
         body::before {
             content: '';
             position: absolute;
@@ -31,36 +40,40 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(0, 255, 150, 0.05) 0%, transparent 70%);
-            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 80, 120, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 150, 200, 0.1) 0%, transparent 40%);
+            z-index: -2;
         }
-        
+
         .header {
             text-align: center;
             margin-bottom: 30px;
-            z-index: 10;
             max-width: 800px;
             padding: 0 20px;
+            z-index: 10;
         }
-        
+
         h1 {
             font-size: 2.8rem;
             margin-bottom: 15px;
-            background: linear-gradient(to right, #00ff9d, #00ffea);
+            background: linear-gradient(to right, var(--primary), #00eeff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 0 15px rgba(0, 255, 170, 0.3);
+            text-shadow: var(--primary-glow);
+            font-weight: 700;
+            letter-spacing: 1px;
         }
-        
+
         .subtitle {
-            font-size: 1.2rem;
-            color: #a0f0d0;
+            font-size: 1.15rem;
+            color: #a0d0f0;
             max-width: 600px;
             margin: 0 auto 30px;
             line-height: 1.6;
         }
-        
+
         .container {
             display: flex;
             flex-wrap: wrap;
@@ -70,23 +83,24 @@
             max-width: 1400px;
             padding: 20px;
         }
-        
+
         .scene {
-            width: 300px;
-            height: 300px;
-            perspective: 1000px;
+            width: 260px;
+            height: 260px;
+            perspective: 1200px;
             margin: 0 auto;
         }
-        
+
         .cube {
             width: 100%;
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
             transform: rotateX(15deg) rotateY(15deg);
-            transition: transform 0.3s ease-out;
+            transition: transform 0.25s ease-out;
+            will-change: transform;
         }
-        
+
         .cube-face {
             position: absolute;
             width: 100%;
@@ -97,178 +111,224 @@
             align-items: center;
             padding: 20px;
             text-align: center;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 8px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
             box-shadow: 
-                0 8px 32px rgba(0, 31, 63, 0.3),
-                inset 0 0 20px rgba(0, 255, 200, 0.1);
+                0 10px 30px rgba(0, 10, 30, 0.5),
+                inset 0 0 20px rgba(0, 200, 255, 0.1);
             cursor: pointer;
             transition: all 0.3s ease;
             overflow: hidden;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
-        
+
         .cube-face::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, 
-                rgba(0, 255, 200, 0.1) 0%, 
-                transparent 70%);
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle, rgba(0, 200, 255, 0.05) 0%, transparent 70%),
+                linear-gradient(45deg, rgba(0, 50, 100, 0.1) 0%, transparent 100%);
             z-index: -1;
         }
-        
+
         .cube-face:hover {
-            background: rgba(255, 255, 255, 0.12);
             box-shadow: 
-                0 8px 32px rgba(0, 100, 200, 0.4),
-                inset 0 0 30px rgba(0, 255, 200, 0.2);
+                0 0 40px rgba(0, 200, 255, 0.3),
+                inset 0 0 30px rgba(0, 200, 255, 0.15);
+            transform: translateZ(10px);
         }
-        
+
         .cube-face i {
-            font-size: 3rem;
+            font-size: 2.8rem;
             margin-bottom: 15px;
-            color: #00ffb3;
-            text-shadow: 0 0 15px rgba(0, 255, 200, 0.7);
+            color: var(--primary);
+            text-shadow: var(--primary-glow);
         }
-        
+
         .cube-face h2 {
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             margin-bottom: 10px;
-            color: #00ffaa;
-            text-shadow: 0 0 10px rgba(0, 255, 170, 0.7);
+            color: var(--primary);
+            text-shadow: var(--primary-glow);
+            font-weight: 600;
         }
-        
+
         .cube-face p {
-            font-size: 0.9rem;
-            color: #b0ffe0;
+            font-size: 0.85rem;
+            color: #c0e0ff;
             line-height: 1.5;
+            font-weight: 300;
         }
-        
+
         .cube-face--front {
-            transform: translateZ(150px);
+            transform: translateZ(130px);
         }
-        
+
         .cube-face--back {
-            transform: rotateY(180deg) translateZ(150px);
+            transform: rotateY(180deg) translateZ(130px);
         }
-        
+
         .cube-face--right {
-            transform: rotateY(90deg) translateZ(150px);
+            transform: rotateY(90deg) translateZ(130px);
         }
-        
+
         .cube-face--left {
-            transform: rotateY(-90deg) translateZ(150px);
+            transform: rotateY(-90deg) translateZ(130px);
         }
-        
+
         .cube-face--top {
-            transform: rotateX(90deg) translateZ(150px);
+            transform: rotateX(90deg) translateZ(130px);
         }
-        
+
         .cube-face--bottom {
-            transform: rotateX(-90deg) translateZ(150px);
+            transform: rotateX(-90deg) translateZ(130px);
         }
-        
+
         .inner-water {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 120px;
-            height: 120px;
-            transform: translate(-50%, -50%) translateZ(-10px);
+            width: 100px;
+            height: 100px;
+            transform: translate(-50%, -50%) translateZ(-20px);
             background: radial-gradient(circle, 
-                rgba(0, 200, 255, 0.15) 0%, 
-                rgba(0, 100, 200, 0.25) 70%);
+                rgba(0, 150, 255, 0.2) 0%, 
+                rgba(0, 80, 150, 0.3) 70%);
             border-radius: 50%;
             box-shadow: 
-                inset 0 0 50px rgba(0, 200, 255, 0.3),
-                0 0 50px rgba(0, 200, 255, 0.2);
-            animation: waterPulse 6s infinite ease-in-out;
-            filter: blur(5px);
+                inset 0 0 30px rgba(0, 150, 255, 0.3),
+                0 0 30px rgba(0, 150, 255, 0.2);
+            animation: waterPulse 8s infinite ease-in-out;
+            filter: blur(6px);
             z-index: -1;
+            will-change: transform, opacity;
         }
-        
-        .bubble {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
-            animation: rise linear infinite;
-        }
-        
+
         @keyframes waterPulse {
-            0%, 100% { transform: translate(-50%, -50%) translateZ(-10px) scale(1); }
-            50% { transform: translate(-50%, -50%) translateZ(-10px) scale(1.1); }
+            0%, 100% { transform: translate(-50%, -50%) translateZ(-20px) scale(1); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) translateZ(-20px) scale(1.15); opacity: 1; }
         }
-        
-        @keyframes rise {
-            to { transform: translateY(-100px); opacity: 0; }
+
+        /* Konten Halaman */
+        .page-content {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 15, 25, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
         }
-        
+
+        .page-content.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .content-container {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0, 10, 30, 0.7);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.5s ease 0.2s;
+            backdrop-filter: blur(10px);
+        }
+
+        .page-content.active .content-container {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .content-header h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            text-shadow: var(--primary-glow);
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            text-shadow: var(--primary-glow);
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        .content-body {
+            line-height: 1.8;
+            color: #d0e8ff;
+        }
+
+        .content-body p {
+            margin-bottom: 20px;
+        }
+
+        /* Kontrol */
         .controls {
             margin-top: 30px;
             display: flex;
             gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
-        
+
         .btn {
             padding: 12px 25px;
             background: rgba(0, 255, 200, 0.1);
-            border: 1px solid rgba(0, 255, 200, 0.3);
+            border: 1px solid var(--glass-border);
             border-radius: 30px;
-            color: #00ffcc;
+            color: var(--primary);
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
             backdrop-filter: blur(5px);
+            font-weight: 500;
         }
-        
+
         .btn:hover {
             background: rgba(0, 255, 200, 0.2);
-            box-shadow: 0 0 20px rgba(0, 255, 200, 0.3);
+            box-shadow: 0 0 20px rgba(0, 200, 255, 0.3);
             transform: translateY(-2px);
         }
-        
-        .info-panel {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 255, 200, 0.2);
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 40px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(0, 31, 63, 0.3);
-        }
-        
-        .info-panel h3 {
-            color: #00ffaa;
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-            text-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
-        }
-        
-        .info-panel p {
-            color: #b0ffe0;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-        
-        .highlight {
-            color: #00ffcc;
-            font-weight: bold;
-            text-shadow: 0 0 8px rgba(0, 255, 200, 0.5);
-        }
-        
+
+        /* Responsif */
         @media (max-width: 768px) {
             .scene {
-                width: 250px;
-                height: 250px;
+                width: 220px;
+                height: 220px;
             }
             
             .cube-face {
@@ -276,31 +336,87 @@
             }
             
             .cube-face--front {
-                transform: translateZ(125px);
+                transform: translateZ(110px);
             }
             
             .cube-face--back {
-                transform: rotateY(180deg) translateZ(125px);
+                transform: rotateY(180deg) translateZ(110px);
             }
             
             .cube-face--right {
-                transform: rotateY(90deg) translateZ(125px);
+                transform: rotateY(90deg) translateZ(110px);
             }
             
             .cube-face--left {
-                transform: rotateY(-90deg) translateZ(125px);
+                transform: rotateY(-90deg) translateZ(110px);
             }
             
             .cube-face--top {
-                transform: rotateX(90deg) translateZ(125px);
+                transform: rotateX(90deg) translateZ(110px);
             }
             
             .cube-face--bottom {
-                transform: rotateX(-90deg) translateZ(125px);
+                transform: rotateX(-90deg) translateZ(110px);
             }
             
             h1 {
                 font-size: 2.2rem;
+            }
+            
+            .content-container {
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .scene {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .cube-face {
+                padding: 15px;
+            }
+            
+            .cube-face i {
+                font-size: 2rem;
+                margin-bottom: 10px;
+            }
+            
+            .cube-face h2 {
+                font-size: 1.1rem;
+            }
+            
+            .cube-face p {
+                font-size: 0.75rem;
+            }
+            
+            .cube-face--front {
+                transform: translateZ(90px);
+            }
+            
+            .cube-face--back {
+                transform: rotateY(180deg) translateZ(90px);
+            }
+            
+            .cube-face--right {
+                transform: rotateY(90deg) translateZ(90px);
+            }
+            
+            .cube-face--left {
+                transform: rotateY(-90deg) translateZ(90px);
+            }
+            
+            .cube-face--top {
+                transform: rotateX(90deg) translateZ(90px);
+            }
+            
+            .cube-face--bottom {
+                transform: rotateX(-90deg) translateZ(90px);
+            }
+            
+            h1 {
+                font-size: 1.8rem;
             }
         }
     </style>
@@ -308,39 +424,39 @@
 <body>
     <div class="header">
         <h1>Portofolio Interaktif 3D</h1>
-        <p class="subtitle">Jelajahi portofolio saya melalui kubus interaktif dengan efek glassmorphism. Setiap sisi kubus dapat diklik untuk melihat detail lebih lanjut.</p>
+        <p class="subtitle">Jelajahi portofolio profesional melalui kubus interaktif dengan efek glassmorphism premium</p>
     </div>
     
     <div class="container">
         <div class="scene">
             <div class="cube">
-                <div class="cube-face cube-face--front">
-                    <i>👤</i>
+                <div class="cube-face cube-face--front" data-page="profile">
+                    <i class="fas fa-user"></i>
                     <h2>Profil</h2>
-                    <p>Tentang saya, pendidikan, dan pengalaman</p>
+                    <p>Tentang saya dan latar belakang profesional</p>
                 </div>
-                <div class="cube-face cube-face--back">
-                    <i>💻</i>
+                <div class="cube-face cube-face--back" data-page="development">
+                    <i class="fas fa-code"></i>
                     <h2>Development</h2>
                     <p>Proyek pengembangan web dan aplikasi</p>
                 </div>
-                <div class="cube-face cube-face--right">
-                    <i>🎨</i>
+                <div class="cube-face cube-face--right" data-page="design">
+                    <i class="fas fa-paint-brush"></i>
                     <h2>Desain</h2>
                     <p>Karya desain UI/UX dan grafis</p>
                 </div>
-                <div class="cube-face cube-face--left">
-                    <i>🏆</i>
+                <div class="cube-face cube-face--left" data-page="portfolio">
+                    <i class="fas fa-trophy"></i>
                     <h2>Karya</h2>
                     <p>Portofolio dan pencapaian terbaik</p>
                 </div>
-                <div class="cube-face cube-face--top">
-                    <i>📞</i>
+                <div class="cube-face cube-face--top" data-page="contact">
+                    <i class="fas fa-envelope"></i>
                     <h2>Kontak</h2>
                     <p>Hubungi saya untuk kolaborasi</p>
                 </div>
-                <div class="cube-face cube-face--bottom">
-                    <i>📚</i>
+                <div class="cube-face cube-face--bottom" data-page="blog">
+                    <i class="fas fa-blog"></i>
                     <h2>Blog</h2>
                     <p>Artikel dan tutorial terbaru</p>
                 </div>
@@ -350,57 +466,82 @@
     </div>
     
     <div class="controls">
-        <button class="btn" id="rotateToggle">Jeda Rotasi</button>
-        <button class="btn" id="resetRotation">Reset Posisi</button>
+        <button class="btn" id="rotateToggle"><i class="fas fa-pause"></i> Jeda Rotasi</button>
+        <button class="btn" id="resetRotation"><i class="fas fa-sync"></i> Reset Posisi</button>
     </div>
     
-    <div class="info-panel">
-        <h3>Panduan Interaksi</h3>
-        <p><span class="highlight">Drag</span> kubus untuk memutarnya secara manual</p>
-        <p><span class="highlight">Klik</span> pada salah satu sisi untuk melihat detail portofolio</p>
-        <p><span class="highlight">Tombol kontrol</span> untuk mengatur rotasi otomatis</p>
+    <!-- Halaman Konten -->
+    <div class="page-content" id="profilePage">
+        <div class="content-container">
+            <div class="content-header">
+                <h2><i class="fas fa-user"></i> Profil Saya</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="content-body">
+                <p>Halo! Saya seorang profesional dengan lebih dari 8 tahun pengalaman di bidang pengembangan web dan desain UI/UX.</p>
+                <p>Saya mengkhususkan diri dalam membuat aplikasi web modern dengan fokus pada performa tinggi dan pengalaman pengguna yang luar biasa.</p>
+                <p>Pendidikan: S1 Teknik Informatika, Universitas Terkemuka (2015)</p>
+                <p>Keahlian: JavaScript, React, Vue, Node.js, UI/UX Design, Animasi Web</p>
+            </div>
+        </div>
     </div>
     
+    <div class="page-content" id="developmentPage">
+        <div class="content-container">
+            <div class="content-header">
+                <h2><i class="fas fa-code"></i> Development</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="content-body">
+                <p>Berikut beberapa proyek pengembangan terbaru saya:</p>
+                <p><strong>Aplikasi E-commerce Premium</strong> - Sistem e-commerce dengan performa tinggi yang mampu menangani 10k+ transaksi/hari</p>
+                <p><strong>Platform LMS Pendidikan</strong> - Sistem manajemen pembelajaran untuk universitas dengan fitur real-time</p>
+                <p><strong>Dashboard Analitik Enterprise</strong> - Visualisasi data interaktif untuk perusahaan Fortune 500</p>
+                <p>Semua proyek dibangun dengan teknologi terbaru dan fokus pada optimasi performa.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-content" id="designPage">
+        <div class="content-container">
+            <div class="content-header">
+                <h2><i class="fas fa-paint-brush"></i> Desain</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="content-body">
+                <p>Karya desain saya mencakup berbagai bidang:</p>
+                <p><strong>UI/UX Aplikasi Mobile</strong> - Desain untuk aplikasi kesehatan dengan fokus pada pengalaman pengguna</p>
+                <p><strong>Branding Perusahaan</strong> - Identitas visual untuk startup teknologi</p>
+                <p><strong>Desain Web Interaktif</strong> - Konsep desain untuk situs web perusahaan dengan animasi mikro</p>
+                <p>Prinsip desain saya: minimalis, fungsional, dan berfokus pada pengguna.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Script untuk performa tinggi -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cube = document.querySelector('.cube');
             let angleX = 15;
             let angleY = 15;
-            let angleZ = 0;
             let autoRotate = true;
             let autoRotateTimeout;
             const AUTO_ROTATE_DELAY = 3000;
-            let bubblesInterval;
+            let animationId;
             
-            // Fungsi untuk membuat gelembung
-            function createBubbles() {
-                const scene = document.querySelector('.scene');
-                if (bubblesInterval) clearInterval(bubblesInterval);
-                
-                bubblesInterval = setInterval(() => {
-                    const bubble = document.createElement('div');
-                    bubble.classList.add('bubble');
-                    
-                    // Posisi acak di dalam scene
-                    const size = Math.random() * 20 + 5;
-                    const left = Math.random() * 100;
-                    
-                    bubble.style.width = `${size}px`;
-                    bubble.style.height = `${size}px`;
-                    bubble.style.left = `${left}%`;
-                    bubble.style.bottom = '0px';
-                    bubble.style.opacity = Math.random() * 0.5 + 0.2;
-                    bubble.style.animationDuration = `${Math.random() * 6 + 4}s`;
-                    
-                    scene.appendChild(bubble);
-                    
-                    // Hapus bubble setelah animasi selesai
-                    setTimeout(() => {
-                        if (bubble.parentNode) {
-                            bubble.parentNode.removeChild(bubble);
-                        }
-                    }, 10000);
-                }, 500);
+            // Optimasi performa dengan requestAnimationFrame
+            function animate() {
+                if (autoRotate) {
+                    angleX = 15 + 5 * Math.sin(Date.now() / 6000);
+                    angleY += 0.3;
+                    updateCubeRotation();
+                }
+                animationId = requestAnimationFrame(animate);
+            }
+            
+            // Fungsi update rotasi kubus
+            function updateCubeRotation() {
+                cube.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg)`;
             }
             
             // Fungsi untuk aktifkan kembali rotasi otomatis
@@ -420,19 +561,8 @@
                 delayAutoRotate();
             }
             
-            // Rotasi otomatis
-            setInterval(() => {
-                if (autoRotate) {
-                    angleX = 15 + 5 * Math.sin(Date.now() / 5000);
-                    angleY += 0.3;
-                    updateCubeRotation();
-                }
-            }, 30);
-            
-            // Fungsi update rotasi kubus
-            function updateCubeRotation() {
-                cube.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg) rotateZ(${angleZ}deg)`;
-            }
+            // Inisialisasi animasi
+            animate();
             
             // Drag to rotate (mouse)
             let dragging = false;
@@ -443,6 +573,7 @@
                 lastX = e.clientX;
                 lastY = e.clientY;
                 handleUserInteraction();
+                e.preventDefault();
             });
             
             window.addEventListener('mousemove', function(e) {
@@ -466,15 +597,17 @@
             
             // Drag to rotate (touch / mobile)
             cube.parentElement.addEventListener('touchstart', function(e) {
-                dragging = true;
-                lastX = e.touches[0].clientX;
-                lastY = e.touches[0].clientY;
-                handleUserInteraction();
-                e.preventDefault();
+                if (e.touches.length === 1) {
+                    dragging = true;
+                    lastX = e.touches[0].clientX;
+                    lastY = e.touches[0].clientY;
+                    handleUserInteraction();
+                    e.preventDefault();
+                }
             });
             
             window.addEventListener('touchmove', function(e) {
-                if (dragging) {
+                if (dragging && e.touches.length === 1) {
                     let deltaX = e.touches[0].clientX - lastX;
                     let deltaY = e.touches[0].clientY - lastY;
                     angleY += deltaX * 0.5;
@@ -496,27 +629,29 @@
             // Kontrol tombol
             document.getElementById('rotateToggle').addEventListener('click', function() {
                 autoRotate = !autoRotate;
-                this.textContent = autoRotate ? 'Jeda Rotasi' : 'Mulai Rotasi';
+                this.innerHTML = autoRotate ? '<i class="fas fa-pause"></i> Jeda Rotasi' : '<i class="fas fa-play"></i> Mulai Rotasi';
                 if (autoRotate) delayAutoRotate();
             });
             
             document.getElementById('resetRotation').addEventListener('click', function() {
                 angleX = 15;
                 angleY = 15;
-                angleZ = 0;
                 updateCubeRotation();
                 handleUserInteraction();
             });
             
-            // Klik pada sisi kubus
+            // Navigasi halaman
             const faces = document.querySelectorAll('.cube-face');
+            const pages = document.querySelectorAll('.page-content');
+            const closeBtns = document.querySelectorAll('.close-btn');
+            
             faces.forEach(face => {
                 face.addEventListener('click', function(e) {
                     if (dragging) return;
                     
                     handleUserInteraction();
                     
-                    // Efek visual saat diklik
+                    // Animasi klik
                     this.style.transform = 'scale(0.95)';
                     this.style.boxShadow = '0 0 30px rgba(0, 255, 200, 0.5)';
                     
@@ -525,26 +660,48 @@
                         this.style.boxShadow = '';
                     }, 300);
                     
-                    // Tampilkan pesan berdasarkan sisi yang diklik
-                    const titles = {
-                        'Profil': 'Halaman Profil',
-                        'Development': 'Portofolio Development',
-                        'Desain': 'Karya Desain',
-                        'Karya': 'Pencapaian & Penghargaan',
-                        'Kontak': 'Hubungi Saya',
-                        'Blog': 'Artikel Terbaru'
-                    };
-                    
-                    const title = this.querySelector('h2').textContent;
-                    alert(`Anda memilih: ${titles[title]}`);
+                    // Tampilkan halaman terkait
+                    const pageId = this.dataset.page + 'Page';
+                    pages.forEach(page => {
+                        page.classList.remove('active');
+                        if (page.id === pageId) {
+                            page.classList.add('active');
+                        }
+                    });
                 });
             });
             
-            // Mulai membuat gelembung
-            createBubbles();
+            // Tutup halaman
+            closeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    pages.forEach(page => page.classList.remove('active'));
+                });
+            });
             
-            // Inisialisasi rotasi
-            updateCubeRotation();
+            // Tutup halaman dengan ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    pages.forEach(page => page.classList.remove('active'));
+                }
+            });
+            
+            // Optimasi untuk perangkat mobile
+            function handleMobileOptimization() {
+                if (window.innerWidth < 768) {
+                    // Nonaktifkan efek air di perangkat mobile untuk performa
+                    const water = document.querySelector('.inner-water');
+                    if (water) water.style.display = 'none';
+                }
+            }
+            
+            // Panggil saat load dan resize
+            handleMobileOptimization();
+            window.addEventListener('resize', handleMobileOptimization);
+            
+            // Bersihkan animasi saat keluar
+            window.addEventListener('beforeunload', function() {
+                cancelAnimationFrame(animationId);
+            });
         });
     </script>
 </body>
