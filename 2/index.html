@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio Interaktif - Kubus 3D</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 255, 150, 0.05) 0%, transparent 70%);
+            z-index: -1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            z-index: 10;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #00ff9d, #00ffea);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(0, 255, 170, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0f0d0;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+            max-width: 1400px;
+            padding: 20px;
+        }
+        
+        .scene {
+            width: 300px;
+            height: 300px;
+            perspective: 1000px;
+            margin: 0 auto;
+        }
+        
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(15deg) rotateY(15deg);
+            transition: transform 0.3s ease-out;
+        }
+        
+        .cube-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            box-shadow: 
+                0 8px 32px rgba(0, 31, 63, 0.3),
+                inset 0 0 20px rgba(0, 255, 200, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .cube-face::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, 
+                rgba(0, 255, 200, 0.1) 0%, 
+                transparent 70%);
+            z-index: -1;
+        }
+        
+        .cube-face:hover {
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 
+                0 8px 32px rgba(0, 100, 200, 0.4),
+                inset 0 0 30px rgba(0, 255, 200, 0.2);
+        }
+        
+        .cube-face i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #00ffb3;
+            text-shadow: 0 0 15px rgba(0, 255, 200, 0.7);
+        }
+        
+        .cube-face h2 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #00ffaa;
+            text-shadow: 0 0 10px rgba(0, 255, 170, 0.7);
+        }
+        
+        .cube-face p {
+            font-size: 0.9rem;
+            color: #b0ffe0;
+            line-height: 1.5;
+        }
+        
+        .cube-face--front {
+            transform: translateZ(150px);
+        }
+        
+        .cube-face--back {
+            transform: rotateY(180deg) translateZ(150px);
+        }
+        
+        .cube-face--right {
+            transform: rotateY(90deg) translateZ(150px);
+        }
+        
+        .cube-face--left {
+            transform: rotateY(-90deg) translateZ(150px);
+        }
+        
+        .cube-face--top {
+            transform: rotateX(90deg) translateZ(150px);
+        }
+        
+        .cube-face--bottom {
+            transform: rotateX(-90deg) translateZ(150px);
+        }
+        
+        .inner-water {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120px;
+            height: 120px;
+            transform: translate(-50%, -50%) translateZ(-10px);
+            background: radial-gradient(circle, 
+                rgba(0, 200, 255, 0.15) 0%, 
+                rgba(0, 100, 200, 0.25) 70%);
+            border-radius: 50%;
+            box-shadow: 
+                inset 0 0 50px rgba(0, 200, 255, 0.3),
+                0 0 50px rgba(0, 200, 255, 0.2);
+            animation: waterPulse 6s infinite ease-in-out;
+            filter: blur(5px);
+            z-index: -1;
+        }
+        
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            animation: rise linear infinite;
+        }
+        
+        @keyframes waterPulse {
+            0%, 100% { transform: translate(-50%, -50%) translateZ(-10px) scale(1); }
+            50% { transform: translate(-50%, -50%) translateZ(-10px) scale(1.1); }
+        }
+        
+        @keyframes rise {
+            to { transform: translateY(-100px); opacity: 0; }
+        }
+        
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            background: rgba(0, 255, 200, 0.1);
+            border: 1px solid rgba(0, 255, 200, 0.3);
+            border-radius: 30px;
+            color: #00ffcc;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .btn:hover {
+            background: rgba(0, 255, 200, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 200, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .info-panel {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 31, 63, 0.3);
+        }
+        
+        .info-panel h3 {
+            color: #00ffaa;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            text-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+        }
+        
+        .info-panel p {
+            color: #b0ffe0;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .highlight {
+            color: #00ffcc;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(0, 255, 200, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .scene {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .cube-face {
+                transform: none;
+            }
+            
+            .cube-face--front {
+                transform: translateZ(125px);
+            }
+            
+            .cube-face--back {
+                transform: rotateY(180deg) translateZ(125px);
+            }
+            
+            .cube-face--right {
+                transform: rotateY(90deg) translateZ(125px);
+            }
+            
+            .cube-face--left {
+                transform: rotateY(-90deg) translateZ(125px);
+            }
+            
+            .cube-face--top {
+                transform: rotateX(90deg) translateZ(125px);
+            }
+            
+            .cube-face--bottom {
+                transform: rotateX(-90deg) translateZ(125px);
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Portofolio Interaktif 3D</h1>
+        <p class="subtitle">Jelajahi portofolio saya melalui kubus interaktif dengan efek glassmorphism. Setiap sisi kubus dapat diklik untuk melihat detail lebih lanjut.</p>
+    </div>
+    
+    <div class="container">
+        <div class="scene">
+            <div class="cube">
+                <div class="cube-face cube-face--front">
+                    <i>👤</i>
+                    <h2>Profil</h2>
+                    <p>Tentang saya, pendidikan, dan pengalaman</p>
+                </div>
+                <div class="cube-face cube-face--back">
+                    <i>💻</i>
+                    <h2>Development</h2>
+                    <p>Proyek pengembangan web dan aplikasi</p>
+                </div>
+                <div class="cube-face cube-face--right">
+                    <i>🎨</i>
+                    <h2>Desain</h2>
+                    <p>Karya desain UI/UX dan grafis</p>
+                </div>
+                <div class="cube-face cube-face--left">
+                    <i>🏆</i>
+                    <h2>Karya</h2>
+                    <p>Portofolio dan pencapaian terbaik</p>
+                </div>
+                <div class="cube-face cube-face--top">
+                    <i>📞</i>
+                    <h2>Kontak</h2>
+                    <p>Hubungi saya untuk kolaborasi</p>
+                </div>
+                <div class="cube-face cube-face--bottom">
+                    <i>📚</i>
+                    <h2>Blog</h2>
+                    <p>Artikel dan tutorial terbaru</p>
+                </div>
+                <div class="inner-water"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button class="btn" id="rotateToggle">Jeda Rotasi</button>
+        <button class="btn" id="resetRotation">Reset Posisi</button>
+    </div>
+    
+    <div class="info-panel">
+        <h3>Panduan Interaksi</h3>
+        <p><span class="highlight">Drag</span> kubus untuk memutarnya secara manual</p>
+        <p><span class="highlight">Klik</span> pada salah satu sisi untuk melihat detail portofolio</p>
+        <p><span class="highlight">Tombol kontrol</span> untuk mengatur rotasi otomatis</p>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cube = document.querySelector('.cube');
+            let angleX = 15;
+            let angleY = 15;
+            let angleZ = 0;
+            let autoRotate = true;
+            let autoRotateTimeout;
+            const AUTO_ROTATE_DELAY = 3000;
+            let bubblesInterval;
+            
+            // Fungsi untuk membuat gelembung
+            function createBubbles() {
+                const scene = document.querySelector('.scene');
+                if (bubblesInterval) clearInterval(bubblesInterval);
+                
+                bubblesInterval = setInterval(() => {
+                    const bubble = document.createElement('div');
+                    bubble.classList.add('bubble');
+                    
+                    // Posisi acak di dalam scene
+                    const size = Math.random() * 20 + 5;
+                    const left = Math.random() * 100;
+                    
+                    bubble.style.width = `${size}px`;
+                    bubble.style.height = `${size}px`;
+                    bubble.style.left = `${left}%`;
+                    bubble.style.bottom = '0px';
+                    bubble.style.opacity = Math.random() * 0.5 + 0.2;
+                    bubble.style.animationDuration = `${Math.random() * 6 + 4}s`;
+                    
+                    scene.appendChild(bubble);
+                    
+                    // Hapus bubble setelah animasi selesai
+                    setTimeout(() => {
+                        if (bubble.parentNode) {
+                            bubble.parentNode.removeChild(bubble);
+                        }
+                    }, 10000);
+                }, 500);
+            }
+            
+            // Fungsi untuk aktifkan kembali rotasi otomatis
+            function enableAutoRotate() {
+                autoRotate = true;
+            }
+            
+            // Fungsi untuk menunda rotasi otomatis
+            function delayAutoRotate() {
+                clearTimeout(autoRotateTimeout);
+                autoRotateTimeout = setTimeout(enableAutoRotate, AUTO_ROTATE_DELAY);
+            }
+            
+            // Fungsi untuk menangani interaksi user
+            function handleUserInteraction() {
+                autoRotate = false;
+                delayAutoRotate();
+            }
+            
+            // Rotasi otomatis
+            setInterval(() => {
+                if (autoRotate) {
+                    angleX = 15 + 5 * Math.sin(Date.now() / 5000);
+                    angleY += 0.3;
+                    updateCubeRotation();
+                }
+            }, 30);
+            
+            // Fungsi update rotasi kubus
+            function updateCubeRotation() {
+                cube.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg) rotateZ(${angleZ}deg)`;
+            }
+            
+            // Drag to rotate (mouse)
+            let dragging = false;
+            let lastX, lastY;
+            
+            cube.parentElement.addEventListener('mousedown', function(e) {
+                dragging = true;
+                lastX = e.clientX;
+                lastY = e.clientY;
+                handleUserInteraction();
+            });
+            
+            window.addEventListener('mousemove', function(e) {
+                if (dragging) {
+                    let deltaX = e.clientX - lastX;
+                    let deltaY = e.clientY - lastY;
+                    angleY += deltaX * 0.5;
+                    angleX -= deltaY * 0.5;
+                    updateCubeRotation();
+                    lastX = e.clientX;
+                    lastY = e.clientY;
+                }
+            });
+            
+            window.addEventListener('mouseup', function() {
+                if (dragging) {
+                    dragging = false;
+                    handleUserInteraction();
+                }
+            });
+            
+            // Drag to rotate (touch / mobile)
+            cube.parentElement.addEventListener('touchstart', function(e) {
+                dragging = true;
+                lastX = e.touches[0].clientX;
+                lastY = e.touches[0].clientY;
+                handleUserInteraction();
+                e.preventDefault();
+            });
+            
+            window.addEventListener('touchmove', function(e) {
+                if (dragging) {
+                    let deltaX = e.touches[0].clientX - lastX;
+                    let deltaY = e.touches[0].clientY - lastY;
+                    angleY += deltaX * 0.5;
+                    angleX -= deltaY * 0.5;
+                    updateCubeRotation();
+                    lastX = e.touches[0].clientX;
+                    lastY = e.touches[0].clientY;
+                    e.preventDefault();
+                }
+            });
+            
+            window.addEventListener('touchend', function() {
+                if (dragging) {
+                    dragging = false;
+                    handleUserInteraction();
+                }
+            });
+            
+            // Kontrol tombol
+            document.getElementById('rotateToggle').addEventListener('click', function() {
+                autoRotate = !autoRotate;
+                this.textContent = autoRotate ? 'Jeda Rotasi' : 'Mulai Rotasi';
+                if (autoRotate) delayAutoRotate();
+            });
+            
+            document.getElementById('resetRotation').addEventListener('click', function() {
+                angleX = 15;
+                angleY = 15;
+                angleZ = 0;
+                updateCubeRotation();
+                handleUserInteraction();
+            });
+            
+            // Klik pada sisi kubus
+            const faces = document.querySelectorAll('.cube-face');
+            faces.forEach(face => {
+                face.addEventListener('click', function(e) {
+                    if (dragging) return;
+                    
+                    handleUserInteraction();
+                    
+                    // Efek visual saat diklik
+                    this.style.transform = 'scale(0.95)';
+                    this.style.boxShadow = '0 0 30px rgba(0, 255, 200, 0.5)';
+                    
+                    setTimeout(() => {
+                        this.style.transform = '';
+                        this.style.boxShadow = '';
+                    }, 300);
+                    
+                    // Tampilkan pesan berdasarkan sisi yang diklik
+                    const titles = {
+                        'Profil': 'Halaman Profil',
+                        'Development': 'Portofolio Development',
+                        'Desain': 'Karya Desain',
+                        'Karya': 'Pencapaian & Penghargaan',
+                        'Kontak': 'Hubungi Saya',
+                        'Blog': 'Artikel Terbaru'
+                    };
+                    
+                    const title = this.querySelector('h2').textContent;
+                    alert(`Anda memilih: ${titles[title]}`);
+                });
+            });
+            
+            // Mulai membuat gelembung
+            createBubbles();
+            
+            // Inisialisasi rotasi
+            updateCubeRotation();
+        });
+    </script>
+</body>
+</html>
