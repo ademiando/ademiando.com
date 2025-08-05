@@ -9,8 +9,10 @@
   --accent-dark: #7A8D7C;
   --text-color: #F0F0EC;
   --text-secondary: #C8C8C2;
-  --liquid-glass-bg: rgba(25, 25, 25, 0.3);
+  --liquid-glass-bg: rgba(25, 25, 25, 0.25);
   --liquid-glass-border: rgba(149, 174, 152, 0.15);
+  --liquid-highlight: rgba(255, 255, 255, 0.15);
+  --liquid-highlight-2: rgba(200, 220, 200, 0.1);
   --transition: all 0.4s ease;
 }
 
@@ -40,23 +42,87 @@ body {
   z-index: -1;
 }
 
-
-
-
-
-
-
-
-/* =============== GLASSMORPHISM EFFECT =============== */
+/* =============== LIQUID GLASS 3D EFFECT =============== */
 .glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
+  position: relative;
+  background: var(--liquid-glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--liquid-glass-border);
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   transition: var(--transition);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 0 20px rgba(0, 0, 0, 0.2);
+  
+  /* Liquid Glass Effect */
+  z-index: 1;
+}
+
+.glass-card::before,
+.glass-card::after {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  top: -25%;
+  left: -25%;
+  background: radial-gradient(
+    circle at center,
+    var(--liquid-highlight) 0%,
+    transparent 60%
+  );
+  opacity: 0.3;
+  z-index: -1;
+  animation: liquidFlow 15s linear infinite;
+  pointer-events: none;
+}
+
+.glass-card::after {
+  background: radial-gradient(
+    circle at center,
+    var(--liquid-highlight-2) 0%,
+    transparent 70%
+  );
+  animation: liquidFlowReverse 20s linear infinite;
+  opacity: 0.2;
+}
+
+@keyframes liquidFlow {
+  0% {
+    transform: rotate(0deg) translate(0, 0);
+  }
+  25% {
+    transform: rotate(5deg) translate(10px, 10px);
+  }
+  50% {
+    transform: rotate(0deg) translate(20px, 0);
+  }
+  75% {
+    transform: rotate(-5deg) translate(10px, -10px);
+  }
+  100% {
+    transform: rotate(0deg) translate(0, 0);
+  }
+}
+
+@keyframes liquidFlowReverse {
+  0% {
+    transform: rotate(30deg) translate(0, 0);
+  }
+  25% {
+    transform: rotate(35deg) translate(-15px, 15px);
+  }
+  50% {
+    transform: rotate(30deg) translate(-30px, 0);
+  }
+  75% {
+    transform: rotate(25deg) translate(-15px, -15px);
+  }
+  100% {
+    transform: rotate(30deg) translate(0, 0);
+  }
 }
 
 /* =============== FLOATING ANIMATION =============== */
@@ -76,10 +142,35 @@ body {
   top: 0;
   width: 100%;
   z-index: 1000;
-  background: rgba(10, 10, 10, 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(10, 10, 10, 0.7);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-bottom: 1px solid rgba(149, 174, 152, 0.1);
+  transition: var(--transition);
+}
+
+/* Liquid effect for nav */
+.glass-nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent 20%,
+    rgba(149, 174, 152, 0.05) 50%,
+    transparent 80%
+  );
+  opacity: 0.2;
+  z-index: -1;
+  animation: navFlow 30s linear infinite;
+}
+
+@keyframes navFlow {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(50%); }
 }
 
 .nav-container {
@@ -122,6 +213,27 @@ body {
   border-radius: 30px;
   transition: var(--transition);
   position: relative;
+  overflow: hidden;
+}
+
+.nav-links a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: var(--transition);
+}
+
+.nav-links a:hover::before {
+  left: 100%;
 }
 
 .nav-links a::after {
@@ -190,7 +302,9 @@ body {
   gap: 20px;
 }
 
+/* =============== LIQUID GLASS BUTTONS =============== */
 .cta-btn {
+  position: relative;
   padding: 14px 30px;
   background: linear-gradient(45deg, var(--accent-dark), var(--accent-color));
   color: #000;
@@ -201,7 +315,39 @@ body {
   align-items: center;
   gap: 10px;
   transition: var(--transition);
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  opacity: 0;
+  transition: var(--transition);
+  z-index: -1;
+}
+
+.cta-btn:hover::before {
+  opacity: 1;
+  animation: liquidShine 2s linear infinite;
+}
+
+@keyframes liquidShine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 .cta-btn i {
@@ -210,7 +356,9 @@ body {
 
 .cta-btn:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+  box-shadow: 
+    0 8px 25px rgba(149, 174, 152, 0.5),
+    inset 0 0 15px rgba(255, 255, 255, 0.3);
 }
 
 .hero-animation {
@@ -458,7 +606,9 @@ body {
   font-size: 0.9rem;
 }
 
+/* LIQUID GLASS BUTTON FOR PACKAGES */
 .cta-wa {
+  position: relative;
   display: block;
   text-align: center;
   padding: 12px;
@@ -468,11 +618,41 @@ body {
   border-radius: 8px;
   font-weight: 600;
   transition: var(--transition);
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+.cta-wa::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  opacity: 0;
+  transition: var(--transition);
+  z-index: -1;
+}
+
+.cta-wa:hover::before {
+  opacity: 1;
+  animation: liquidShine 2s linear infinite;
 }
 
 .cta-wa:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+  box-shadow: 
+    0 8px 20px rgba(37, 211, 102, 0.4),
+    inset 0 0 12px rgba(255, 255, 255, 0.3);
 }
 
 /* =============== ADD-ONS SECTION =============== */
@@ -596,7 +776,7 @@ body {
 .form-group textarea:focus {
   outline: none;
   border-color: var(--accent-color);
-  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+  box-shadow: 0 0 0 3px rgba(149, 174, 152, 0.2);
 }
 
 .form-group textarea {
@@ -604,7 +784,9 @@ body {
   resize: vertical;
 }
 
+/* LIQUID GLASS SUBMIT BUTTON */
 .submit-btn {
+  position: relative;
   width: 100%;
   padding: 15px;
   background: linear-gradient(45deg, var(--accent-dark), var(--accent-color));
@@ -619,11 +801,41 @@ body {
   justify-content: center;
   align-items: center;
   gap: 10px;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  opacity: 0;
+  transition: var(--transition);
+  z-index: -1;
+}
+
+.submit-btn:hover::before {
+  opacity: 1;
+  animation: liquidShine 2s linear infinite;
 }
 
 .submit-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+  box-shadow: 
+    0 8px 20px rgba(149, 174, 152, 0.4),
+    inset 0 0 15px rgba(255, 255, 255, 0.3);
 }
 
 .order-info {
@@ -711,15 +923,35 @@ body {
 .powered-by { 
   padding: 1.5rem 1rem; 
   text-align: center; 
-  background: rgba(255, 255, 255, 0.05); 
+  background: rgba(25, 25, 25, 0.25);
   border-radius: 1rem; 
-  backdrop-filter: blur(16px); 
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25), 0 0 20px rgba(78, 84, 200, 0.2); 
+  backdrop-filter: blur(16px) saturate(180%); 
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.25),
+    0 0 20px rgba(78, 84, 200, 0.2),
+    inset 0 0 15px rgba(149, 174, 152, 0.1); 
   margin: 2rem auto; 
   max-width: 1100px; 
-  border: 1px solid rgba(255, 255, 255, 0.12); 
+  border: 1px solid rgba(255, 255, 255, 0.08); 
   position: relative; 
   overflow: hidden; 
+}
+
+.powered-by::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(200, 220, 200, 0.1) 0%,
+    transparent 60%
+  );
+  opacity: 0.2;
+  z-index: -1;
+  animation: liquidFlow 20s linear infinite;
 }
 
 .powered-logos { 
@@ -750,7 +982,9 @@ body {
   padding: 1.2rem 1rem; 
   transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
   border: 1px solid rgba(255, 255, 255, 0.15); 
-  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.2); 
+  box-shadow: 
+    0 5px 18px rgba(0, 0, 0, 0.2),
+    inset 0 0 8px rgba(255, 255, 255, 0.05); 
   backdrop-filter: blur(4px); 
 }
 
@@ -795,6 +1029,28 @@ body {
 .glass-footer {
   background: radial-gradient(circle at bottom, #1a1a1a, #000000);
   padding: 60px 20px 0;
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  position: relative;
+}
+
+/* Liquid effect for footer */
+.glass-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg, 
+    transparent 0%, 
+    rgba(149, 174, 152, 0.05) 50%, 
+    transparent 100%
+  );
+  opacity: 0.15;
+  z-index: -1;
+  animation: navFlow 40s linear infinite;
 }
 
 .footer-container {
@@ -836,6 +1092,10 @@ body {
   font-size: 1.2rem;
   transition: var(--transition);
   text-decoration: none;
+  backdrop-filter: blur(4px);
+  box-shadow: 
+    0 4px 10px rgba(0, 0, 0, 0.2),
+    inset 0 0 8px rgba(255, 255, 255, 0.05);
 }
 
 .social-links a:hover {
@@ -896,7 +1156,6 @@ body {
 }
 
 /* ========== SCROLL TOP BUTTON ========== */
-
 .scroll-top {
   position: fixed;
   bottom: 20px;
@@ -907,40 +1166,44 @@ body {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-
-  /* Dark glassmorphism */
-  background: rgba(18, 18, 18, 0.4); /* gelap transparan */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1.5px solid rgba(255, 255, 255, 0.08); /* white low-opacity border */
-
+  background: rgba(18, 18, 18, 0.3);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   z-index: 999;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); /* bayangan gelap */
-  color: #fff; /* warna ikon putih */
+  box-shadow: 
+    0 4px 30px rgba(0, 0, 0, 0.5),
+    inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.scroll-top::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.15) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  animation: liquidFlow 10s linear infinite;
+  opacity: 0.5;
+  z-index: -1;
 }
 
 .scroll-top:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
-  background: rgba(18, 18, 18, 0.6);
-  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.7),
+    inset 0 0 15px rgba(255, 255, 255, 0.15);
+  background: rgba(18, 18, 18, 0.4);
+  border-color: rgba(149, 174, 152, 0.3);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* =============== RESPONSIVE STYLES =============== */
 /* Tablet */
@@ -1220,316 +1483,3 @@ body {
     padding: 100px 20px 30px;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* =============== LIQUID GLASS EFFECT =============== */
-.glass-card {
-  background: var(--liquid-glass-bg);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid var(--liquid-glass-border);
-  border-radius: 16px;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 0 20px rgba(149, 174, 152, 0.1);
-  overflow: hidden;
-  transition: var(--transition);
-  position: relative;
-}
-
-/* Liquid effect pseudo-element */
-.glass-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-  opacity: 0.3;
-  transform: rotate(30deg);
-  transition: var(--transition);
-  z-index: -1;
-}
-
-.glass-card:hover::before {
-  transform: rotate(45deg) translate(10px, -10px);
-}
-
-/* =============== FLOATING ANIMATION =============== */
-.floating {
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
-}
-
-/* =============== NAVIGATION =============== */
-.glass-nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-  background: rgba(10, 10, 10, 0.7);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  border-bottom: 1px solid rgba(149, 174, 152, 0.1);
-  transition: var(--transition);
-}
-
-/* Liquid effect for nav */
-.glass-nav::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, 
-    transparent 0%, 
-    rgba(149, 174, 152, 0.05) 50%, 
-    transparent 100%);
-  opacity: 0.2;
-  z-index: -1;
-}
-
-/* =============== TOMBOL LIQUID GLASS =============== */
-/* Base button style */
-.cta-btn, .submit-btn, .cta-wa {
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-  transition: var(--transition);
-  border: none;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  border-radius: 50px;
-  box-shadow: 
-    0 4px 15px rgba(0, 0, 0, 0.3),
-    inset 0 0 10px rgba(255, 255, 255, 0.1);
-}
-
-/* Liquid effect for buttons */
-.cta-btn::before, 
-.submit-btn::before, 
-.cta-wa::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, 
-    rgba(255,255,255,0.3) 0%, 
-    rgba(255,255,255,0.1) 40%,
-    transparent 70%);
-  transform: rotate(45deg);
-  transition: var(--transition);
-  z-index: -1;
-}
-
-/* Button hover effect */
-.cta-btn:hover::before, 
-.submit-btn:hover::before, 
-.cta-wa:hover::before {
-  transform: rotate(45deg) translate(10px, -10px);
-}
-
-/* Specific button styles */
-.cta-btn {
-  padding: 14px 30px;
-  background: linear-gradient(45deg, var(--accent-dark), var(--accent-color));
-  color: #000;
-}
-
-.submit-btn {
-  padding: 15px;
-  background: linear-gradient(45deg, var(--accent-dark), var(--accent-color));
-  color: #000;
-  font-size: 1.1rem;
-  justify-content: center;
-}
-
-.cta-wa {
-  padding: 12px;
-  background: linear-gradient(45deg, #128C7E, #25D366);
-  color: white;
-  text-align: center;
-  border-radius: 8px;
-}
-
-/* Button hover states */
-.cta-btn:hover, .submit-btn:hover {
-  transform: translateY(-5px);
-  box-shadow: 
-    0 8px 25px rgba(149, 174, 152, 0.5),
-    inset 0 0 15px rgba(255, 255, 255, 0.2);
-}
-
-.cta-wa:hover {
-  transform: translateY(-3px);
-  box-shadow: 
-    0 8px 20px rgba(37, 211, 102, 0.4),
-    inset 0 0 15px rgba(255, 255, 255, 0.2);
-}
-
-/* =============== HERO SECTION =============== */
-.hero-section {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  padding: 100px 100px 50px;
-  position: relative;
-  overflow: hidden;
-}
-
-/* ... (bagian kode lainnya tetap sama) ... */
-
-/* =============== POWERED BY SECTION =============== */
-.powered-by { 
-  padding: 1.5rem 1rem; 
-  text-align: center; 
-  background: rgba(25, 25, 25, 0.25);
-  border-radius: 1rem; 
-  backdrop-filter: blur(16px) saturate(180%); 
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.25),
-    0 0 20px rgba(78, 84, 200, 0.2),
-    inset 0 0 15px rgba(149, 174, 152, 0.1); 
-  margin: 2rem auto; 
-  max-width: 1100px; 
-  border: 1px solid rgba(255, 255, 255, 0.08); 
-  position: relative; 
-  overflow: hidden; 
-}
-
-.tech-logo { 
-  min-width: 130px; 
-  text-align: center; 
-  flex-shrink: 0; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  justify-content: center; 
-  background: rgba(255, 255, 255, 0.08); 
-  border-radius: 14px; 
-  padding: 1.2rem 1rem; 
-  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-  border: 1px solid rgba(255, 255, 255, 0.1); 
-  box-shadow: 
-    0 5px 18px rgba(0, 0, 0, 0.2),
-    inset 0 0 8px rgba(255, 255, 255, 0.05); 
-  backdrop-filter: blur(4px); 
-}
-
-/* ... (bagian kode lainnya tetap sama) ... */
-
-/* =============== FOOTER =============== */
-.glass-footer {
-  background: radial-gradient(circle at bottom, #1a1a1a, #000000);
-  padding: 60px 20px 0;
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  position: relative;
-}
-
-/* Liquid effect for footer */
-.glass-footer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, 
-    transparent 0%, 
-    rgba(149, 174, 152, 0.05) 50%, 
-    transparent 100%);
-  opacity: 0.15;
-  z-index: -1;
-}
-
-.social-links a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 50%;
-  color: var(--text-color);
-  font-size: 1.2rem;
-  transition: var(--transition);
-  text-decoration: none;
-  backdrop-filter: blur(4px);
-  box-shadow: 
-    0 4px 10px rgba(0, 0, 0, 0.2),
-    inset 0 0 8px rgba(255, 255, 255, 0.05);
-}
-
-/* ========== SCROLL TOP BUTTON ========== */
-.scroll-top {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: rgba(18, 18, 18, 0.3);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  cursor: pointer;
-  transition: var(--transition);
-  z-index: 999;
-  box-shadow: 
-    0 4px 30px rgba(0, 0, 0, 0.5),
-    inset 0 0 10px rgba(255, 255, 255, 0.1);
-}
-
-.scroll-top:hover {
-  transform: translateY(-5px);
-  box-shadow: 
-    0 8px 25px rgba(0, 0, 0, 0.7),
-    inset 0 0 15px rgba(255, 255, 255, 0.15);
-  background: rgba(18, 18, 18, 0.4);
-  border-color: rgba(149, 174, 152, 0.3);
-}
-
-/* ... (bagian kode lainnya tetap sama) ... */
