@@ -1,0 +1,33 @@
+/* style.css - Montamap Premium Liquid Glass UI */ @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* =============== VARIABLES =============== */ :root { --primary-bg: #0f0f0f; --secondary-bg: #1a1a1a; --accent-light: #95AE98; --accent-dark: #7A8D7C; --text-main: #F0F0EC; --text-muted: #C8C8C2; --glass-bg: rgba(30, 30, 30, 0.5); --glass-border: rgba(149, 174, 152, 0.4); --transition: all 0.3s ease; }
+
+/* =============== RESET & BASE =============== */
+
+{ margin:0; padding:0; box-sizing:border-box; } body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at center, var(--primary-bg), #000); color: var(--text-main); line-height:1.6; overflow-x:hidden; }
+
+
+/* =============== PARTICLE BACKGROUND =============== */ .particles-container { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; }
+
+/* =============== GLASSMORPHISM =============== */ .glass-card, .glass-nav, .glass-footer { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border:1px solid var(--glass-border); border-radius:16px; box-shadow:0 8px 32px rgba(0,0,0,0.4); transition:var(--transition); } .glass-card:hover { background: rgba(40,40,40,0.6); box-shadow:0 12px 48px rgba(0,0,0,0.5); }
+
+/* =============== NAVIGATION =============== */ .glass-nav { position:fixed; top:0; width:100%; z-index:1000; padding:1rem; display:flex; justify-content:center; } .nav-container { width:100%; max-width:1200px; display:flex; justify-content:space-between; align-items:center; } .logo { font-size:1.8rem; font-weight:700; color:var(--accent-light); } .nav-links { display:flex; gap:1.5rem; } .nav-links a { color:var(--text-main); padding:0.5rem 1rem; border-radius:30px; position:relative; transition:var(--transition); } .nav-links a::after { content:''; position:absolute; bottom:-2px; left:50%; width:0; height:2px; background:var(--accent-light); transition:var(--transition); transform:translateX(-50%); } .nav-links a:hover::after { width:80%; } .nav-links a:hover { color:var(--accent-light); } .hamburger { display:none; cursor:pointer; } .hamburger .line { background:var(--text-main); }
+
+/* =============== HERO =============== */ .hero-section { min-height:100vh; display:flex; align-items:center; padding:6rem 2rem 2rem; position:relative; } .hero-content { max-width:600px; z-index:2; } .hero-title { font-size:3.5rem; font-weight:700; margin-bottom:1rem; } .hero-subtitle { font-size:1.2rem; color:var(--text-muted); margin-bottom:2rem; } .hero-cta { display:flex; gap:1rem; } .cta-btn { padding:1rem 2rem; background:linear-gradient(45deg, var(--accent-dark), var(--accent-light)); color:#000; border:none; border-radius:50px; font-weight:600; transition:var(--transition); } .cta-btn:hover { transform:translateY(-4px); box-shadow:0 6px 20px rgba(0,0,0,0.3); }
+
+/* =============== FLOATING ANIMATION =============== */ .floating { animation:float 6s ease-in-out infinite; } @keyframes float { 0%,100%{transform:translateY(0);}50%{transform:translateY(-15px);} }
+
+/* =============== SECTIONS =============== */ .section { padding:6rem 2rem; } .section-header { text-align:center; margin-bottom:3rem; } .section-header h2 { font-size:2.5rem; color:var(--accent-light); } .section-header p { max-width:700px; margin:1rem auto 0; color:var(--text-muted); }
+
+/* =============== CARDS =============== */ .card { background: var(--glass-bg); padding:2rem; border-radius:16px; backdrop-filter: blur(18px); border:1px solid var(--glass-border); box-shadow:0 6px 24px rgba(0,0,0,0.4); transition:var(--transition); } .card:hover { transform:translateY(-6px); box-shadow:0 10px 30px rgba(0,0,0,0.5); }
+
+/* =============== BUTTONS =============== */ .btn { display:inline-block; padding:0.75rem 2rem; background: var(--glass-bg); border:1px solid var(--glass-border); border-radius:50px; color:var(--text-main); backdrop-filter: blur(15px); transition:var(--transition); } .btn-primary { background:linear-gradient(45deg, var(--accent-light), var(--accent-dark)); color:#000; } .btn:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(0,0,0,0.4); }
+
+/* =============== FORMS =============== */ .input, .textarea { width:100%; padding:1rem; background: var(--secondary-bg); border:1px solid var(--glass-border); border-radius:12px; color:var(--text-main); backdrop-filter: blur(12px); transition:var(--transition); } .input:focus, .textarea:focus { outline:none; border-color:var(--accent-light); box-shadow:0 0 0 3px rgba(149,174,152,0.4); }
+
+/* =============== FOOTER =============== */ .glass-footer { padding:3rem 2rem; text-align:center; margin-top:4rem; }
+
+/* =============== UTILITIES =============== */ .flex { display:flex; } .center { justify-content:center; align-items:center; } .text-center { text-align:center; } .mt-2 { margin-top:2rem; } .mb-2 { margin-bottom:2rem; }
+
+/* =============== RESPONSIVE =============== */ @media(max-width:768px) { .hero-section { flex-direction:column; padding-top:4rem; } .nav-links { display:none; } .hamburger { display:block; } }
+
