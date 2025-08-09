@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-
-  // ========== PARALLAX HD BACKGROUND ==========
-  // Buat canvas untuk background paralaks
+// ========== PARALLAX HD BACKGROUND REALISTIK + ZOOM SCROLL ==========
+document.addEventListener('DOMContentLoaded', function() {
   let parallaxCanvas = document.createElement('canvas');
   parallaxCanvas.id = 'parallax-bg';
   parallaxCanvas.style.position = 'fixed';
@@ -14,65 +13,72 @@ document.addEventListener('DOMContentLoaded', function() {
   document.body.prepend(parallaxCanvas);
 
   let ctx = parallaxCanvas.getContext('2d');
+  let width = window.innerWidth;
+  let height = window.innerHeight;
 
-  // Konfigurasi layer paralaks
-  let layers = [
-    {
-      // Layer belakang: gradasi bintang
-      draw: function(w, h, mx, my) {
-        let grad = ctx.createLinearGradient(0, 0, 0, h);
-        grad.addColorStop(0, '#0d1b2a');
-        grad.addColorStop(1, '#1b263b');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, w, h);
+  // Buat layer bintang
+  let starCount = 350;
+  let stars = [];
+  for (let i = 0; i < starCount; i++) {
+    stars.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      r: Math.random() * 1.2 + 0.3,
+      alpha: Math.random() * 0.8 + 0.2,
+      speed: Math.random() * 0.03 + 0.01
+    });
+  }
 
-        // Bintang random
-        for(let i=0; i<150; i++) {
-          let x = Math.random()*w;
-          let y = Math.random()*h;
-          ctx.beginPath();
-          ctx.arc(x, y, Math.random()*0.8+0.2, 0, Math.PI*2);
-          ctx.fillStyle = 'rgba(255,255,255,'+(Math.random()*0.7+0.2)+')';
-          ctx.fill();
-        }
-      },
-      depth: 0.02
-    },
-    {
-      // Layer awan/nebula (pakai gradient neon hijau)
-      draw: function(w, h, mx, my) {
-        let grad = ctx.createRadialGradient(
-          w*0.7+mx*30, h*0.3+my*30, 10,
-          w*0.7+mx*30, h*0.3+my*30, w/2
-        );
-        grad.addColorStop(0, 'rgba(57,255,20,0.15)');
-        grad.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, w, h);
-      },
-      depth: 0.04
-    },
-    {
-      // Layer depan: partikel neon/interaktif
-      draw: function(w, h, mx, my) {
-        for(let i=0; i<35; i++) {
-          let t = Date.now()/1000 + i;
-          let x = (w/2) + Math.sin(t+i)*w*0.35 + mx*90;
-          let y = (h/2) + Math.cos(t+i*1.5)*h*0.28 + my*60;
-          ctx.beginPath();
-          ctx.arc(x, y, 7+6*Math.sin(t+i*0.7), 0, Math.PI*2);
-          ctx.shadowColor = '#39FF14';
-          ctx.shadowBlur = 22;
-          ctx.fillStyle = 'rgba(57,255,20,0.28)';
-          ctx.fill();
-          ctx.shadowBlur = 0;
-        }
-      },
-      depth: 0.09
-    }
-  ];
+  // Buat layer nebula/awan galaksi
+  function drawNebula(ctx, w, h, mouseX, mouseY, zoom) {
+    // Nebula gradient deep blue-purple
+    let grad1 = ctx.createRadialGradient(
+      w * 0.4 + mouseX * 20, h * 0.35 + mouseY * 20, 10 * zoom,
+      w * 0.45 + mouseX * 20, h * 0.4 + mouseY * 20, w * 0.7 * zoom
+    );
+    grad1.addColorStop(0, 'rgba(120, 0, 210, 0.16)');
+    grad1.addColorStop(0.55, 'rgba(31, 18, 47, 0.18)');
+    grad1.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
-  // Track mouse/touch untuk efek interaktif paralaks
+    ctx.globalAlpha = 0.8;
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.fillStyle = grad1;
+    ctx.fillRect(0, 0, w, h);
+
+    let grad2 = ctx.createRadialGradient(
+      w * 0.7 + mouseX * 30, h * 0.7 + mouseY * 30, 20 * zoom,
+      w * 0.65 + mouseX * 30, h * 0.8 + mouseY * 20, w * 0.5 * zoom
+    );
+    grad2.addColorStop(0, 'rgba(0, 180, 255, 0.12)');
+    grad2.addColorStop(0.7, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = grad2;
+    ctx.fillRect(0, 0, w, h);
+
+    // Sedikit hint hijau/emerald
+    let grad3 = ctx.createRadialGradient(
+      w * 0.55, h * 0.15, 10 * zoom,
+      w * 0.52, h * 0.19, w * 0.24 * zoom
+    );
+    grad3.addColorStop(0, 'rgba(0,255,100,0.13)');
+    grad3.addColorStop(0.8, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad3;
+    ctx.fillRect(0,0,w,h);
+
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  // Responsive resize
+  function resizeCanvas() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    parallaxCanvas.width = width;
+    parallaxCanvas.height = height;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  // Mouse Parallax
   let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
   function updateMouse(e) {
     let w = window.innerWidth, h = window.innerHeight;
@@ -87,30 +93,68 @@ document.addEventListener('DOMContentLoaded', function() {
   window.addEventListener('mousemove', updateMouse);
   window.addEventListener('touchmove', updateMouse);
 
-  // Responsive resize
-  function resizeCanvas() {
-    parallaxCanvas.width = window.innerWidth;
-    parallaxCanvas.height = window.innerHeight;
+  // Zoom effect by scroll
+  let scrollRatio = 0, zoom = 1;
+  function updateZoom() {
+    // ScrollY effect, clamp between 1 and 1.25
+    scrollRatio = Math.min(1, window.scrollY / (window.innerHeight * 1.2));
+    zoom = 1 + 0.2 * scrollRatio;
   }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
+  window.addEventListener('scroll', updateZoom);
 
-  // Main animation loop
+  // Animation loop
   function animateParallax() {
-    mouseX += (targetX - mouseX) * 0.07;
-    mouseY += (targetY - mouseY) * 0.07;
-    let w = parallaxCanvas.width, h = parallaxCanvas.height;
-    ctx.clearRect(0,0,w,h);
-    layers.forEach(layer => {
-      ctx.save();
-      ctx.translate(w*layer.depth*mouseX, h*layer.depth*mouseY);
-      layer.draw(w, h, mouseX, mouseY);
-      ctx.restore();
-    });
+    mouseX += (targetX - mouseX) * 0.1;
+    mouseY += (targetY - mouseY) * 0.1;
+    updateZoom();
+
+    ctx.clearRect(0,0,width,height);
+
+    // Background deep black
+    let gradBg = ctx.createLinearGradient(0, 0, 0, height);
+    gradBg.addColorStop(0, '#0a0a13');
+    gradBg.addColorStop(1, '#191928');
+    ctx.fillStyle = gradBg;
+    ctx.fillRect(0, 0, width, height);
+
+    // Draw nebula/awan layer
+    drawNebula(ctx, width, height, mouseX*22, mouseY*22, zoom);
+
+    // Draw moving stars (minor movement only)
+    for (let i = 0; i < stars.length; i++) {
+      let star = stars[i];
+      // Sedikit movement paralaks
+      let parallaxX = star.x + mouseX * star.r * 24 * (0.18 + star.r * 0.25);
+      let parallaxY = star.y + mouseY * star.r * 18 * (0.18 + star.r * 0.25);
+      // Efek gerak lambat
+      let slowMove = Math.sin(Date.now() * star.speed * 0.22 + i) * 2;
+      ctx.beginPath();
+      ctx.arc(
+        parallaxX * zoom,
+        (parallaxY + slowMove) * zoom,
+        star.r * zoom,
+        0, Math.PI * 2
+      );
+      ctx.globalAlpha = star.alpha;
+      ctx.fillStyle = '#fff';
+      ctx.shadowColor = '#fff';
+      ctx.shadowBlur = 5 * star.r * zoom;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.globalAlpha = 1;
+    }
+
     requestAnimationFrame(animateParallax);
   }
   animateParallax();
+});
 
+
+
+
+
+
+  
   // ========== CUBE INTERAKTIF 3D ==========
   const cube = document.querySelector('.cube');
   let angleX = 0;
