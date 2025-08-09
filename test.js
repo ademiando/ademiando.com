@@ -1,12 +1,5 @@
-// Cinematic Parallax Galaxy - Siap tempel di ademiando.com, ga perlu React/npm
-// Wajib: Tambahkan di index.html sebelum <script src="test.js"> :
-// <script src="https://unpkg.com/three@0.155.0/build/three.min.js"></script>
-// <script src="https://unpkg.com/three@0.155.0/examples/js/postprocessing/EffectComposer.js"></script>
-// <script src="https://unpkg.com/three@0.155.0/examples/js/postprocessing/RenderPass.js"></script>
-// <script src="https://unpkg.com/three@0.155.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
-
 (function () {
-  // ===== SETUP CANVAS =====
+  // ===== PARALLAX GALAXY - CANVAS =====
   let canvas = document.createElement("canvas");
   canvas.id = "parallax-canvas";
   canvas.style.position = "fixed";
@@ -18,7 +11,7 @@
   canvas.style.pointerEvents = "none";
   document.body.prepend(canvas);
 
-  // ===== THREE.JS INIT =====
+  // ===== THREE.JS GALAXY =====
   let scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x000000, 0.00033);
 
@@ -148,4 +141,100 @@
     requestAnimationFrame(animate);
   }
   animate();
+
+  // ===== CUBE 3D INTERAKTIF (tetap ada, di atas parallax) =====
+  // Pastikan ada .cube di HTML kamu!
+  const cube = document.querySelector('.cube');
+  let angleX = 15;
+  let angleY = 15;
+  let angleZ = 0;
+  let autoRotate = true;
+
+  // Tambahkan variabel untuk reset timer
+  let autoRotateTimeout;
+  const AUTO_ROTATE_DELAY = 2000; // 2 detik setelah interaksi
+
+  if (cube) {
+    // Fungsi untuk aktifkan kembali rotasi otomatis
+    function enableAutoRotate() {
+      autoRotate = true;
+    }
+
+    // Fungsi untuk menunda rotasi otomatis
+    function delayAutoRotate() {
+      clearTimeout(autoRotateTimeout);
+      autoRotateTimeout = setTimeout(enableAutoRotate, AUTO_ROTATE_DELAY);
+    }
+
+    // Fungsi untuk menangani interaksi user
+    function handleUserInteraction() {
+      autoRotate = false;
+      delayAutoRotate();
+    }
+
+    setInterval(() => {
+      if (autoRotate) {
+        angleX = 15 + 5 * Math.sin(Date.now() / 5000);
+        angleY += 0.5;
+        cube.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg)`;
+      }
+    }, 15);
+
+    // Drag to rotate (mouse)
+    let dragging = false;
+    let lastX, lastY;
+
+    cube.parentElement.addEventListener('mousedown', function(e) {
+      dragging = true;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      handleUserInteraction();
+    });
+
+    window.addEventListener('mousemove', function(e) {
+      if (dragging) {
+        let deltaX = e.clientX - lastX;
+        let deltaY = e.clientY - lastY;
+        angleY += deltaX * 0.8;
+        angleX -= deltaY * 0.8;
+        cube.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg) rotateZ(${angleZ}deg)`;
+        lastX = e.clientX;
+        lastY = e.clientY;
+      }
+    });
+
+    window.addEventListener('mouseup', function() {
+      if (dragging) {
+        dragging = false;
+        handleUserInteraction();
+      }
+    });
+
+    // Drag to rotate (touch / mobile)
+    cube.parentElement.addEventListener('touchstart', function(e) {
+      dragging = true;
+      lastX = e.touches[0].clientX;
+      lastY = e.touches[0].clientY;
+      handleUserInteraction();
+    });
+
+    window.addEventListener('touchmove', function(e) {
+      if (dragging) {
+        let deltaX = e.touches[0].clientX - lastX;
+        let deltaY = e.touches[0].clientY - lastY;
+        angleY += deltaX * 0.8;
+        angleX -= deltaY * 0.8;
+        cube.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg) rotateZ(${angleZ}deg)`;
+        lastX = e.touches[0].clientX;
+        lastY = e.touches[0].clientY;
+      }
+    });
+
+    window.addEventListener('touchend', function() {
+      if (dragging) {
+        dragging = false;
+        handleUserInteraction();
+      }
+    });
+  }
 })();
