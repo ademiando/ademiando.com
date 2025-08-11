@@ -1,47 +1,314 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Ademiando Hero Section</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    html, body, #root { height: 100%; margin: 0; background: #111; color: #fff; }
-    .hero-container { position: relative; width: 100vw; height: 100vh; overflow: hidden;}
-    .hero-canvas { position: fixed; top:0; left:0; width:100vw; height:100vh; z-index:1; pointer-events:none;}
-    .side-menu { position:fixed; left:32px; top:36px; z-index:10; display:flex; flex-direction:column; align-items:center;}
-    .side-menu .menu-icon span { display:block; width:32px; height:4px; background:#fff; margin:6px 0; border-radius:2px;}
-    .vertical-text { writing-mode: vertical-rl; text-orientation: mixed; font-size:15px; margin-top:18px; letter-spacing:2px; opacity:.7;}
-    .hero-content { position:relative; z-index:5; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh;}
-    .hero-title { font-size:4rem; letter-spacing:2px; font-weight:800; margin:0 0 18px 0; }
-    .hero-subtitle { font-size:1.4rem; line-height:1.5; opacity:.85;}
-    .subtitle-line { margin:0;}
-    .scroll-progress { position:fixed; bottom:36px; left:50%; transform:translateX(-50%); z-index:10; display:flex; flex-direction:column; align-items:center;}
-    .scroll-text { font-size:13px; letter-spacing:2px; opacity:.7; margin-bottom:8px;}
-    .progress-track { width:120px; height:6px; background:#444; border-radius:3px; overflow:hidden; margin-bottom:6px;}
-    .progress-fill { height:100%; background:linear-gradient(90deg,#00f0ff,#f0f); border-radius:3px; transition:width 0.2s;}
-    .section-counter { font-size:13px; opacity:.7;}
-    .scroll-sections { height:200vh;}
-    section.content-section { margin-top:120vh; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ademiando - Web Development Portfolio</title>
+    <style>
+        /* CSS Styling Kompleks */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            background-color: #000;
+            overflow-x: hidden;
+        }
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Background cinematic */
+        }
+        header {
+            text-align: center;
+            padding: 150px 20px;
+            position: relative;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            font-size: 4em;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(100px); /* Untuk GSAP animasi */
+            transition: all 0.5s ease; /* Fallback */
+        }
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .project {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .project:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5); /* Glow effect */
+        }
+        .project img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        footer {
+            text-align: center;
+            padding: 40px;
+            background: #111;
+            position: relative;
+        }
+        /* Media Queries untuk Responsif */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            section { padding: 50px 10px; }
+        }
+    </style>
+    <!-- Import Three.js dan Addons via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/postprocessing/RenderPass.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/shaders/CopyShader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/postprocessing/ShaderPass.js"></script>
+    <!-- GSAP dan ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 </head>
 <body>
-  <div id="root"></div>
-  <!-- React, ReactDOM, Babel -->
-  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-  <script src="https://unpkg.com/three@0.155.0/build/three.min.js"></script>
-  <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
-  <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-  <script src="https://unpkg.com/three@0.155.0/examples/js/postprocessing/EffectComposer.js"></script>
-  <script src="https://unpkg.com/three@0.155.0/examples/js/postprocessing/RenderPass.js"></script>
-  <script src="https://unpkg.com/three@0.155.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <!-- Load ademiando.jsx as a module using Babel -->
-  <script type="text/babel" data-type="module" data-presets="react">
-    import { Component as HeroSection } from './ademiando.jsx';
+    <!-- Container untuk Three.js Canvas -->
+    <div id="canvas-container"></div>
 
-    // Render ke root
-    ReactDOM.createRoot(document.getElementById('root')).render(<HeroSection />);
-  </script>
+    <!-- Header Cinematic -->
+    <header>
+        <h1>Ademiando</h1>
+        <p>Web Developer & Creative Technologist - Specializing in Interactive Web Experiences</p>
+    </header>
+
+    <!-- Section Work (Projects Web Dev) -->
+    <section id="work">
+        <h2>Work</h2>
+        <div class="project-grid">
+            <div class="project">
+                <img src="https://source.unsplash.com/random/800x600/?web-development" alt="Project 1">
+                <h3>E-commerce Platform</h3>
+                <p>Built a responsive e-commerce site with React, Node.js, and payment integration. Features: Cart animation, real-time updates.</p>
+                <a href="#">View Project</a>
+            </div>
+            <div class="project">
+                <img src="https://source.unsplash.com/random/800x600/?dashboard" alt="Project 2">
+                <h3>Interactive Dashboard</h3>
+                <p>Data visualization app using D3.js and Vue. Scroll-triggered charts and 3D graphs.</p>
+                <a href="#">View Project</a>
+            </div>
+            <div class="project">
+                <img src="https://source.unsplash.com/random/800x600/?portfolio" alt="Project 3">
+                <h3>Portfolio Site</h3>
+                <p>Custom Three.js integration for cinematic effects, like this one!</p>
+                <a href="#">View Project</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Prototypes -->
+    <section id="prototypes">
+        <h2>Prototypes</h2>
+        <div class="project-grid">
+            <div class="project">
+                <img src="https://source.unsplash.com/random/800x600/?prototype" alt="Prototype 1">
+                <h3>AR Web Experiment</h3>
+                <p>WebAR prototype with 8th Wall for interactive overlays.</p>
+            </div>
+            <div class="project">
+                <img src="https://source.unsplash.com/random/800x600/?vr" alt="Prototype 2">
+                <h3>VR Interface</h3>
+                <p>Three.js-based VR dashboard prototype.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Art -->
+    <section id="art">
+        <h2>Art</h2>
+        <div class="project-grid">
+            <div class="project">
+                <img src="https://source.unsplash.com/random/800x600/?art" alt="Art 1">
+                <h3>Digital Shader Art</h3>
+                <p>Custom GLSL shaders for abstract visuals.</p>
+            </div>
+            <div class="project">
+                <img src="https://source.unsplash.com/random/800x600/?abstract" alt="Art 2">
+                <h3>Generative Patterns</h3>
+                <p>Procedural art with p5.js and WebGL.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Press -->
+    <section id="press">
+        <h2>Press</h2>
+        <p>Featured in Awwwards, Codrops, and Web Design Magazine for innovative web dev projects.</p>
+        <ul>
+            <li><a href="#">Awwwards Site of the Day - 2025</a></li>
+            <li><a href="#">Codrops Tutorial Contribution</a></li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Ademiando. Inspired by richardmattka.com - Built with Three.js & GSAP</p>
+    </footer>
+
+    <script>
+        // JavaScript Kompleks: Three.js Scene dengan Shaders, Post-Processing, GSAP Scroll Animations
+
+        // Inisialisasi Scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Lights untuk Cinematic
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0xffffff, 1);
+        pointLight.position.set(5, 5, 5);
+        scene.add(pointLight);
+
+        // Objek 3D: TorusKnot dengan Custom Shader untuk Distortion
+        const geometry = new THREE.TorusKnotGeometry(1, 0.4, 100, 16);
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0 },
+                distortion: { value: 0.5 }
+            },
+            vertexShader: `
+                uniform float time;
+                uniform float distortion;
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    vec3 pos = position;
+                    pos += normal * sin(time + pos.y * 5.0) * distortion;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                }
+            `,
+            fragmentShader: `
+                varying vec2 vUv;
+                void main() {
+                    gl_FragColor = vec4(sin(vUv.x * 10.0), cos(vUv.y * 10.0), 0.5, 1.0);
+                }
+            `,
+            wireframe: true
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        camera.position.z = 5;
+
+        // Orbit Controls untuk Interaksi Mouse
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // Post-Processing untuk Cinematic Bloom
+        const composer = new THREE.EffectComposer(renderer);
+        const renderPass = new THREE.RenderPass(scene, camera);
+        composer.addPass(renderPass);
+        const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        composer.addPass(bloomPass);
+
+        // Clock untuk Animasi
+        const clock = new THREE.Clock();
+
+        // Animate Function
+        function animate() {
+            requestAnimationFrame(animate);
+            const delta = clock.getDelta();
+            material.uniforms.time.value += delta;
+            mesh.rotation.x += 0.01;
+            mesh.rotation.y += 0.01;
+            controls.update();
+            composer.render();
+        }
+        animate();
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // GSAP ScrollTrigger untuk Animasi Cinematic
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Animasi Header
+        gsap.from("header", { opacity: 0, y: -100, duration: 1.5, ease: "power2.out" });
+
+        // Animasi Sections dengan Scroll Trigger
+        const sections = ["#work", "#prototypes", "#art", "#press"];
+        sections.forEach((sec, index) => {
+            gsap.to(sec, {
+                opacity: 1,
+                y: 0,
+                duration: 1.5,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: sec,
+                    start: "top 80%",
+                    end: "bottom 20%",
+                    scrub: true, // Smooth scroll-linked
+                    onEnter: () => {
+                        // Animasi 3D Camera berdasarkan section
+                        gsap.to(camera.position, {
+                            z: 5 + index * 0.5,
+                            duration: 1,
+                            ease: "power2.inOut"
+                        });
+                        gsap.to(mesh.rotation, {
+                            x: "+=0.5",
+                            y: "+=0.5",
+                            duration: 1,
+                            ease: "power2.inOut"
+                        });
+                    }
+                }
+            });
+        });
+
+        // Pin Footer untuk Effect Sticky
+        gsap.to("footer", {
+            scrollTrigger: {
+                trigger: "footer",
+                pin: true,
+                start: "top bottom",
+                end: "+=300"
+            }
+        });
+
+        // Hover Effects pada Projects (GSAP)
+        document.querySelectorAll('.project').forEach(proj => {
+            proj.addEventListener('mouseenter', () => {
+                gsap.to(proj, { scale: 1.1, duration: 0.3 });
+            });
+            proj.addEventListener('mouseleave', () => {
+                gsap.to(proj, { scale: 1, duration: 0.3 });
+            });
+        });
+    </script>
 </body>
 </html>
