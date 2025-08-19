@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Download Next.js 3D Portfolio Project</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(100, 149, 237, 0.8);
+        }
+        .download-btn {
+            display: block;
+            width: 250px;
+            margin: 30px auto;
+            padding: 15px;
+            text-align: center;
+            background: linear-gradient(135deg, #6e45e2, #88d3ce);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #6e45e2;
+        }
+        .structure {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+            line-height: 1.6;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .tech {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .tech-item {
+            text-align: center;
+            width: 100px;
+            margin: 10px;
+        }
+        .tech-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Next.js 14+ 3D Cinematic Portfolio</h1>
+        
+        <p>Complete production-ready project with stunning 3D effects and premium design.</p>
+        
+        <a href="#" class="download-btn" id="downloadBtn">Download Project ZIP</a>
+        
+        <div class="instructions">
+            <h2>Quick Start Instructions</h2>
+            <ol>
+                <li>Extract the downloaded ZIP file</li>
+                <li>Run: <code>npm install</code></li>
+                <li>Run: <code>npm run dev</code></li>
+                <li>Open <a href="http://localhost:3000">http://localhost:3000</a></li>
+            </ol>
+        </div>
+        
+        <h2>Project Features</h2>
+        <div class="features">
+            <div class="feature">3D Hero Section with React Three Fiber</div>
+            <div class="feature">15,000+ Particle System</div>
+            <div class="feature">Volumetric Nebula & Aurora Effects</div>
+            <div class="feature">Cinematic Postprocessing</div>
+            <div class="feature">Dark/Light Mode Toggle</div>
+            <div class="feature">Liquid-glass Buttons</div>
+            <div class="feature">Interactive Portfolio Section</div>
+            <div class="feature">Fully Responsive Design</div>
+            <div class="feature">TypeScript Fully Typed</div>
+            <div class="feature">SEO Optimized</div>
+            <div class="feature">Vercel Deployment Ready</div>
+            <div class="feature">Smooth Animations</div>
+        </div>
+        
+        <h2>Technology Stack</h2>
+        <div class="tech">
+            <div class="tech-item">
+                <div class="tech-icon">⚡</div>
+                <div>Next.js 14</div>
+            </div>
+            <div class="tech-item">
+                <div class="tech-icon">🔺</div>
+                <div>React Three Fiber</div>
+            </div>
+            <div class="tech-item">
+                <div class="tech-icon">🎨</div>
+                <div>TailwindCSS</div>
+            </div>
+            <div class="tech-item">
+                <div class="tech-icon">🔄</div>
+                <div>Framer Motion</div>
+            </div>
+            <div class="tech-item">
+                <div class="tech-icon">📘</div>
+                <div>TypeScript</div>
+            </div>
+        </div>
+        
+        <h2>Project Structure</h2>
+        <div class="structure">
+nextjs-3d-portfolio/
+├── app/
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── providers.tsx
+│   └── favicon.ico
+├── components/
+│   ├── ui/
+│   │   ├── Button.tsx
+│   │   ├── DarkModeToggle.tsx
+│   │   └── Loader.tsx
+│   ├── sections/
+│   │   ├── Hero.tsx
+│   │   ├── Work.tsx
+│   │   ├── About.tsx
+│   │   ├── Contact.tsx
+│   │   └── Footer.tsx
+│   └── three/
+│       ├── Scene.tsx
+│       ├── Particles.tsx
+│       ├── Nebula.tsx
+│       ├── Aurora.tsx
+│       ├── CameraRig.tsx
+│       └── Effects.tsx
+├── lib/
+│   ├── utils.ts
+│   └── constants.ts
+├── hooks/
+│   ├── useDarkMode.ts
+│   └── useParallax.ts
+├── types/
+│   └── index.ts
+├── public/
+├── next.config.js
+├── tailwind.config.js
+├── tsconfig.json
+├── package.json
+├── postcss.config.js
+├── vercel.json
+└── README.md
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('downloadBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('In a real implementation, this would download the ZIP file. For now, please copy the code from the previous response.');
+        });
+    </script>
+</body>
+</html>
