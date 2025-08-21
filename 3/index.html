@@ -1,201 +1,228 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Download Next.js 3D Portfolio Project</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ademiando - Desainer & Pengembang Web Interaktif</title>
+
+    <!-- Tailwind CSS for UI overlay -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            color: white;
+            font-family: 'Inter', sans-serif;
+            background-color: #000000; /* Black background for space */
+            color: #fafafa;
+            margin: 0;
+            overflow-x: hidden;
         }
-        .container {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 30px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+        #webgl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            outline: none;
+            z-index: -1;
         }
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(100, 149, 237, 0.8);
+
+        .content-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 500vh; /* Height to control scroll length */
         }
-        .download-btn {
-            display: block;
-            width: 250px;
-            margin: 30px auto;
-            padding: 15px;
-            text-align: center;
-            background: linear-gradient(135deg, #6e45e2, #88d3ce);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-        .download-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-        }
-        .features {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 20px 0;
-        }
-        .feature {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 4px solid #6e45e2;
-        }
-        .structure {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            font-family: monospace;
-            line-height: 1.6;
-            white-space: pre;
-            overflow-x: auto;
-        }
-        .instructions {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
-        .tech {
+
+        .content-section {
+            height: 100vh;
+            width: 100%;
             display: flex;
-            justify-content: space-around;
-            margin: 30px 0;
-            flex-wrap: wrap;
-        }
-        .tech-item {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            width: 100px;
-            margin: 10px;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            text-shadow: 0 0 10px rgba(0,0,0,0.7); /* Add shadow for readability */
         }
-        .tech-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
+        
+        .content-section.visible {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Next.js 14+ 3D Cinematic Portfolio</h1>
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <div class="content-container">
+        <section id="section-0" class="content-section">
+            <h1 class="text-5xl md:text-8xl font-black uppercase tracking-tighter">Ademiando</h1>
+            <p class="mt-4 text-lg md:text-2xl text-gray-300 max-w-2xl">
+                Menciptakan Pengalaman Digital Imersif dengan Teknologi Web Modern.
+            </p>
+        </section>
+
+        <section id="section-1" class="content-section">
+            <h2 class="text-4xl md:text-6xl font-bold">Desain UI/UX</h2>
+            <p class="mt-2 text-xl text-gray-400 max-w-2xl">Fokus pada pengalaman pengguna yang intuitif dan antarmuka yang menawan.</p>
+        </section>
+
+        <section id="section-2" class="content-section">
+            <h2 class="text-4xl md:text-6xl font-bold">Pengembangan WebGL</h2>
+            <p class="mt-2 text-xl text-gray-400 max-w-2xl">Membangun visualisasi 3D interaktif yang berjalan mulus di peramban.</p>
+        </section>
+
+        <section id="section-3" class="content-section">
+            <h2 class="text-4xl md:text-6xl font-bold">Animasi Interaktif</h2>
+            <p class="mt-2 text-xl text-gray-400 max-w-2xl">Menghidupkan situs dengan animasi yang responsif dan bermakna.</p>
+        </section>
         
-        <p>Complete production-ready project with stunning 3D effects and premium design.</p>
-        
-        <a href="#" class="download-btn" id="downloadBtn">Download Project ZIP</a>
-        
-        <div class="instructions">
-            <h2>Quick Start Instructions</h2>
-            <ol>
-                <li>Extract the downloaded ZIP file</li>
-                <li>Run: <code>npm install</code></li>
-                <li>Run: <code>npm run dev</code></li>
-                <li>Open <a href="http://localhost:3000">http://localhost:3000</a></li>
-            </ol>
-        </div>
-        
-        <h2>Project Features</h2>
-        <div class="features">
-            <div class="feature">3D Hero Section with React Three Fiber</div>
-            <div class="feature">15,000+ Particle System</div>
-            <div class="feature">Volumetric Nebula & Aurora Effects</div>
-            <div class="feature">Cinematic Postprocessing</div>
-            <div class="feature">Dark/Light Mode Toggle</div>
-            <div class="feature">Liquid-glass Buttons</div>
-            <div class="feature">Interactive Portfolio Section</div>
-            <div class="feature">Fully Responsive Design</div>
-            <div class="feature">TypeScript Fully Typed</div>
-            <div class="feature">SEO Optimized</div>
-            <div class="feature">Vercel Deployment Ready</div>
-            <div class="feature">Smooth Animations</div>
-        </div>
-        
-        <h2>Technology Stack</h2>
-        <div class="tech">
-            <div class="tech-item">
-                <div class="tech-icon">⚡</div>
-                <div>Next.js 14</div>
-            </div>
-            <div class="tech-item">
-                <div class="tech-icon">🔺</div>
-                <div>React Three Fiber</div>
-            </div>
-            <div class="tech-item">
-                <div class="tech-icon">🎨</div>
-                <div>TailwindCSS</div>
-            </div>
-            <div class="tech-item">
-                <div class="tech-icon">🔄</div>
-                <div>Framer Motion</div>
-            </div>
-            <div class="tech-item">
-                <div class="tech-icon">📘</div>
-                <div>TypeScript</div>
-            </div>
-        </div>
-        
-        <h2>Project Structure</h2>
-        <div class="structure">
-nextjs-3d-portfolio/
-├── app/
-│   ├── globals.css
-│   ├── layout.tsx
-│   ├── page.tsx
-│   ├── providers.tsx
-│   └── favicon.ico
-├── components/
-│   ├── ui/
-│   │   ├── Button.tsx
-│   │   ├── DarkModeToggle.tsx
-│   │   └── Loader.tsx
-│   ├── sections/
-│   │   ├── Hero.tsx
-│   │   ├── Work.tsx
-│   │   ├── About.tsx
-│   │   ├── Contact.tsx
-│   │   └── Footer.tsx
-│   └── three/
-│       ├── Scene.tsx
-│       ├── Particles.tsx
-│       ├── Nebula.tsx
-│       ├── Aurora.tsx
-│       ├── CameraRig.tsx
-│       └── Effects.tsx
-├── lib/
-│   ├── utils.ts
-│   └── constants.ts
-├── hooks/
-│   ├── useDarkMode.ts
-│   └── useParallax.ts
-├── types/
-│   └── index.ts
-├── public/
-├── next.config.js
-├── tailwind.config.js
-├── tsconfig.json
-├── package.json
-├── postcss.config.js
-├── vercel.json
-└── README.md
-        </div>
+        <section id="section-4" class="content-section">
+             <h2 class="text-4xl md:text-6xl font-bold">Mari Terhubung</h2>
+             <p class="mt-4 max-w-xl text-lg text-gray-300">
+                    Punya ide atau proyek yang ingin didiskusikan? Saya selalu terbuka untuk kesempatan baru.
+             </p>
+             <a href="mailto:halo@ademiando.com" class="mt-8 inline-block bg-white text-black font-semibold px-8 py-3 rounded-lg hover:bg-gray-200 transition-all duration-300">
+                Kirim Email
+             </a>
+        </section>
     </div>
 
-    <script>
-        document.getElementById('downloadBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('In a real implementation, this would download the ZIP file. For now, please copy the code from the previous response.');
+    <!-- Libraries -->
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // --- Scene Setup ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({
+            canvas: document.querySelector('#webgl-canvas'),
+            antialias: true
         });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.position.setZ(15);
+
+        // --- Lighting ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0xffffff, 1.5);
+        pointLight.position.set(25, 10, 20);
+        scene.add(pointLight);
+        
+        // --- 3D Globe ---
+        const textureLoader = new THREE.TextureLoader();
+        const earthGeometry = new THREE.SphereGeometry(5, 64, 64);
+        const earthMaterial = new THREE.MeshStandardMaterial({
+            map: textureLoader.load('https://unpkg.com/three-globe@2.27.2/example/img/earth-dark.jpg'),
+            metalness: 0.2,
+            roughness: 0.7
+        });
+        const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+        scene.add(earth);
+
+        // --- Clouds ---
+        const cloudGeometry = new THREE.SphereGeometry(5.1, 64, 64);
+        const cloudMaterial = new THREE.MeshStandardMaterial({
+            map: textureLoader.load('https://unpkg.com/three-globe@2.27.2/example/img/earth-clouds.png'),
+            transparent: true,
+            opacity: 0.4
+        });
+        const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+        scene.add(clouds);
+
+        // --- Starfield ---
+        const starGeometry = new THREE.BufferGeometry();
+        const starCount = 10000;
+        const posArray = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 2000;
+        }
+        starGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const starMaterial = new THREE.PointsMaterial({ size: 0.5, color: 0xffffff });
+        const starMesh = new THREE.Points(starGeometry, starMaterial);
+        scene.add(starMesh);
+
+        // --- GSAP Scroll Animation ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".content-container",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1,
+            }
+        });
+
+        // Animate camera position and rotation
+        tl.to(camera.position, { z: 8, y: 3 })
+          .to(camera.rotation, { x: -0.2 }, "<") // "<" means start at the same time as previous animation
+          .to(earth.rotation, { y: 1.5 }, "<")
+          .to(clouds.rotation, { y: 2.0 }, "<")
+          .to(camera.position, { z: 12, y: -2, x: -3 }, "25%") // Start at 25% of the timeline
+          .to(camera.rotation, { x: 0.3, y: -0.2 }, "25%")
+          .to(earth.rotation, { y: 3.0 }, "25%")
+          .to(clouds.rotation, { y: 3.8 }, "25%")
+          .to(camera.position, { z: 8, y: 0, x: 0 }, "75%")
+          .to(camera.rotation, { x: 0, y: 0 }, "75%")
+          .to(earth.rotation, { y: 4.5 }, "75%")
+          .to(clouds.rotation, { y: 5.5 }, "75%");
+
+
+        // --- HTML Content Fade In/Out ---
+        const sections = document.querySelectorAll('.content-section');
+        sections.forEach((section) => {
+            ScrollTrigger.create({
+                trigger: section,
+                start: 'top center',
+                end: 'bottom center',
+                onEnter: () => section.classList.add('visible'),
+                onLeave: () => section.classList.remove('visible'),
+                onEnterBack: () => section.classList.add('visible'),
+                onLeaveBack: () => section.classList.remove('visible'),
+            });
+        });
+        
+        // --- Animation Loop ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Auto-rotation
+            earth.rotation.y += 0.0005;
+            clouds.rotation.y += 0.0007;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // --- Handle Window Resize ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
     </script>
 </body>
 </html>
