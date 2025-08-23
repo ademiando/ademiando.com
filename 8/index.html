@@ -6,7 +6,7 @@
     <title>Ademiando - Desainer & Pengembang Web Interaktif</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #000000; /* Ubah ke hitam untuk menyatu dengan model */
+            background-color: #0d121c; /* Dark blue-gray background for atmosphere */
             color: #fafafa;
             margin: 0;
             overflow-x: hidden;
@@ -33,8 +33,206 @@
             position: relative;
             z-index: 1;
             width: 100%;
-            height: 500vh; /* Tinggi untuk mengontrol panjang scroll */
+            height: 500vh; /* Height to control scroll length */
         }
+
+        .content-section {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            text-shadow: 0 0 10px rgba(0,0,0,0.7); /* Add shadow for readability */
+        }
+
+        .content-section.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <div class="content-container">
+        <section id="section-0" class="content-section">
+            <h1 class="text-5xl md:text-8xl font-black uppercase tracking-tighter">Ademiando</h1>
+            <p class="mt-4 text-lg md:text-2xl text-gray-300 max-w-2xl">
+                Menciptakan Pengalaman Digital Imersif dengan Teknologi Web Modern.
+            </p>
+        </section>
+
+        <section id="section-1" class="content-section">
+            <h2 class="text-4xl md:text-6xl font-bold">Desain UI/UX</h2>
+            <p class="mt-2 text-xl text-gray-400 max-w-2xl">Fokus pada pengalaman pengguna yang intuitif dan antarmuka yang menawan.</p>
+        </section>
+
+        <section id="section-2" class="content-section">
+            <h2 class="text-4xl md:text-6xl font-bold">Pengembangan WebGL</h2>
+            <p class="mt-2 text-xl text-gray-400 max-w-2xl">Membangun visualisasi 3D interaktif yang berjalan mulus di peramban.</p>
+        </section>
+
+        <section id="section-3" class="content-section">
+            <h2 class="text-4xl md:text-6xl font-bold">Animasi Interaktif</h2>
+            <p class="mt-2 text-xl text-gray-400 max-w-2xl">Menghidupkan situs dengan animasi yang responsif dan bermakna.</p>
+        </section>
+
+        <section id="section-4" class="content-section">
+              <h2 class="text-4xl md:text-6xl font-bold">Mari Terhubung</h2>
+              <p class="mt-4 max-w-xl text-lg text-gray-300">
+                  Punya ide atau proyek yang ingin didiskusikan? Saya selalu terbuka untuk kesempatan baru.
+              </p>
+              <a href="mailto:halo@ademiando.com" class="mt-8 inline-block bg-white text-black font-semibold px-8 py-3 rounded-lg hover:bg-gray-200 transition-all duration-300">
+                Kirim Email
+              </a>
+        </section>
+    </div>
+
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+
+        // --- Scene Setup ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({
+            canvas: document.querySelector('#webgl-canvas'),
+            antialias: true
+        });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // Add fog for a misty, cinematic effect
+        scene.fog = new THREE.Fog(0x0d121c, 1, 20);
+
+        // --- Lighting ---
+        const ambientLight = new THREE.AmbientLight(0x404040, 1.5); // Soft ambient light
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 2.5);
+        directionalLight.position.set(50, 100, 50); // Light source from the sun
+        scene.add(directionalLight);
+
+        // --- Load GLB Model ---
+        const loader = new GLTFLoader();
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+        loader.setDRACOLoader(dracoLoader);
+
+        let mountainModel;
+        const modelPath = 'https://raw.githubusercontent.com/ademiando/ademiando.com/main/8/mountain_landscape.glb';
+
+        loader.load(
+            modelPath,
+            function (gltf) {
+                mountainModel = gltf.scene;
+                mountainModel.scale.set(0.1, 0.1, 0.1); // Adjust scale to fit the scene
+                mountainModel.position.set(0, -5, 0); // Adjust position if needed
+                scene.add(mountainModel);
+                console.log('Model loaded successfully!');
+            },
+            undefined,
+            function (error) {
+                console.error('An error happened while loading the GLB model:', error);
+            }
+        );
+
+        // --- GSAP Scroll Animation ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Define a variable for the initial camera position
+        const initialCameraPos = {
+            x: 0,
+            y: 3,
+            z: 15
+        };
+        camera.position.set(initialCameraPos.x, initialCameraPos.y, initialCameraPos.z);
+
+        // Use a timeline for cinematic camera movement
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".content-container",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: true,
+            }
+        });
+
+        // Animate camera position to fly over the mountains
+        tl.to(camera.position, {
+            x: -2,
+            y: 4,
+            z: 0
+        }, 0)
+        .to(camera.lookAt(new THREE.Vector3(0, 0, 0)), {}, 0)
+        .to(camera.position, {
+            x: 2,
+            y: 5,
+            z: -2
+        }, 1)
+        .to(camera.lookAt(new THREE.Vector3(0, 1, 0)), {}, 1)
+        .to(camera.position, {
+            x: 0,
+            y: 4,
+            z: -10
+        }, 2)
+        .to(camera.lookAt(new THREE.Vector3(0, 0, -15)), {}, 2);
+
+        // --- HTML Content Fade In/Out ---
+        const sections = document.querySelectorAll('.content-section');
+        sections.forEach((section) => {
+            ScrollTrigger.create({
+                trigger: section,
+                start: 'top center',
+                end: 'bottom center',
+                onEnter: () => section.classList.add('visible'),
+                onLeave: () => section.classList.remove('visible'),
+                onEnterBack: () => section.classList.add('visible'),
+                onLeaveBack: () => section.classList.remove('visible'),
+            });
+        });
+
+        // --- Animation Loop ---
+        function animate() {
+            requestAnimationFrame(animate);
+            // Rotate the model slowly for dynamic effect
+            if (mountainModel) {
+                mountainModel.rotation.y += 0.0002;
+            }
+            renderer.render(scene, camera);
+        }
+
+        // --- Handle Window Resize ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        window.onload = animate;
+    </script>
+</body>
+</html>        }
 
         .content-section {
             height: 100vh;
