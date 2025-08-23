@@ -2,145 +2,228 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ade Miando — Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ade Miando - Interactive Web Developer</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
   <style>
-    body, html {
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #000;
+      color: #fafafa;
       margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: "Helvetica Neue", sans-serif;
-      background: #0d0d0d;
-      color: #f5f5f5;
       overflow-x: hidden;
     }
-    canvas#bg {
+    #webgl-canvas {
       position: fixed;
       top: 0;
       left: 0;
       z-index: -1;
+      outline: none;
+    }
+    .content-container {
+      position: relative;
+      z-index: 1;
       width: 100%;
-      height: 100%;
+      height: 600vh;
     }
-    nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 1rem 0;
-      z-index: 10;
-      backdrop-filter: blur(10px);
-    }
-    nav a {
-      margin: 0 1rem;
-      text-decoration: none;
-      color: #f5f5f5;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-    nav a:hover {
-      color: #00c6ff;
-    }
-    section {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      padding: 3rem 2rem;
-      scroll-snap-align: start;
-    }
-    main {
-      scroll-snap-type: y mandatory;
-      overflow-y: scroll;
+    .content-section {
       height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      text-shadow: 0 0 15px rgba(0,0,0,0.6);
     }
-    h1, h2 {
-      margin: 0.5rem 0;
-    }
-    p {
-      max-width: 600px;
-      line-height: 1.6;
+    .content-section.visible {
+      opacity: 1;
     }
   </style>
 </head>
 <body>
-  <canvas id="bg"></canvas>
+  <!-- Navbar -->
+  <header class="fixed w-full top-0 left-0 z-20 bg-black/30 backdrop-blur-sm">
+    <div class="max-w-6xl mx-auto px-4 flex items-center justify-between h-16">
+      <span class="text-xl font-bold">ADEMIANDO</span>
+      <!-- Desktop menu -->
+      <nav class="hidden md:flex space-x-8 font-medium">
+        <a href="#home" class="hover:text-cyan-400">Home</a>
+        <a href="#services" class="hover:text-cyan-400">Services</a>
+        <a href="#lab" class="hover:text-cyan-400">Lab</a>
+        <a href="#portfolio" class="hover:text-cyan-400">Portfolio</a>
+        <a href="#projects" class="hover:text-cyan-400">Projects</a>
+        <a href="#contact" class="hover:text-cyan-400">Contact</a>
+      </nav>
+      <!-- Mobile hamburger -->
+      <button id="menu-btn" class="md:hidden flex flex-col space-y-1.5 focus:outline-none">
+        <span class="w-6 h-0.5 bg-white"></span>
+        <span class="w-6 h-0.5 bg-white"></span>
+        <span class="w-6 h-0.5 bg-white"></span>
+      </button>
+    </div>
+    <!-- Mobile menu -->
+    <nav id="mobile-menu" class="hidden flex-col space-y-4 p-6 bg-black/90 md:hidden">
+      <a href="#home" class="hover:text-cyan-400">Home</a>
+      <a href="#services" class="hover:text-cyan-400">Services</a>
+      <a href="#lab" class="hover:text-cyan-400">Lab</a>
+      <a href="#portfolio" class="hover:text-cyan-400">Portfolio</a>
+      <a href="#projects" class="hover:text-cyan-400">Projects</a>
+      <a href="#contact" class="hover:text-cyan-400">Contact</a>
+    </nav>
+  </header>
 
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#services">Services</a>
-    <a href="#lab">Lab</a>
-    <a href="#portfolio">Portfolio</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
-  </nav>
+  <!-- WebGL Background -->
+  <canvas id="webgl-canvas"></canvas>
 
-  <main>
-    <section id="home">
-      <h1>Welcome</h1>
-      <p>Hi, I'm Ade Miando. A creator, builder, and explorer of ideas. This is my digital space where technology meets creativity.</p>
+  <!-- Content -->
+  <div class="content-container">
+    <section id="home" class="content-section">
+      <h1 class="text-5xl md:text-8xl font-extrabold">Ade Miando</h1>
+      <p class="mt-4 text-xl md:text-2xl text-gray-300 max-w-2xl">Crafting immersive digital experiences with modern web technologies.</p>
     </section>
 
-    <section id="services">
-      <h2>Services</h2>
-      <p>I provide premium web development, interactive design, and digital strategy to help you craft elegant online experiences.</p>
+    <section id="services" class="content-section">
+      <h2 class="text-4xl md:text-6xl font-bold">Services</h2>
+      <p class="mt-4 text-lg md:text-xl text-gray-400 max-w-2xl">Premium web development, interactive design, and digital strategy tailored for your brand.</p>
     </section>
 
-    <section id="lab">
-      <h2>Lab</h2>
-      <p>The Lab is my experimental ground, where I explore new technologies, WebGL animations, and creative coding projects.</p>
+    <section id="lab" class="content-section">
+      <h2 class="text-4xl md:text-6xl font-bold">Lab</h2>
+      <p class="mt-4 text-lg md:text-xl text-gray-400 max-w-2xl">Exploring creative coding, WebGL experiments, and future-forward prototypes.</p>
     </section>
 
-    <section id="portfolio">
-      <h2>Portfolio</h2>
-      <p>A curated showcase of my works — from websites to interactive experiences, all built with precision and passion.</p>
+    <section id="portfolio" class="content-section">
+      <h2 class="text-4xl md:text-6xl font-bold">Portfolio</h2>
+      <p class="mt-4 text-lg md:text-xl text-gray-400 max-w-2xl">A curated collection of projects showcasing elegant design and technical precision.</p>
     </section>
 
-    <section id="projects">
-      <h2>Projects</h2>
-      <p>Here are ongoing and upcoming projects that reflect my journey, innovation, and collaborative work with others.</p>
+    <section id="projects" class="content-section">
+      <h2 class="text-4xl md:text-6xl font-bold">Projects</h2>
+      <p class="mt-4 text-lg md:text-xl text-gray-400 max-w-2xl">Highlights of ongoing and upcoming projects blending creativity and technology.</p>
     </section>
 
-    <section id="contact">
-      <h2>Contact</h2>
-      <p>Let's connect! Reach out for collaborations, freelance work, or just to say hello. I’d love to hear from you.</p>
+    <section id="contact" class="content-section">
+      <h2 class="text-4xl md:text-6xl font-bold">Contact</h2>
+      <p class="mt-4 text-lg md:text-xl text-gray-300 max-w-xl">Open to collaborations, freelance work, or just a friendly chat. Let’s connect.</p>
+      <a href="mailto:halo@ademiando.com" class="mt-6 inline-block bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition">Say Hello</a>
     </section>
-  </main>
+  </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script>
-    // Simple WebGL animated background with Three.js
+  <!-- Scripts -->
+  <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script type="module">
+    import * as THREE from 'three';
+
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("bg"), antialias: true });
+    const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#webgl-canvas'), antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.position.z = 5;
+    camera.position.setZ(15);
 
-    const geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
-    const material = new THREE.MeshStandardMaterial({ color: 0x00c6ff, metalness: 0.7, roughness: 0.2 });
-    const torusKnot = new THREE.Mesh(geometry, material);
-    scene.add(torusKnot);
-
-    const pointLight = new THREE.PointLight(0xffffff, 1);
-    pointLight.position.set(5, 5, 5);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambient);
+    const pointLight = new THREE.PointLight(0xffffff, 1.5);
+    pointLight.position.set(25, 10, 20);
     scene.add(pointLight);
+
+    const textureLoader = new THREE.TextureLoader();
+    const earthGeometry = new THREE.SphereGeometry(5, 64, 64);
+    const earthMaterial = new THREE.MeshStandardMaterial({
+      map: textureLoader.load('https://unpkg.com/three-globe@2.27.2/example/img/earth-dark.jpg'),
+      metalness: 0.2,
+      roughness: 0.7
+    });
+    const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+    scene.add(earth);
+
+    const cloudsGeometry = new THREE.SphereGeometry(5.1, 64, 64);
+    const cloudsMaterial = new THREE.MeshStandardMaterial({
+      map: textureLoader.load('https://unpkg.com/three-globe@2.27.2/example/img/earth-clouds.png'),
+      transparent: true,
+      opacity: 0.4
+    });
+    const clouds = new THREE.Mesh(cloudsGeometry, cloudsMaterial);
+    scene.add(clouds);
+
+    const starGeometry = new THREE.BufferGeometry();
+    const starCount = 8000;
+    const posArray = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount * 3; i++) {
+      posArray[i] = (Math.random() - 0.5) * 2000;
+    }
+    starGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    const starMaterial = new THREE.PointsMaterial({ size: 0.5, color: 0xffffff });
+    const stars = new THREE.Points(starGeometry, starMaterial);
+    scene.add(stars);
+
+    gsap.registerPlugin(ScrollTrigger);
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".content-container",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1,
+      }
+    });
+    tl.to(camera.position, { z: 8, y: 3 })
+      .to(camera.rotation, { x: -0.2 }, "<")
+      .to(earth.rotation, { y: 1.5 }, "<")
+      .to(clouds.rotation, { y: 2.0 }, "<");
+
+    const sections = document.querySelectorAll('.content-section');
+    sections.forEach((s) => {
+      ScrollTrigger.create({
+        trigger: s,
+        start: 'top center',
+        end: 'bottom center',
+        onEnter: () => s.classList.add('visible'),
+        onLeave: () => s.classList.remove('visible'),
+        onEnterBack: () => s.classList.add('visible'),
+        onLeaveBack: () => s.classList.remove('visible'),
+      });
+    });
 
     function animate() {
       requestAnimationFrame(animate);
-      torusKnot.rotation.x += 0.01;
-      torusKnot.rotation.y += 0.01;
+      earth.rotation.y += 0.0005;
+      clouds.rotation.y += 0.0007;
       renderer.render(scene, camera);
     }
     animate();
 
-    window.addEventListener("resize", () => {
+    window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Hamburger menu toggle
+    const menuBtn = document.getElementById("menu-btn");
+    const mobileMenu = document.getElementById("mobile-menu");
+    menuBtn.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
     });
   </script>
 </body>
