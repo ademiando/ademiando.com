@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ade Miando — Portfolio</title>
   <style>
     body, html {
@@ -21,6 +21,7 @@
       width: 100%;
       height: 100%;
     }
+
     /* Navbar */
     nav {
       position: fixed;
@@ -31,51 +32,55 @@
       align-items: center;
       background: rgba(0, 0, 0, 0.3);
       padding: 1rem 2rem;
-      z-index: 10;
+      z-index: 1000;
       backdrop-filter: blur(10px);
     }
-    nav .menu {
+    .nav-links {
       display: flex;
-      gap: 1rem;
+      gap: 1.5rem;
     }
-    nav a {
+    .nav-links a {
       text-decoration: none;
       color: #f5f5f5;
       font-weight: 500;
       transition: color 0.3s;
     }
-    nav a:hover {
+    .nav-links a:hover {
       color: #00c6ff;
     }
-    /* Hamburger */
     .hamburger {
       display: none;
       flex-direction: column;
       cursor: pointer;
+      gap: 5px;
     }
-    .hamburger span {
-      height: 3px;
+    .hamburger div {
       width: 25px;
-      background: #fff;
-      margin: 4px 0;
-      border-radius: 5px;
-      transition: 0.3s;
+      height: 3px;
+      background: #f5f5f5;
     }
-    .menu.active {
-      display: flex;
-      flex-direction: column;
-      position: absolute;
-      top: 60px;
-      right: 20px;
-      background: rgba(0,0,0,0.8);
-      padding: 1rem;
-      border-radius: 10px;
+
+    /* Mobile menu */
+    @media (max-width: 768px) {
+      .nav-links {
+        position: absolute;
+        top: 60px;
+        right: 0;
+        background: rgba(0,0,0,0.9);
+        flex-direction: column;
+        width: 200px;
+        padding: 1rem;
+        display: none;
+      }
+      .nav-links.active {
+        display: flex;
+      }
+      .hamburger {
+        display: flex;
+      }
     }
-    @media(max-width: 768px) {
-      .menu { display: none; }
-      .hamburger { display: flex; }
-    }
-    /* Section */
+
+    /* Sections */
     section {
       min-height: 100vh;
       display: flex;
@@ -89,11 +94,12 @@
       margin: 0.5rem 0;
     }
     p {
-      max-width: 600px;
+      max-width: 700px;
       line-height: 1.6;
     }
-    /* Cards */
-    .cards {
+
+    /* Card grid */
+    .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 2rem;
@@ -103,51 +109,46 @@
     }
     .card {
       background: rgba(255,255,255,0.05);
-      border-radius: 15px;
-      padding: 1.5rem;
-      transition: transform 0.3s, background 0.3s;
-      text-align: left;
-    }
-    .card:hover {
-      transform: translateY(-8px);
-      background: rgba(0,198,255,0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      text-decoration: none;
+      color: #fff;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
     .card img {
       width: 100%;
-      border-radius: 10px;
-      margin-bottom: 1rem;
+      height: 160px;
+      object-fit: cover;
     }
     .card h3 {
-      margin: 0.5rem 0;
+      margin: 1rem;
     }
-    .card a {
-      display: inline-block;
-      margin-top: 0.5rem;
-      color: #00c6ff;
-      text-decoration: none;
-      font-weight: 500;
+    .card p {
+      margin: 0 1rem 1rem;
+      font-size: 0.9rem;
+      color: #ccc;
     }
-    .card a:hover {
-      text-decoration: underline;
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
     }
   </style>
 </head>
 <body>
   <canvas id="bg"></canvas>
 
-  <!-- Navbar -->
   <nav>
     <div class="logo"></div>
-    <div class="menu">
+    <div class="hamburger" onclick="toggleMenu()">
+      <div></div><div></div><div></div>
+    </div>
+    <div class="nav-links" id="nav-links">
       <a href="#home">Home</a>
       <a href="#services">Services</a>
       <a href="#lab">Lab</a>
       <a href="#portfolio">Portfolio</a>
       <a href="#projects">Projects</a>
       <a href="#contact">Contact</a>
-    </div>
-    <div class="hamburger" id="hamburger">
-      <span></span><span></span><span></span>
     </div>
   </nav>
 
@@ -159,55 +160,65 @@
 
     <section id="services">
       <h2>Services</h2>
-      <div class="cards">
-        <div class="card">
-          <img src="https://via.placeholder.com/400x250" alt="Web Development">
+      <div class="card-grid">
+        <a class="card" href="services.html">
+          <img src="https://source.unsplash.com/600x400/?technology" alt="Services">
           <h3>Web Development</h3>
-          <p>Building premium, responsive, and interactive websites.</p>
-          <a href="services.html">Learn More →</a>
-        </div>
-        <div class="card">
-          <img src="https://via.placeholder.com/400x250" alt="Design">
-          <h3>Design</h3>
-          <p>Minimalist and modern design that enhances user experience.</p>
-          <a href="services.html">Learn More →</a>
-        </div>
+          <p>Premium responsive websites with interactive design.</p>
+        </a>
+        <a class="card" href="services.html">
+          <img src="https://source.unsplash.com/600x400/?design" alt="Design">
+          <h3>Design Strategy</h3>
+          <p>Crafting elegant and professional digital identities.</p>
+        </a>
       </div>
     </section>
 
     <section id="lab">
       <h2>Lab</h2>
-      <div class="cards">
-        <div class="card">
-          <img src="https://via.placeholder.com/400x250" alt="Experiment">
-          <h3>Creative Experiments</h3>
-          <p>Exploring WebGL, animations, and interactive concepts.</p>
-          <a href="lab.html">Explore →</a>
-        </div>
+      <div class="card-grid">
+        <a class="card" href="lab.html">
+          <img src="https://source.unsplash.com/600x400/?code" alt="Lab">
+          <h3>Experimental Code</h3>
+          <p>Exploring WebGL, Three.js, and creative coding ideas.</p>
+        </a>
+        <a class="card" href="lab.html">
+          <img src="https://source.unsplash.com/600x400/?innovation" alt="Innovation">
+          <h3>Innovation</h3>
+          <p>Pushing the limits of design and technology.</p>
+        </a>
       </div>
     </section>
 
     <section id="portfolio">
       <h2>Portfolio</h2>
-      <div class="cards">
-        <div class="card">
-          <img src="https://via.placeholder.com/400x250" alt="Portfolio">
-          <h3>Showcase</h3>
-          <p>Selected works crafted with passion and precision.</p>
-          <a href="portfolio.html">View More →</a>
-        </div>
+      <div class="card-grid">
+        <a class="card" href="portfolio.html">
+          <img src="https://source.unsplash.com/600x400/?website" alt="Portfolio">
+          <h3>Interactive Websites</h3>
+          <p>Showcasing my best client and personal projects.</p>
+        </a>
+        <a class="card" href="portfolio.html">
+          <img src="https://source.unsplash.com/600x400/?app" alt="App">
+          <h3>Applications</h3>
+          <p>Modern apps with smooth user experiences.</p>
+        </a>
       </div>
     </section>
 
     <section id="projects">
       <h2>Projects</h2>
-      <div class="cards">
-        <div class="card">
-          <img src="https://via.placeholder.com/400x250" alt="Projects">
+      <div class="card-grid">
+        <a class="card" href="projects.html">
+          <img src="https://source.unsplash.com/600x400/?project" alt="Projects">
           <h3>Ongoing Projects</h3>
-          <p>Discover what I'm currently working on.</p>
-          <a href="projects.html">See Projects →</a>
-        </div>
+          <p>Follow my journey with current and future work.</p>
+        </a>
+        <a class="card" href="projects.html">
+          <img src="https://source.unsplash.com/600x400/?future" alt="Future">
+          <h3>Future Visions</h3>
+          <p>Concepts and prototypes shaping tomorrow.</p>
+        </a>
       </div>
     </section>
 
@@ -217,10 +228,14 @@
     </section>
   </main>
 
-  <!-- Three.js Background -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
-    // Simple WebGL animated background
+    // Toggle Hamburger Menu
+    function toggleMenu() {
+      document.getElementById("nav-links").classList.toggle("active");
+    }
+
+    // WebGL Background
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("bg"), antialias: true });
@@ -248,13 +263,6 @@
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-
-    // Hamburger menu toggle
-    const hamburger = document.getElementById("hamburger");
-    const menu = document.querySelector(".menu");
-    hamburger.addEventListener("click", () => {
-      menu.classList.toggle("active");
     });
   </script>
 </body>
