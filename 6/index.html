@@ -1,520 +1,370 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="description" content="Ademiando — Desainer & Pengembang Web Interaktif. Portfolio, blog, dan eksperimen WebGL." />
-    <title>Ademiando - Desainer & Pengembang Web Interaktif</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Ademiando — Desainer & Pengembang Web Interaktif. Portfolio, blog, dan eksperimen WebGL." />
+  <title>Ademiando — Desainer & Pengembang Web Interaktif</title>
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind config for extended fonts & smoother defaults
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: "#0b0b0d",
+            glass: "rgba(255,255,255,0.06)",
+            accent: "#6EE7B7",
+            muted: "#9CA3AF"
+          },
+          fontFamily: {
+            sans: ["Inter", "ui-sans-serif", "system-ui"]
+          }
+        }
+      }
+    }
+  </script>
 
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet" />
 
-    <style>
-        :root {
-            --glass-bg: rgba(255,255,255,0.06);
-            --glass-border: rgba(255,255,255,0.08);
-        }
-        html, body {
-            height: 100%;
-            font-family: 'Inter', sans-serif;
-            background-color: #000;
-            color: #fafafa;
-            margin: 0;
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            overflow-x: hidden;
-        }
+  <style>
+    :root { --glass: rgba(255,255,255,0.06); --glass-border: rgba(255,255,255,0.08); }
+    html,body{height:100%;background:#000; color:#f8fafc; font-family:Inter,system-ui; margin:0; -webkit-font-smoothing:antialiased;}
+    #webgl-canvas{position:fixed; inset:0; width:100vw; height:100vh; z-index:-1;}
+    /* center container keeps content readable with nice max width */
+    .center-wrap{max-width:1100px; margin:0 auto; padding:1.25rem;}
+    /* sticky fullscreen sections */
+    .content-container{position:relative; height:420vh; z-index:1;}
+    .content-section{position:sticky; top:0; height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem;}
+    .card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid var(--glass-border); border-radius:14px; padding:1.25rem; backdrop-filter:blur(8px); }
+    /* hero */
+    .hero-title{letter-spacing:-0.02em}
+    /* subtle text glow for contrast */
+    .glow { text-shadow: 0 6px 40px rgba(0,0,0,0.6); }
+    /* hamburger */
+    .hamb { width:44px; height:44px; display:inline-grid; place-items:center; border-radius:10px; }
+    .hamb-line { width:20px; height:2px; background:#fff; position:relative; transition:all .25s ease; }
+    .hamb-line::before, .hamb-line::after { content:""; position:absolute; left:0; width:20px; height:2px; background:#fff; transition:all .25s ease; }
+    .hamb-line::before { top:-7px } .hamb-line::after { top:7px }
+    .hamb.open .hamb-line { background:transparent } 
+    .hamb.open .hamb-line::before { transform: translateY(7px) rotate(45deg); }
+    .hamb.open .hamb-line::after { transform: translateY(-7px) rotate(-45deg); }
 
-        /* Canvas */
-        #webgl-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            outline: none;
-            z-index: -1;
-        }
+    /* mobile nav panel */
+    .mobile-panel { position:fixed; right:18px; top:76px; width:260px; border-radius:12px; padding:12px; z-index:60; display:none; }
+    .mobile-panel.open { display:block; }
 
-        /* Content container controls scroll length; each section is sticky and fills screen */
-        .content-container {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            height: 500vh; /* controls scroll timeline */
-        }
-
-        .content-section {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 1.25rem;
-            position: sticky;
-            top: 0;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out, transform 0.6s ease;
-            transform: translateY(6vh);
-            text-shadow: 0 6px 20px rgba(0,0,0,0.6);
-        }
-
-        .content-section.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* header / nav */
-        header.site-header {
-            position: fixed;
-            top: 18px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 2rem);
-            max-width: 1200px;
-            z-index: 40;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            pointer-events: auto;
-        }
-
-        .nav-glass {
-            backdrop-filter: blur(8px) saturate(120%);
-            -webkit-backdrop-filter: blur(8px) saturate(120%);
-            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 8px 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        /* hamburger animation */
-        .hamburger {
-            width: 44px;
-            height: 44px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-        .hamburger .bar {
-            width: 20px;
-            height: 2px;
-            background: #fff;
-            display: block;
-            position: relative;
-            transition: all 0.25s ease;
-        }
-        .hamburger .bar::before,
-        .hamburger .bar::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            width: 20px;
-            height: 2px;
-            background: #fff;
-            transition: all 0.25s ease;
-        }
-        .hamburger .bar::before {
-            top: -6px;
-        }
-        .hamburger .bar::after {
-            top: 6px;
-        }
-        .hamburger.open .bar {
-            background: transparent;
-        }
-        .hamburger.open .bar::before {
-            transform: translateY(6px) rotate(45deg);
-        }
-        .hamburger.open .bar::after {
-            transform: translateY(-6px) rotate(-45deg);
-        }
-
-        /* mobile menu panel */
-        nav.mobile-panel {
-            position: fixed;
-            right: 18px;
-            top: 74px;
-            width: 260px;
-            max-width: calc(100% - 64px);
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            transform-origin: top right;
-            transition: opacity 0.2s ease, transform 0.2s ease;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 50;
-        }
-        nav.mobile-panel.open {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-
-        footer.site-footer {
-            position: relative;
-            z-index: 1;
-            margin-top: 2rem;
-            padding: 3rem 1rem;
-            text-align: center;
-        }
-
-        /* utility */
-        .logo-mark {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .logo-badge {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #6EE7B7 0%, #3B82F6 100%);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #06121A;
-            font-weight: 800;
-            font-size: 14px;
-        }
-
-        @media (min-width: 768px) {
-            nav.desktop-links {
-                display: flex !important;
-                gap: 18px;
-                align-items: center;
-            }
-            nav.mobile-panel {
-                display: none;
-            }
-        }
-
-        @media (max-width: 767px) {
-            nav.desktop-links {
-                display: none;
-            }
-        }
-    </style>
+    /* responsive tweaks */
+    @media (min-width:768px) {
+      .desktop-nav { display:flex; gap:18px; align-items:center; }
+      .mobile-panel { display:none !important; }
+    }
+    @media (max-width:767px) {
+      .desktop-nav { display:none; }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- WebGL canvas (ke belakang) -->
-    <canvas id="webgl-canvas"></canvas>
+  <!-- WebGL background canvas -->
+  <canvas id="webgl-canvas" aria-hidden="true"></canvas>
 
-    <!-- Header with hamburger and nav -->
-    <header class="site-header">
-        <div class="nav-glass pl-3 pr-3">
-            <a href="#section-0" class="logo-mark aria-hidden">
-                <span class="logo-badge">A</span>
-                <span class="hidden sm:inline-block font-semibold">Ademiando</span>
-            </a>
+  <!-- header -->
+  <header class="center-wrap fixed top-6 left-0 right-0 z-40 pointer-events-auto" role="banner">
+    <div class="flex items-center justify-between">
+      <a href="#section-0" class="flex items-center gap-3">
+        <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#6EE7B7,#3B82F6);display:inline-grid;place-items:center;color:#06121A;font-weight:800">A</div>
+        <div class="hidden sm:block font-semibold">Ademiando</div>
+      </a>
+
+      <nav class="flex items-center gap-4">
+        <!-- desktop links -->
+        <div class="desktop-nav text-sm text-gray-300">
+          <a href="#section-1" class="hover:underline">Desain</a>
+          <a href="#section-2" class="hover:underline">WebGL</a>
+          <a href="#section-3" class="hover:underline">Animasi</a>
+          <a href="#section-4" class="hover:underline">Kontak</a>
+          <span class="mx-2 border-l border-white/10 h-5 inline-block align-middle"></span>
+          <a href="https://portfolio.ademiando.com" class="font-medium" target="_blank" rel="noopener">Portfolio</a>
         </div>
 
-        <!-- Desktop links -->
-        <nav class="nav-glass desktop-links px-4 py-2" aria-label="Main navigation">
-            <a href="#section-1" class="text-sm font-medium hover:underline">Desain</a>
-            <a href="#section-2" class="text-sm font-medium hover:underline">WebGL</a>
-            <a href="#section-3" class="text-sm font-medium hover:underline">Animasi</a>
-            <a href="#section-4" class="text-sm font-medium hover:underline">Kontak</a>
-            <div class="border-l border-white/10 h-6 mx-2"></div>
-            <!-- External subdomain links -->
-            <a href="https://portfolio.ademiando.com" class="text-sm font-semibold hover:underline" target="_blank" rel="noopener">Portfolio</a>
-            <a href="https://blog.ademiando.com" class="text-sm font-semibold hover:underline ml-2" target="_blank" rel="noopener">Blog</a>
-        </nav>
-
-        <!-- Mobile hamburger -->
-        <div class="nav-glass">
-            <button id="hambtn" class="hamburger" aria-expanded="false" aria-controls="mobileNav" aria-label="Buka menu">
-                <span class="bar"></span>
-            </button>
+        <!-- mobile hamburger -->
+        <div>
+          <button id="hambtn" class="hamb" aria-label="Buka menu" aria-expanded="false">
+            <span class="hamb-line" aria-hidden="true"></span>
+          </button>
         </div>
-
-        <!-- Mobile panel -->
-        <nav id="mobileNav" class="mobile-panel" aria-hidden="true">
-            <ul class="space-y-3 text-sm">
-                <li><a href="#section-1" class="block font-medium">Desain UI/UX</a></li>
-                <li><a href="#section-2" class="block font-medium">Pengembangan WebGL</a></li>
-                <li><a href="#section-3" class="block font-medium">Animasi Interaktif</a></li>
-                <li><a href="#section-4" class="block font-medium">Kontak</a></li>
-                <li><hr class="border-white/6" /></li>
-                <li><a href="https://portfolio.ademiando.com" target="_blank" rel="noopener" class="block font-semibold">Portfolio (subdomain)</a></li>
-                <li><a href="https://blog.ademiando.com" target="_blank" rel="noopener" class="block font-semibold">Blog (subdomain)</a></li>
-                <li><a href="mailto:halo@ademiando.com" class="block font-semibold">Kirim Email</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <!-- Main content (sticky sections) -->
-    <div class="content-container">
-
-        <section id="section-0" class="content-section">
-            <h1 class="text-4xl md:text-6xl lg:text-8xl font-black uppercase tracking-tighter leading-tight">Ademiando</h1>
-            <p class="mt-4 text-base md:text-lg text-gray-300 max-w-2xl">
-                Menciptakan pengalaman digital imersif dengan teknologi web modern — desain UI/UX, WebGL, dan animasi interaktif.
-            </p>
-
-            <div class="mt-8 flex flex-col sm:flex-row gap-4">
-                <a href="https://portfolio.ademiando.com" target="_blank" rel="noopener" class="inline-block bg-white text-black font-semibold px-6 py-3 rounded-lg shadow hover:scale-[1.02] transition-transform">
-                    Lihat Portfolio
-                </a>
-                <a href="#section-4" class="inline-block border border-white/20 px-6 py-3 rounded-lg hover:bg-white/5 transition">
-                    Hubungi Saya
-                </a>
-            </div>
-
-            <div class="mt-10 text-xs text-gray-400">
-                Tip: Gunakan tombol menu (kanan atas) untuk navigasi cepat.
-            </div>
-        </section>
-
-        <section id="section-1" class="content-section">
-            <h2 class="text-3xl md:text-5xl font-bold">Desain UI/UX</h2>
-            <p class="mt-4 text-lg md:text-xl text-gray-400 max-w-2xl">
-                Fokus pada pengalaman pengguna yang intuitif, prototyping cepat, dan visual yang memikat.  
-                Tools: Figma, Framer, Tailwind.
-            </p>
-
-            <div class="mt-6 flex gap-3">
-                <a class="px-4 py-2 rounded-lg bg-white text-black font-medium" href="https://portfolio.ademiando.com" target="_blank" rel="noopener">Project UI</a>
-                <a class="px-4 py-2 rounded-lg border border-white/20" href="#section-2">Lanjut ke WebGL</a>
-            </div>
-        </section>
-
-        <section id="section-2" class="content-section">
-            <h2 class="text-3xl md:text-5xl font-bold">Pengembangan WebGL</h2>
-            <p class="mt-4 text-lg md:text-xl text-gray-400 max-w-2xl">
-                Membangun visualisasi 3D interaktif yang berjalan mulus di peramban. Optimalisasi performa dan pengalaman pengguna tetap prioritas.
-            </p>
-
-            <div class="mt-6">
-                <a class="px-4 py-2 rounded-lg bg-white text-black font-medium" href="#section-3">Lihat Animasi</a>
-            </div>
-        </section>
-
-        <section id="section-3" class="content-section">
-            <h2 class="text-3xl md:text-5xl font-bold">Animasi Interaktif</h2>
-            <p class="mt-4 text-lg md:text-xl text-gray-400 max-w-2xl">
-                Menghidupkan situs dengan animasi yang responsif dan bermakna — micro-interactions, scroll-driven storytelling, dan gesture support.
-            </p>
-
-            <div class="mt-6 flex gap-3">
-                <a class="px-4 py-2 rounded-lg bg-white text-black font-medium" href="#section-4">Kontak & Kolaborasi</a>
-            </div>
-        </section>
-
-        <section id="section-4" class="content-section">
-             <h2 class="text-3xl md:text-5xl font-bold">Mari Terhubung</h2>
-             <p class="mt-4 max-w-xl text-lg text-gray-300">
-                 Punya ide proyek atau ingin kolaborasi? Saya terbuka untuk konsultasi, freelance, atau kerja jangka panjang.
-             </p>
-
-             <div class="mt-6 flex flex-col sm:flex-row gap-3">
-                 <a href="mailto:halo@ademiando.com" class="inline-block bg-white text-black font-semibold px-6 py-3 rounded-lg">Kirim Email</a>
-                 <a href="https://portfolio.ademiando.com" target="_blank" rel="noopener" class="inline-block border border-white/20 px-6 py-3 rounded-lg">Lihat Portfolio</a>
-             </div>
-
-             <div class="mt-8 text-sm text-gray-400 max-w-xl">
-                 Alamat: (opsional) — Cantumkan jika ingin publik. <br>
-                 Sosial: <a href="#" class="underline">Twitter</a> • <a href="#" class="underline">GitHub</a> • <a href="#" class="underline">LinkedIn</a>
-             </div>
-        </section>
-
+      </nav>
     </div>
 
-    <footer class="site-footer text-gray-400">
-        <div class="max-w-4xl mx-auto px-4">
-            <div class="flex items-center justify-center gap-3">
-                <span class="logo-badge">A</span>
-                <div class="text-sm">
-                    &copy; <span id="copyYear"></span> Ademiando — All rights reserved.
-                </div>
-            </div>
+    <!-- mobile panel -->
+    <div id="mobileNav" class="mobile-panel card bg-[var(--glass)] shadow-lg" aria-hidden="true">
+      <ul class="space-y-3 text-sm">
+        <li><a href="#section-1" class="block font-medium">Desain UI/UX</a></li>
+        <li><a href="#section-2" class="block font-medium">WebGL & Visual</a></li>
+        <li><a href="#section-3" class="block font-medium">Animasi</a></li>
+        <li><a href="#section-4" class="block font-medium">Kontak</a></li>
+        <li><hr class="border-white/6 my-2" /></li>
+        <li><a href="https://portfolio.ademiando.com" target="_blank" rel="noopener" class="block font-semibold">Portfolio</a></li>
+        <li><a href="https://blog.ademiando.com" target="_blank" rel="noopener" class="block font-semibold">Blog</a></li>
+        <li><a href="mailto:halo@ademiando.com" class="block font-semibold">Kirim Email</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- main sticky sections -->
+  <main class="content-container" role="main">
+
+    <!-- HERO -->
+    <section id="section-0" class="content-section">
+      <div class="center-wrap text-center max-w-3xl">
+        <h1 class="hero-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold glow">Ademiando</h1>
+        <p class="mt-4 text-base sm:text-lg text-gray-300 max-w-2xl mx-auto">
+          Saya merancang dan membangun pengalaman digital yang elegan, cepat, dan berkesan — menggabungkan desain, interaksi, dan visual 3D untuk produk yang bermakna.
+        </p>
+
+        <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="https://portfolio.ademiando.com" target="_blank" rel="noopener" class="inline-block px-6 py-3 rounded-lg bg-white text-black font-semibold shadow hover:shadow-md transition transform hover:-translate-y-0.5">Lihat Portfolio</a>
+          <a href="#section-4" class="inline-block px-6 py-3 rounded-lg border border-white/10 text-sm text-gray-200 hover:bg-white/3 transition">Hubungi Saya</a>
         </div>
-    </footer>
 
-    <!-- Libraries -->
-    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js",
-                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/"
-            }
-        }
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+        <div class="mt-6 text-xs text-gray-400">Minimal. Responsif. Profesional.</div>
+      </div>
+    </section>
 
-    <!-- Three.js WebGL + Scroll Animations -->
-    <script type="module">
-        import * as THREE from 'three';
+    <!-- DESIGN -->
+    <section id="section-1" class="content-section">
+      <div class="center-wrap max-w-4xl">
+        <div class="grid gap-8 md:grid-cols-2 items-center">
+          <div>
+            <h2 class="text-2xl md:text-4xl font-bold">Desain UI/UX</h2>
+            <p class="mt-3 text-gray-300 max-w-xl">
+              Proses design yang berfokus pada kebutuhan pengguna — clarity, hierarchy, dan micro-interactions. Prototype cepat, user testing, dan desain yang siap dikembangkan.
+            </p>
+            <div class="mt-6 flex gap-3">
+              <a href="https://portfolio.ademiando.com" target="_blank" rel="noopener" class="px-4 py-2 rounded-md bg-white text-black font-medium">Contoh Project</a>
+              <a href="#section-2" class="px-4 py-2 rounded-md border border-white/10">Lihat WebGL</a>
+            </div>
+          </div>
 
-        // Scene & renderer
-        const canvas = document.querySelector('#webgl-canvas');
-        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-        renderer.setPixelRatio(window.devicePixelRatio || 1);
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x000000, 0); // transparent to let CSS background show
+          <div class="p-4 card">
+            <h3 class="text-sm text-muted uppercase tracking-wide">Pendekatan</h3>
+            <ul class="mt-3 space-y-2 text-sm text-gray-300">
+              <li>∘ Research & user flows</li>
+              <li>∘ High-fidelity prototyping</li>
+              <li>∘ Design systems & tokens</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 4000);
-        camera.position.set(0, 0, 18);
+    <!-- WEBGL -->
+    <section id="section-2" class="content-section">
+      <div class="center-wrap max-w-3xl text-center">
+        <h2 class="text-2xl md:text-4xl font-bold">Pengembangan WebGL</h2>
+        <p class="mt-3 text-gray-300">Visualisasi 3D & interaksi realtime yang ringan, dioptimalkan untuk perangkat modern. Fokus pada performa, fallback, dan aksesibilitas.</p>
 
-        // Lighting
-        const ambient = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambient);
-        const point = new THREE.PointLight(0xffffff, 1.2);
-        point.position.set(25, 10, 20);
-        scene.add(point);
+        <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <a class="card p-4 hover:scale-[1.02] transition" href="https://portfolio.ademiando.com" target="_blank" rel="noopener">
+            <div class="text-sm font-semibold">Project — Visualisasi Data</div>
+            <div class="mt-2 text-xs text-gray-400">WebGL, optimization, responsive</div>
+          </a>
+          <a class="card p-4 hover:scale-[1.02] transition" href="https://portfolio.ademiando.com" target="_blank" rel="noopener">
+            <div class="text-sm font-semibold">Project — Product Demo</div>
+            <div class="mt-2 text-xs text-gray-400">Interactive demo, controls, perf</div>
+          </a>
+          <a class="card p-4 hover:scale-[1.02] transition" href="https://portfolio.ademiando.com" target="_blank" rel="noopener">
+            <div class="text-sm font-semibold">Project — Experimental</div>
+            <div class="mt-2 text-xs text-gray-400">Experiments & playground</div>
+          </a>
+        </div>
+      </div>
+    </section>
 
-        // Earth
-        const loader = new THREE.TextureLoader();
-        const earthGeo = new THREE.SphereGeometry(5, 64, 64);
-        const earthMat = new THREE.MeshStandardMaterial({
-            map: loader.load('https://unpkg.com/three-globe@2.27.2/example/img/earth-dark.jpg'),
-            metalness: 0.2,
-            roughness: 0.7
-        });
-        const earth = new THREE.Mesh(earthGeo, earthMat);
-        scene.add(earth);
+    <!-- ANIMATIONS -->
+    <section id="section-3" class="content-section">
+      <div class="center-wrap max-w-4xl">
+        <h2 class="text-2xl md:text-4xl font-bold">Animasi Interaktif</h2>
+        <p class="mt-3 text-gray-300 max-w-2xl">Scroll-driven storytelling, micro-interactions, dan motion yang meningkatkan kegunaan tanpa mengganggu performa.</p>
 
-        // Clouds
-        const cloudGeo = new THREE.SphereGeometry(5.05, 64, 64);
-        const cloudMat = new THREE.MeshStandardMaterial({
-            map: loader.load('https://unpkg.com/three-globe@2.27.2/example/img/earth-clouds.png'),
-            transparent: true,
-            opacity: 0.36,
-            depthWrite: false
-        });
-        const clouds = new THREE.Mesh(cloudGeo, cloudMat);
-        scene.add(clouds);
+        <div class="mt-6 flex gap-3">
+          <a href="#section-4" class="px-4 py-2 rounded-md bg-white text-black font-medium">Berkolaborasi</a>
+          <a href="https://blog.ademiando.com" target="_blank" rel="noopener" class="px-4 py-2 rounded-md border border-white/10">Tulisan & Case Study</a>
+        </div>
+      </div>
+    </section>
 
-        // Stars
-        const starsG = new THREE.BufferGeometry();
-        const starCount = 8000;
-        const positions = new Float32Array(starCount * 3);
-        for (let i = 0; i < starCount * 3; i++) positions[i] = (Math.random() - 0.5) * 2000;
-        starsG.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        const starsM = new THREE.PointsMaterial({ size: 0.5, transparent: true, opacity: 0.9 });
-        const stars = new THREE.Points(starsG, starsM);
-        scene.add(stars);
+    <!-- CONTACT -->
+    <section id="section-4" class="content-section">
+      <div class="center-wrap max-w-2xl text-center">
+        <div class="card p-8">
+          <h2 class="text-2xl font-bold">Mari Terhubung</h2>
+          <p class="mt-3 text-gray-300">Sudah punya ide? Ingin konsultasi atau kolaborasi? Kirim pesan singkat dan kita atur waktu untuk ngobrol.</p>
 
-        // GSAP Scroll timeline
-        gsap.registerPlugin(ScrollTrigger);
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: ".content-container",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1
-            }
-        });
+          <div class="mt-6 grid gap-3 sm:flex sm:justify-center">
+            <a href="mailto:halo@ademiando.com" class="px-6 py-3 rounded-lg bg-white text-black font-semibold">Kirim Email</a>
+            <a href="https://portfolio.ademiando.com" target="_blank" rel="noopener" class="px-6 py-3 rounded-lg border border-white/10">Lihat Portfolio</a>
+          </div>
 
-        tl.to(camera.position, { z: 9, y: 3 }, 0)
-          .to(camera.rotation, { x: -0.15 }, 0)
-          .to(earth.rotation, { y: 1.6 }, 0)
-          .to(clouds.rotation, { y: 2.2 }, 0)
-          .to(camera.position, { z: 12, y: -2, x: -3 }, 0.25)
-          .to(earth.rotation, { y: 3.2 }, 0.25)
-          .to(clouds.rotation, { y: 3.9 }, 0.25)
-          .to(camera.position, { z: 8, y: 0, x: 0 }, 0.75)
-          .to(earth.rotation, { y: 4.8 }, 0.75)
-          .to(clouds.rotation, { y: 5.6 }, 0.75);
+          <div class="mt-4 text-xs text-gray-400">Sosial: <a href="#" class="underline">GitHub</a> • <a href="#" class="underline">LinkedIn</a></div>
+        </div>
+      </div>
+    </section>
 
-        // Fade sections on scroll
-        const sections = document.querySelectorAll('.content-section');
-        sections.forEach(section => {
-            ScrollTrigger.create({
-                trigger: section,
-                start: 'top center',
-                end: 'bottom center',
-                onEnter: () => section.classList.add('visible'),
-                onLeave: () => section.classList.remove('visible'),
-                onEnterBack: () => section.classList.add('visible'),
-                onLeaveBack: () => section.classList.remove('visible'),
-            });
-        });
+  </main>
 
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
-            earth.rotation.y += 0.0006;
-            clouds.rotation.y += 0.0009;
-            renderer.render(scene, camera);
-        }
-        animate();
+  <footer class="center-wrap text-center py-8 text-gray-400">
+    <div class="text-sm">&copy; <span id="copyYear"></span> Ademiando — Minimal • Professional</div>
+  </footer>
 
-        // Resize
-        window.addEventListener('resize', () => {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-        });
-    </script>
+  <!-- Import libs (ESM shim) -->
+  <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js"
+      }
+    }
+  </script>
 
-    <!-- UI behavior (hamburger, mobile nav, accessibility, year) -->
-    <script>
-        // Hamburger & mobile nav
-        const hambtn = document.getElementById('hambtn');
-        const mobileNav = document.getElementById('mobileNav');
+  <!-- THREE + GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
-        function openNav() {
-            hambtn.classList.add('open');
-            hambtn.setAttribute('aria-expanded', 'true');
-            mobileNav.classList.add('open');
-            mobileNav.setAttribute('aria-hidden', 'false');
-        }
-        function closeNav() {
-            hambtn.classList.remove('open');
-            hambtn.setAttribute('aria-expanded', 'false');
-            mobileNav.classList.remove('open');
-            mobileNav.setAttribute('aria-hidden', 'true');
-        }
+  <script type="module">
+    import * as THREE from 'three';
 
-        hambtn.addEventListener('click', () => {
-            const expanded = hambtn.classList.contains('open');
-            if (expanded) closeNav(); else openNav();
-        });
+    // renderer
+    const canvas = document.querySelector('#webgl-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.physicallyCorrectLights = true;
 
-        // Close mobile nav when clicking a link
-        mobileNav.querySelectorAll('a').forEach(a => {
-            a.addEventListener('click', () => closeNav());
-        });
+    // scene & camera
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 2000);
+    camera.position.set(0, 0, 18);
 
-        // Close on ESC
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeNav();
-        });
+    // lights
+    const amb = new THREE.AmbientLight(0xffffff, 0.45);
+    scene.add(amb);
+    const p = new THREE.PointLight(0xffffff, 1.2);
+    p.position.set(25, 10, 20);
+    scene.add(p);
 
-        // Close mobile nav when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!mobileNav.contains(e.target) && !hambtn.contains(e.target)) {
-                closeNav();
-            }
-        });
+    // earth (optimized)
+    const loader = new THREE.TextureLoader();
+    const earthGeo = new THREE.SphereGeometry(5, 48, 48);
+    const earthMat = new THREE.MeshStandardMaterial({
+      map: loader.load('https://unpkg.com/three-globe@2.27.2/example/img/earth-dark.jpg'),
+      metalness: 0.18,
+      roughness: 0.72
+    });
+    const earth = new THREE.Mesh(earthGeo, earthMat);
+    scene.add(earth);
 
-        // Fill copyright year
-        document.getElementById('copyYear').textContent = new Date().getFullYear();
-    </script>
+    // clouds
+    const cloudGeo = new THREE.SphereGeometry(5.06, 48, 48);
+    const cloudMat = new THREE.MeshStandardMaterial({
+      map: loader.load('https://unpkg.com/three-globe@2.27.2/example/img/earth-clouds.png'),
+      transparent: true,
+      opacity: 0.36,
+      depthWrite: false
+    });
+    const clouds = new THREE.Mesh(cloudGeo, cloudMat);
+    scene.add(clouds);
+
+    // subtle starfield
+    const starGeo = new THREE.BufferGeometry();
+    const starCount = 6000;
+    const pos = new Float32Array(starCount * 3);
+    for (let i=0;i<pos.length;i++) pos[i] = (Math.random()-0.5) * 2000;
+    starGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const starMat = new THREE.PointsMaterial({ size: 0.45, transparent: true, opacity: 0.9 });
+    const stars = new THREE.Points(starGeo, starMat);
+    scene.add(stars);
+
+    // GSAP scroll timeline (keeps interactivity)
+    gsap.registerPlugin(ScrollTrigger);
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".content-container",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1,
+      }
+    });
+
+    tl.to(camera.position, { z: 9, y: 3 })
+      .to(camera.rotation, { x: -0.12 }, "<")
+      .to(earth.rotation, { y: 1.6 }, "<")
+      .to(clouds.rotation, { y: 2.0 }, "<")
+      .to(camera.position, { z: 12, y: -2, x: -2 }, 0.25)
+      .to(earth.rotation, { y: 3.2 }, 0.25)
+      .to(clouds.rotation, { y: 3.8 }, 0.25)
+      .to(camera.position, { z: 8, y: 0, x: 0 }, 0.75)
+      .to(earth.rotation, { y: 4.8 }, 0.75)
+      .to(clouds.rotation, { y: 5.6 }, 0.75);
+
+    // simple animate loop
+    function animate(){
+      requestAnimationFrame(animate);
+      earth.rotation.y += 0.0007;
+      clouds.rotation.y += 0.0010;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // resize
+    addEventListener('resize', () => {
+      renderer.setSize(innerWidth, innerHeight);
+      camera.aspect = innerWidth/innerHeight;
+      camera.updateProjectionMatrix();
+    });
+
+    // accessibility: if WebGL unsupported -> gentle fallback
+    if (!renderer.getContext()) {
+      document.body.style.background = '#050506';
+    }
+  </script>
+
+  <!-- UI Script -->
+  <script>
+    // mobile nav
+    const hambtn = document.getElementById('hambtn');
+    const mobileNav = document.getElementById('mobileNav');
+
+    function openNav(){ hambtn.classList.add('open'); hambtn.setAttribute('aria-expanded','true'); mobileNav.classList.add('open'); mobileNav.setAttribute('aria-hidden','false'); }
+    function closeNav(){ hambtn.classList.remove('open'); hambtn.setAttribute('aria-expanded','false'); mobileNav.classList.remove('open'); mobileNav.setAttribute('aria-hidden','true'); }
+
+    hambtn.addEventListener('click', ()=> {
+      const open = hambtn.classList.contains('open');
+      if(open) closeNav(); else openNav();
+    });
+
+    mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => closeNav()));
+    addEventListener('keydown', e => { if(e.key === 'Escape') closeNav(); });
+
+    // copyright year
+    document.getElementById('copyYear').textContent = new Date().getFullYear();
+
+    // intersection observer for section fades (lightweight)
+    const sections = document.querySelectorAll('.content-section');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (en.isIntersecting) en.target.classList.add('visible');
+        else en.target.classList.remove('visible');
+      });
+    }, { threshold: 0.45 });
+    sections.forEach(s => obs.observe(s));
+  </script>
 
 </body>
 </html>
