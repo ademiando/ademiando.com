@@ -1,260 +1,158 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ademiando - Desainer & Pengembang Web Interaktif</title>
-
-    <!-- Tailwind CSS for UI overlay -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #000000; /* Black background for space */
-            color: #fafafa;
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        #webgl-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            outline: none;
-            z-index: -1;
-        }
-
-        .content-container {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            height: 500vh; /* Height to control scroll length */
-        }
-
-        .content-section {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 2rem;
-            position: sticky;
-            top: 0;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-            text-shadow: 0 0 10px rgba(0,0,0,0.7);
-        }
-        
-        .content-section.visible {
-            opacity: 1;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Earth from Space — HDRI Galaxy</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    html,body{margin:0;height:100%;background:#000;overflow:hidden}
+    canvas{display:block}
+  </style>
 </head>
 <body>
+  <!-- Three.js + OrbitControls -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/examples/js/controls/OrbitControls.js"></script>
 
-    <canvas id="webgl-canvas"></canvas>
+  <script>
+  // ===== Scene, Camera, Renderer =====
+  const scene   = new THREE.Scene();
+  const camera  = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 5000);
+  camera.position.set(0, 0, 15);
 
-    <div class="content-container">
-        <section id="section-0" class="content-section">
-            <h1 class="text-5xl md:text-8xl font-black uppercase tracking-tighter">Ademiando</h1>
-            <p class="mt-4 text-lg md:text-2xl text-gray-300 max-w-2xl">
-                Menciptakan Pengalaman Digital Imersif dengan Teknologi Web Modern.
-            </p>
-        </section>
+  const renderer = new THREE.WebGLRenderer({ antialias:true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  document.body.appendChild(renderer.domElement);
 
-        <section id="section-1" class="content-section">
-            <h2 class="text-4xl md:text-6xl font-bold">Desain UI/UX</h2>
-            <p class="mt-2 text-xl text-gray-400 max-w-2xl">Fokus pada pengalaman pengguna yang intuitif dan antarmuka yang menawan.</p>
-        </section>
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.minDistance = 7;
+  controls.maxDistance = 30;
 
-        <section id="section-2" class="content-section">
-            <h2 class="text-4xl md:text-6xl font-bold">Pengembangan WebGL</h2>
-            <p class="mt-2 text-xl text-gray-400 max-w-2xl">Membangun visualisasi 3D interaktif yang berjalan mulus di peramban.</p>
-        </section>
+  // ===== Galaxy / Nebula HDRI (CubeTexture) =====
+  // Pakai cube map Milky Way bawaan three.js examples (CORS-ready)
+  const cubeLoader = new THREE.CubeTextureLoader();
+  const galaxy = cubeLoader.load([
+    "https://threejs.org/examples/textures/cube/MilkyWay/dark-s_px.jpg",
+    "https://threejs.org/examples/textures/cube/MilkyWay/dark-s_nx.jpg",
+    "https://threejs.org/examples/textures/cube/MilkyWay/dark-s_py.jpg",
+    "https://threejs.org/examples/textures/cube/MilkyWay/dark-s_ny.jpg",
+    "https://threejs.org/examples/textures/cube/MilkyWay/dark-s_pz.jpg",
+    "https://threejs.org/examples/textures/cube/MilkyWay/dark-s_nz.jpg",
+  ]);
+  scene.background = galaxy;
 
-        <section id="section-3" class="content-section">
-            <h2 class="text-4xl md:text-6xl font-bold">Animasi Interaktif</h2>
-            <p class="mt-2 text-xl text-gray-400 max-w-2xl">Menghidupkan situs dengan animasi yang responsif dan bermakna.</p>
-        </section>
-        
-        <section id="section-4" class="content-section">
-             <h2 class="text-4xl md:text-6xl font-bold">Mari Terhubung</h2>
-             <p class="mt-4 max-w-xl text-lg text-gray-300">
-                    Punya ide atau proyek yang ingin didiskusikan? Saya selalu terbuka untuk kesempatan baru.
-             </p>
-             <a href="mailto:halo@ademiando.com" class="mt-8 inline-block bg-white text-black font-semibold px-8 py-3 rounded-lg hover:bg-gray-200 transition-all duration-300">
-                Kirim Email
-             </a>
-        </section>
-    </div>
+  // ===== Lights (Sun + Ambient) =====
+  const sunLight = new THREE.DirectionalLight(0xffffff, 2.0);
+  sunLight.position.set(100, 0, 50); // arah sinar matahari
+  scene.add(sunLight);
 
-    <!-- Libraries -->
-    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js",
-                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/"
-            }
-        }
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  const ambient = new THREE.AmbientLight(0x1a1a1a, 1.0);
+  scene.add(ambient);
 
-    <script type="module">
-        import * as THREE from 'three';
+  // ===== Textures (8K Earth) =====
+  const loader = new THREE.TextureLoader();
+  const tDay   = loader.load("https://raw.githubusercontent.com/rajatpillai/earth-textures/main/8k_earth_daymap.jpg");
+  const tNight = loader.load("https://raw.githubusercontent.com/rajatpillai/earth-textures/main/8k_earth_nightmap.jpg");
+  const tNorm  = loader.load("https://raw.githubusercontent.com/rajatpillai/earth-textures/main/8k_earth_normal_map.jpg");
+  const tSpec  = loader.load("https://raw.githubusercontent.com/rajatpillai/earth-textures/main/8k_earth_specular_map.jpg");
+  const tCloud = loader.load("https://raw.githubusercontent.com/rajatpillai/earth-textures/main/8k_earth_clouds.jpg");
 
-        // --- Scene Setup ---
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({
-            canvas: document.querySelector('#webgl-canvas'),
-            antialias: true
-        });
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.position.setZ(15);
+  // Anisotropy kecil buat tajam
+  [tDay,tNight,tNorm,tSpec,tCloud].forEach(tex=>{
+    tex.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
+  });
 
-        // --- Lighting ---
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
-        scene.add(ambientLight);
+  // ===== Earth (day) =====
+  const gEarth = new THREE.SphereGeometry(5, 128, 128);
+  const mEarth = new THREE.MeshPhongMaterial({
+    map: tDay,
+    bumpMap: tNorm,
+    bumpScale: 0.15,
+    specularMap: tSpec,
+    specular: new THREE.Color(0x666666),
+    shininess: 15
+  });
+  const earth = new THREE.Mesh(gEarth, mEarth);
+  scene.add(earth);
 
-        const sunLight = new THREE.DirectionalLight(0xffffff, 1.5);
-        sunLight.position.set(20, 10, 20);
-        scene.add(sunLight);
+  // ===== Night lights (city lights overlay) =====
+  const mNight = new THREE.MeshBasicMaterial({
+    map: tNight,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    opacity: 0.9
+  });
+  const earthNight = new THREE.Mesh(gEarth, mNight);
+  scene.add(earthNight);
 
-        // --- Textures ---
-        const textureLoader = new THREE.TextureLoader();
-        const earthDayMap = textureLoader.load('https://raw.githubusercontent.com/rajatpillai/earth-textures/main/8k_earth_daymap.jpg');
-        const earthNightMap = textureLoader.load('https://raw.githubusercontent.com/rajatpillai/earth-textures/main/8k_earth_nightmap.jpg');
-        const earthNormalMap = textureLoader.load('https://raw.githubusercontent.com/rajatpillai/earth-textures/main/8k_earth_normal_map.jpg');
-        const earthSpecMap = textureLoader.load('https://raw.githubusercontent.com/rajatpillai/earth-textures/main/8k_earth_specular_map.jpg');
-        const earthCloudMap = textureLoader.load('https://raw.githubusercontent.com/rajatpillai/earth-textures/main/8k_earth_clouds.jpg');
+  // ===== Clouds =====
+  const gCloud = new THREE.SphereGeometry(5.05, 128, 128);
+  const mCloud = new THREE.MeshLambertMaterial({
+    map: tCloud,
+    transparent: true,
+    opacity: 0.42,
+    depthWrite: false
+  });
+  const clouds = new THREE.Mesh(gCloud, mCloud);
+  scene.add(clouds);
 
-        // --- Earth (Day) ---
-        const earthGeometry = new THREE.SphereGeometry(5, 128, 128);
-        const earthMaterial = new THREE.MeshPhongMaterial({
-            map: earthDayMap,
-            bumpMap: earthNormalMap,
-            bumpScale: 0.15,
-            specularMap: earthSpecMap,
-            specular: new THREE.Color('grey'),
-        });
-        const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-        scene.add(earth);
+  // ===== Atmosphere Glow (simple rim) =====
+  const gAtmo = new THREE.SphereGeometry(5.2, 128, 128);
+  const mAtmo = new THREE.MeshBasicMaterial({
+    color: 0x3388ff,
+    transparent: true,
+    opacity: 0.22,
+    side: THREE.BackSide,
+    blending: THREE.AdditiveBlending
+  });
+  const atmosphere = new THREE.Mesh(gAtmo, mAtmo);
+  scene.add(atmosphere);
 
-        // --- Earth (Night Lights) ---
-        const nightMaterial = new THREE.MeshBasicMaterial({
-            map: earthNightMap,
-            blending: THREE.AdditiveBlending,
-            transparent: true,
-            opacity: 0.9
-        });
-        const earthNight = new THREE.Mesh(earthGeometry, nightMaterial);
-        scene.add(earthNight);
+  // ===== Twinkling Stars (dua lapis untuk kedalaman & "kelap-kelip") =====
+  function makeStars(count, size, spread){
+    const geo = new THREE.BufferGeometry();
+    const pos = new Float32Array(count*3);
+    for(let i=0;i<count;i++){
+      pos[i*3+0] = (Math.random()-0.5)*spread;
+      pos[i*3+1] = (Math.random()-0.5)*spread;
+      pos[i*3+2] = (Math.random()-0.5)*spread;
+    }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+    const mat = new THREE.PointsMaterial({ size, color: 0xffffff, transparent:true, opacity: 0.8, depthWrite:false });
+    return new THREE.Points(geo, mat);
+  }
+  const starsNear = makeStars(6000, 0.7, 1800);
+  const starsFar  = makeStars(10000, 0.5, 2600);
+  scene.add(starsNear, starsFar);
 
-        // --- Clouds ---
-        const cloudGeometry = new THREE.SphereGeometry(5.05, 128, 128);
-        const cloudMaterial = new THREE.MeshLambertMaterial({
-            map: earthCloudMap,
-            transparent: true,
-            opacity: 0.4,
-            depthWrite: false,
-        });
-        const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
-        scene.add(clouds);
+  // ===== Small helpers (slow rotations) =====
+  let t = 0;
+  function animate(){
+    requestAnimationFrame(animate);
 
-        // --- Atmosphere Glow ---
-        const atmosphereGeometry = new THREE.SphereGeometry(5.2, 128, 128);
-        const atmosphereMaterial = new THREE.MeshBasicMaterial({
-            color: 0x3399ff,
-            transparent: true,
-            opacity: 0.2,
-            side: THREE.BackSide,
-            blending: THREE.AdditiveBlending,
-        });
-        const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
-        scene.add(atmosphere);
+    // Rotasi & dinamika
+    earth.rotation.y      += 0.0008;
+    earthNight.rotation.y += 0.0008;
+    clouds.rotation.y     += 0.001;
 
-        // --- Starfield ---
-        const starGeometry = new THREE.BufferGeometry();
-        const starCount = 8000;
-        const posArray = new Float32Array(starCount * 3);
-        for (let i = 0; i < starCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 2000;
-        }
-        starGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const starMaterial = new THREE.PointsMaterial({ size: 0.5, color: 0xffffff });
-        const starMesh = new THREE.Points(starGeometry, starMaterial);
-        scene.add(starMesh);
+    // Twinkle subtle (layer berbeda fase)
+    t += 0.01;
+    starsNear.material.opacity = 0.7 + Math.sin(t*1.7)*0.08;
+    starsFar.material.opacity  = 0.7 + Math.cos(t*1.2)*0.06;
 
-        // --- GSAP Scroll Animation ---
-        gsap.registerPlugin(ScrollTrigger);
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  animate();
 
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: ".content-container",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1,
-            }
-        });
-
-        tl.to(camera.position, { z: 8, y: 3 })
-          .to(camera.rotation, { x: -0.2 }, "<")
-          .to(earth.rotation, { y: 1.5 }, "<")
-          .to(clouds.rotation, { y: 2.0 }, "<")
-          .to(camera.position, { z: 12, y: -2, x: -3 }, "25%")
-          .to(camera.rotation, { x: 0.3, y: -0.2 }, "25%")
-          .to(earth.rotation, { y: 3.0 }, "25%")
-          .to(clouds.rotation, { y: 3.8 }, "25%")
-          .to(camera.position, { z: 8, y: 0, x: 0 }, "75%")
-          .to(camera.rotation, { x: 0, y: 0 }, "75%")
-          .to(earth.rotation, { y: 4.5 }, "75%")
-          .to(clouds.rotation, { y: 5.5 }, "75%");
-
-        // --- HTML Content Fade In/Out ---
-        const sections = document.querySelectorAll('.content-section');
-        sections.forEach((section) => {
-            ScrollTrigger.create({
-                trigger: section,
-                start: 'top center',
-                end: 'bottom center',
-                onEnter: () => section.classList.add('visible'),
-                onLeave: () => section.classList.remove('visible'),
-                onEnterBack: () => section.classList.add('visible'),
-                onLeaveBack: () => section.classList.remove('visible'),
-            });
-        });
-        
-        // --- Animation Loop ---
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Auto-rotation
-            earth.rotation.y += 0.0005;
-            earthNight.rotation.y += 0.0005;
-            clouds.rotation.y += 0.0007;
-
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        // --- Handle Window Resize ---
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-    </script>
+  // Resize
+  addEventListener('resize', ()=>{
+    camera.aspect = innerWidth/innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+  </script>
 </body>
 </html>
