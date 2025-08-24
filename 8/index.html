@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ademiando - Desainer & Pengembang Web Interaktif</title>
 
+    <!-- Tailwind CSS for UI overlay -->
     <script src="https://cdn.tailwindcss.com"></script>
-
+    
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -14,11 +16,10 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0d121c; /* Dark blue-gray background for atmosphere */
+            background-color: #000000; /* Black background for space */
             color: #fafafa;
             margin: 0;
             overflow-x: hidden;
-            overscroll-behavior: contain;
         }
 
         #webgl-canvas {
@@ -49,9 +50,9 @@
             top: 0;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
-            text-shadow: 0 0 10px rgba(0,0,0,0.7); /* Add shadow for readability */
+            text-shadow: 0 0 10px rgba(0,0,0,0.7);
         }
-
+        
         .content-section.visible {
             opacity: 1;
         }
@@ -83,18 +84,19 @@
             <h2 class="text-4xl md:text-6xl font-bold">Animasi Interaktif</h2>
             <p class="mt-2 text-xl text-gray-400 max-w-2xl">Menghidupkan situs dengan animasi yang responsif dan bermakna.</p>
         </section>
-
+        
         <section id="section-4" class="content-section">
-              <h2 class="text-4xl md:text-6xl font-bold">Mari Terhubung</h2>
-              <p class="mt-4 max-w-xl text-lg text-gray-300">
-                  Punya ide atau proyek yang ingin didiskusikan? Saya selalu terbuka untuk kesempatan baru.
-              </p>
-              <a href="mailto:halo@ademiando.com" class="mt-8 inline-block bg-white text-black font-semibold px-8 py-3 rounded-lg hover:bg-gray-200 transition-all duration-300">
+             <h2 class="text-4xl md:text-6xl font-bold">Mari Terhubung</h2>
+             <p class="mt-4 max-w-xl text-lg text-gray-300">
+                    Punya ide atau proyek yang ingin didiskusikan? Saya selalu terbuka untuk kesempatan baru.
+             </p>
+             <a href="mailto:halo@ademiando.com" class="mt-8 inline-block bg-white text-black font-semibold px-8 py-3 rounded-lg hover:bg-gray-200 transition-all duration-300">
                 Kirim Email
-              </a>
+             </a>
         </section>
     </div>
 
+    <!-- Libraries -->
     <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
     <script type="importmap">
         {
@@ -109,8 +111,6 @@
 
     <script type="module">
         import * as THREE from 'three';
-        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-        import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
         // --- Scene Setup ---
         const scene = new THREE.Scene();
@@ -121,83 +121,105 @@
         });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
-
-        // Add fog for a misty, cinematic effect
-        scene.fog = new THREE.Fog(0x0d121c, 1, 20);
+        camera.position.setZ(15);
 
         // --- Lighting ---
-        const ambientLight = new THREE.AmbientLight(0x404040, 1.5); // Soft ambient light
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
         scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 2.5);
-        directionalLight.position.set(50, 100, 50); // Light source from the sun
-        scene.add(directionalLight);
+        const sunLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        sunLight.position.set(20, 10, 20);
+        scene.add(sunLight);
 
-        // --- Load GLB Model ---
-        const loader = new GLTFLoader();
-        const dracoLoader = new DRACOLoader();
-        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
-        loader.setDRACOLoader(dracoLoader);
+        // --- Textures ---
+        const textureLoader = new THREE.TextureLoader();
+        const earthDayMap = textureLoader.load('https://raw.githubusercontent.com/rajatpillai/earth-textures/main/8k_earth_daymap.jpg');
+        const earthNightMap = textureLoader.load('https://raw.githubusercontent.com/rajatpillai/earth-textures/main/8k_earth_nightmap.jpg');
+        const earthNormalMap = textureLoader.load('https://raw.githubusercontent.com/rajatpillai/earth-textures/main/8k_earth_normal_map.jpg');
+        const earthSpecMap = textureLoader.load('https://raw.githubusercontent.com/rajatpillai/earth-textures/main/8k_earth_specular_map.jpg');
+        const earthCloudMap = textureLoader.load('https://raw.githubusercontent.com/rajatpillai/earth-textures/main/8k_earth_clouds.jpg');
 
-        let mountainModel;
-        // Ini adalah URL untuk file .glb di GitHub Anda
-        const modelPath = 'https://raw.githubusercontent.com/ademiando/ademiando.com/main/8/mountain_landscape.glb';
+        // --- Earth (Day) ---
+        const earthGeometry = new THREE.SphereGeometry(5, 128, 128);
+        const earthMaterial = new THREE.MeshPhongMaterial({
+            map: earthDayMap,
+            bumpMap: earthNormalMap,
+            bumpScale: 0.15,
+            specularMap: earthSpecMap,
+            specular: new THREE.Color('grey'),
+        });
+        const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+        scene.add(earth);
 
-        loader.load(
-            modelPath,
-            function (gltf) {
-                mountainModel = gltf.scene;
-                mountainModel.scale.set(0.1, 0.1, 0.1); // Adjust scale to fit the scene
-                mountainModel.position.set(0, -5, 0); // Adjust position if needed
-                scene.add(mountainModel);
-                console.log('Model loaded successfully!');
-            },
-            undefined,
-            function (error) {
-                console.error('An error happened while loading the GLB model:', error);
-            }
-        );
+        // --- Earth (Night Lights) ---
+        const nightMaterial = new THREE.MeshBasicMaterial({
+            map: earthNightMap,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            opacity: 0.9
+        });
+        const earthNight = new THREE.Mesh(earthGeometry, nightMaterial);
+        scene.add(earthNight);
+
+        // --- Clouds ---
+        const cloudGeometry = new THREE.SphereGeometry(5.05, 128, 128);
+        const cloudMaterial = new THREE.MeshLambertMaterial({
+            map: earthCloudMap,
+            transparent: true,
+            opacity: 0.4,
+            depthWrite: false,
+        });
+        const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+        scene.add(clouds);
+
+        // --- Atmosphere Glow ---
+        const atmosphereGeometry = new THREE.SphereGeometry(5.2, 128, 128);
+        const atmosphereMaterial = new THREE.MeshBasicMaterial({
+            color: 0x3399ff,
+            transparent: true,
+            opacity: 0.2,
+            side: THREE.BackSide,
+            blending: THREE.AdditiveBlending,
+        });
+        const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+        scene.add(atmosphere);
+
+        // --- Starfield ---
+        const starGeometry = new THREE.BufferGeometry();
+        const starCount = 8000;
+        const posArray = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 2000;
+        }
+        starGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const starMaterial = new THREE.PointsMaterial({ size: 0.5, color: 0xffffff });
+        const starMesh = new THREE.Points(starGeometry, starMaterial);
+        scene.add(starMesh);
 
         // --- GSAP Scroll Animation ---
         gsap.registerPlugin(ScrollTrigger);
 
-        // Define a variable for the initial camera position
-        const initialCameraPos = {
-            x: 0,
-            y: 3,
-            z: 15
-        };
-        camera.position.set(initialCameraPos.x, initialCameraPos.y, initialCameraPos.z);
-
-        // Use a timeline for cinematic camera movement
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".content-container",
                 start: "top top",
                 end: "bottom bottom",
-                scrub: true,
+                scrub: 1,
             }
         });
 
-        // Animate camera position to fly over the mountains
-        tl.to(camera.position, {
-            x: -2,
-            y: 4,
-            z: 0
-        }, 0)
-        .to(camera.lookAt(new THREE.Vector3(0, 0, 0)), {}, 0)
-        .to(camera.position, {
-            x: 2,
-            y: 5,
-            z: -2
-        }, 1)
-        .to(camera.lookAt(new THREE.Vector3(0, 1, 0)), {}, 1)
-        .to(camera.position, {
-            x: 0,
-            y: 4,
-            z: -10
-        }, 2)
-        .to(camera.lookAt(new THREE.Vector3(0, 0, -15)), {}, 2);
+        tl.to(camera.position, { z: 8, y: 3 })
+          .to(camera.rotation, { x: -0.2 }, "<")
+          .to(earth.rotation, { y: 1.5 }, "<")
+          .to(clouds.rotation, { y: 2.0 }, "<")
+          .to(camera.position, { z: 12, y: -2, x: -3 }, "25%")
+          .to(camera.rotation, { x: 0.3, y: -0.2 }, "25%")
+          .to(earth.rotation, { y: 3.0 }, "25%")
+          .to(clouds.rotation, { y: 3.8 }, "25%")
+          .to(camera.position, { z: 8, y: 0, x: 0 }, "75%")
+          .to(camera.rotation, { x: 0, y: 0 }, "75%")
+          .to(earth.rotation, { y: 4.5 }, "75%")
+          .to(clouds.rotation, { y: 5.5 }, "75%");
 
         // --- HTML Content Fade In/Out ---
         const sections = document.querySelectorAll('.content-section');
@@ -212,16 +234,19 @@
                 onLeaveBack: () => section.classList.remove('visible'),
             });
         });
-
+        
         // --- Animation Loop ---
         function animate() {
             requestAnimationFrame(animate);
-            // Rotate the model slowly for dynamic effect
-            if (mountainModel) {
-                mountainModel.rotation.y += 0.0002;
-            }
+
+            // Auto-rotation
+            earth.rotation.y += 0.0005;
+            earthNight.rotation.y += 0.0005;
+            clouds.rotation.y += 0.0007;
+
             renderer.render(scene, camera);
         }
+        animate();
 
         // --- Handle Window Resize ---
         window.addEventListener('resize', () => {
@@ -230,7 +255,6 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        window.onload = animate;
     </script>
 </body>
 </html>
