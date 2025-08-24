@@ -1,332 +1,128 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ademiando - Desainer & Pengembang Web Interaktif</title>
-
-  <!-- Tailwind (overlay UI) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
-
+  <title>3D Realistic Earth</title>
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #000;
-      color: #fafafa;
-      margin: 0;
-      overflow-x: hidden;
-    }
-    #webgl-canvas {
-      position: fixed;
-      inset: 0;
-      outline: none;
-      z-index: -1;
-      display: block;
-    }
-    .content-container {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: 500vh;
-    }
-    .content-section {
-      height: 100vh;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 0 2rem;
-      position: sticky;
-      top: 0;
-      opacity: 0;
-      transition: opacity 0.5s ease-in-out;
-      text-shadow: 0 0 10px rgba(0,0,0,0.7);
-    }
-    .content-section.visible { opacity: 1; }
+    body { margin: 0; overflow: hidden; background: black; }
+    canvas { display: block; }
   </style>
 </head>
 <body>
+<canvas id="webgl-canvas"></canvas>
 
-  <canvas id="webgl-canvas"></canvas>
+<script type="module">
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js";
 
-  <div class="content-container">
-    <section id="section-0" class="content-section">
-      <h1 class="text-5xl md:text-8xl font-black uppercase tracking-tighter">Ademiando</h1>
-      <p class="mt-4 text-lg md:text-2xl text-gray-300 max-w-2xl">
-        Menciptakan Pengalaman Digital Imersif dengan Teknologi Web Modern.
-      </p>
-    </section>
+// --- Renderer & Scene ---
+const canvas = document.querySelector('#webgl-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
 
-    <section id="section-1" class="content-section">
-      <h2 class="text-4xl md:text-6xl font-bold">Desain UI/UX</h2>
-      <p class="mt-2 text-xl text-gray-400 max-w-2xl">Fokus pada pengalaman pengguna yang intuitif dan antarmuka yang menawan.</p>
-    </section>
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 2000);
+camera.position.set(0, 0, 15);
 
-    <section id="section-2" class="content-section">
-      <h2 class="text-4xl md:text-6xl font-bold">Pengembangan WebGL</h2>
-      <p class="mt-2 text-xl text-gray-400 max-w-2xl">Membangun visualisasi 3D interaktif yang berjalan mulus di peramban.</p>
-    </section>
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
 
-    <section id="section-3" class="content-section">
-      <h2 class="text-4xl md:text-6xl font-bold">Animasi Interaktif</h2>
-      <p class="mt-2 text-xl text-gray-400 max-w-2xl">Menghidupkan situs dengan animasi yang responsif dan bermakna.</p>
-    </section>
-    
-    <section id="section-4" class="content-section">
-      <h2 class="text-4xl md:text-6xl font-bold">Mari Terhubung</h2>
-      <p class="mt-4 max-w-xl text-lg text-gray-300">
-        Punya ide atau proyek yang ingin didiskusikan? Saya selalu terbuka untuk kesempatan baru.
-      </p>
-      <a href="mailto:halo@ademiando.com" class="mt-8 inline-block bg-white text-black font-semibold px-8 py-3 rounded-lg hover:bg-gray-200 transition-all duration-300">
-        Kirim Email
-      </a>
-    </section>
-  </div>
+// --- Textures ---
+const loader = new THREE.TextureLoader();
+const earthDayMap   = loader.load("https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg");
+const earthNightMap = loader.load("https://rawcdn.githack.com/trekhleb/machine-learning-experiments/gh-pages/threejs/textures/earth_lights_2048.png");
+const earthSpecMap  = loader.load("https://threejs.org/examples/textures/earth_specular_2048.jpg");
+const earthBumpMap  = loader.load("https://threejs.org/examples/textures/earthbump1k.jpg");
+const cloudMap      = loader.load("https://threejs.org/examples/textures/earth_clouds_1024.png");
 
-  <!-- Modules -->
-  <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/"
-      }
+// --- Earth Globe ---
+const earthGeo = new THREE.SphereGeometry(5, 256, 256);
+const earthMat = new THREE.MeshPhongMaterial({
+  map: earthDayMap,
+  specularMap: earthSpecMap,
+  specular: new THREE.Color(0x444444),
+  shininess: 20,
+  bumpMap: earthBumpMap,
+  bumpScale: 0.05,
+  emissiveMap: earthNightMap,
+  emissive: new THREE.Color(0xffffff),
+  emissiveIntensity: 1.2
+});
+const earth = new THREE.Mesh(earthGeo, earthMat);
+scene.add(earth);
+
+// --- Clouds ---
+const cloudGeo = new THREE.SphereGeometry(5.05, 256, 256);
+const cloudMat = new THREE.MeshPhongMaterial({
+  map: cloudMap,
+  transparent: true,
+  opacity: 0.35,
+  depthWrite: false
+});
+const clouds = new THREE.Mesh(cloudGeo, cloudMat);
+scene.add(clouds);
+
+// --- Atmosphere Glow ---
+const atmoGeo = new THREE.SphereGeometry(5.2, 128, 128);
+const atmoMat = new THREE.ShaderMaterial({
+  vertexShader: `
+    varying vec3 vNormal;
+    void main() {
+      vNormal = normalize(normalMatrix * normal);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-
-  <script type="module">
-    import * as THREE from 'three';
-    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-
-    // ===== Scene / Camera / Renderer =====
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 3000);
-    camera.position.set(0, 0, 15);
-
-    const renderer = new THREE.WebGLRenderer({
-      canvas: document.querySelector('#webgl-canvas'),
-      antialias: true
-    });
-    renderer.setSize(innerWidth, innerHeight);
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
-
-    // ===== Background Galaxy (CubeMap) =====
-    const cubeLoader = new THREE.CubeTextureLoader();
-    const galaxy = cubeLoader.load([
-      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_px.jpg',
-      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_nx.jpg',
-      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_py.jpg',
-      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_ny.jpg',
-      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_pz.jpg',
-      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_nz.jpg'
-    ]);
-    scene.background = galaxy;
-
-    // ===== Lights (Sun + Ambient) =====
-    const sunLight = new THREE.DirectionalLight(0xffffff, 2.0);
-    sunLight.position.set(50, 0, 25);
-    scene.add(sunLight);
-
-    const ambient = new THREE.AmbientLight(0x0e0e0e, 1.0);
-    scene.add(ambient);
-
-    // ===== Textures (stable CDN) =====
-    const tex = new THREE.TextureLoader();
-    const tDay   = tex.load('https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg');
-    const tNight = tex.load('https://threejs.org/examples/textures/earth_lights_2048.png');
-    const tSpec  = tex.load('https://threejs.org/examples/textures/earth_specular_2048.jpg');
-    const tCloud = tex.load('https://threejs.org/examples/textures/earth_clouds_1024.png');
-    [tDay, tNight, tSpec, tCloud].forEach(t => t.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8));
-
-    // ===== Earth DAY (Phong, specular & bump) =====
-    const earthGeo = new THREE.SphereGeometry(5, 192, 192);
-    const earthMat = new THREE.MeshPhongMaterial({
-      map: tDay,
-      specularMap: tSpec,
-      specular: new THREE.Color(0x444444),
-      shininess: 18
-      // (opsional) bisa tambah bumpMap di sini kalau pakai map bump terpisah
-    });
-    const earthDay = new THREE.Mesh(earthGeo, earthMat);
-    scene.add(earthDay);
-
-    // ===== Earth NIGHT (city lights) — Shader: tampil hanya di sisi gelap =====
-    const nightUniforms = {
-      nightMap:  { value: tNight },
-      sunDirW:   { value: new THREE.Vector3().copy(sunLight.position).normalize() },
-      opacity:   { value: 1.0 }
-    };
-    const nightMat = new THREE.ShaderMaterial({
-      uniforms: nightUniforms,
-      vertexShader: `
-        varying vec2 vUv;
-        varying vec3 vWorldNormal;
-        void main(){
-          vUv = uv;
-          // normal di world space
-          vWorldNormal = normalize(mat3(modelMatrix) * normal);
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform sampler2D nightMap;
-        uniform vec3 sunDirW;
-        uniform float opacity;
-        varying vec2 vUv;
-        varying vec3 vWorldNormal;
-
-        void main(){
-          // NdotL: positif = sisi siang, negatif = sisi malam
-          float ndl = dot(vWorldNormal, normalize(sunDirW));
-          // Faktor malam: 0 di siang, 1 di malam, dengan transisi lembut
-          float nightFactor = smoothstep(0.15, -0.1, ndl);
-          vec3 city = texture2D(nightMap, vUv).rgb;
-          gl_FragColor = vec4(city * nightFactor, opacity * nightFactor);
-        }
-      `,
-      transparent: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending
-    });
-    const earthNight = new THREE.Mesh(earthGeo, nightMat);
-    scene.add(earthNight);
-
-    // ===== Clouds (semi-transparan, depthWrite off biar lembut) =====
-    const cloudGeo = new THREE.SphereGeometry(5.05, 160, 160);
-    const cloudMat = new THREE.MeshLambertMaterial({
-      map: tCloud,
-      transparent: true,
-      opacity: 0.42,
-      depthWrite: false
-    });
-    const clouds = new THREE.Mesh(cloudGeo, cloudMat);
-    scene.add(clouds);
-
-    // ===== Atmosphere (rim glow) — view-dependent scatter sederhana =====
-    const atmoGeo = new THREE.SphereGeometry(5.25, 160, 160);
-    const atmoMat = new THREE.ShaderMaterial({
-      uniforms: {
-        glowColor: { value: new THREE.Color(0x4aa3ff) },
-        intensity: { value: 0.8 }
-      },
-      vertexShader: `
-        varying vec3 vNormalW;
-        varying vec3 vWorldPos;
-        void main(){
-          vNormalW = normalize(mat3(modelMatrix) * normal);
-          vWorldPos = (modelMatrix * vec4(position,1.0)).xyz;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform vec3 glowColor;
-        uniform float intensity;
-        varying vec3 vNormalW;
-        varying vec3 vWorldPos;
-
-        void main(){
-          // view direction dari kamera (0,0,0 di view), tapi kita pakai rim dengan sudut normal-ke-kamera kira-kira
-          vec3 viewDir = normalize(cameraPosition - vWorldPos);
-          float rim = 1.0 - max(dot(normalize(vNormalW), viewDir), 0.0);
-          rim = pow(rim, 3.0); // tajamkan di tepi
-          gl_FragColor = vec4(glowColor, rim * 0.35 * intensity);
-        }
-      `,
-      blending: THREE.AdditiveBlending,
-      side: THREE.BackSide,
-      transparent: true,
-      depthWrite: false
-    });
-    const atmosphere = new THREE.Mesh(atmoGeo, atmoMat);
-    scene.add(atmosphere);
-
-    // ===== Starfield (dua lapis + twinkle halus) =====
-    function makeStars(count, size, spread){
-      const geo = new THREE.BufferGeometry();
-      const pos = new Float32Array(count*3);
-      for(let i=0;i<count;i++){
-        pos[i*3+0] = (Math.random()-0.5) * spread;
-        pos[i*3+1] = (Math.random()-0.5) * spread;
-        pos[i*3+2] = (Math.random()-0.5) * spread;
-      }
-      geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
-      const mat = new THREE.PointsMaterial({ size, color: 0xffffff, transparent:true, opacity:0.8, depthWrite:false });
-      return new THREE.Points(geo, mat);
+  `,
+  fragmentShader: `
+    varying vec3 vNormal;
+    void main() {
+      float intensity = pow(0.6 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 4.0);
+      gl_FragColor = vec4(0.2, 0.5, 1.0, 1.0) * intensity;
     }
-    const starsNear = makeStars(6000, 0.7, 1800);
-    const starsFar  = makeStars(10000, 0.5, 2600);
-    scene.add(starsNear, starsFar);
+  `,
+  blending: THREE.AdditiveBlending,
+  side: THREE.BackSide,
+  transparent: true
+});
+const atmosphere = new THREE.Mesh(atmoGeo, atmoMat);
+scene.add(atmosphere);
 
-    // ===== Postprocessing (Bloom lembut utk citylights & rim) =====
-    const composer = new EffectComposer(renderer);
-    composer.addPass(new RenderPass(scene, camera));
-    const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.35, 0.6, 0.85);
-    composer.addPass(bloom);
+// --- Lighting (Sun & Ambient) ---
+const sunLight = new THREE.DirectionalLight(0xffffff, 1.5);
+sunLight.position.set(20, 0, 20);
+scene.add(sunLight);
 
-    // ===== GSAP Scroll Animations =====
-    gsap.registerPlugin(ScrollTrigger);
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".content-container",
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1
-      }
-    });
-    tl.to(camera.position, { z: 10, y: 3, x: 1 })
-      .to(earthDay.rotation, { y: 1.2 }, "<")
-      .to(clouds.rotation,  { y: 1.6 }, "<")
-      .to(camera.position, { z: 14, y: -2, x: -3 }, "25%")
-      .to(earthDay.rotation, { y: 2.8 }, "25%")
-      .to(clouds.rotation,  { y: 3.4 }, "25%")
-      .to(camera.position, { z: 11, y: 0, x: 0 }, "75%")
-      .to(earthDay.rotation, { y: 4.2 }, "75%")
-      .to(clouds.rotation,  { y: 5.2 }, "75%");
+const ambient = new THREE.AmbientLight(0x111111);
+scene.add(ambient);
 
-    // ===== Animation Loop =====
-    let t = 0;
-    function animate() {
-      requestAnimationFrame(animate);
+// --- Stars Background ---
+const starGeo = new THREE.BufferGeometry();
+const starCount = 10000;
+const posArray = new Float32Array(starCount * 3);
+for (let i = 0; i < starCount * 3; i++) {
+  posArray[i] = (Math.random() - 0.5) * 4000;
+}
+starGeo.setAttribute("position", new THREE.BufferAttribute(posArray, 3));
+const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 1 });
+const stars = new THREE.Points(starGeo, starMat);
+scene.add(stars);
 
-      // Auto-rotate
-      earthDay.rotation.y  += 0.0007;
-      earthNight.rotation.y = earthDay.rotation.y;
-      clouds.rotation.y    += 0.001;
+// --- Animation Loop ---
+function animate() {
+  requestAnimationFrame(animate);
+  earth.rotation.y += 0.0008;
+  clouds.rotation.y += 0.001;
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
 
-      // Update sun direction for night shader (if light moves, here it's static)
-      nightUniforms.sunDirW.value.copy(sunLight.position).normalize();
-
-      // Twinkle stars
-      t += 0.01;
-      starsNear.material.opacity = 0.72 + Math.sin(t*1.7)*0.08;
-      starsFar .material.opacity = 0.72 + Math.cos(t*1.2)*0.06;
-
-      // Render with composer (bloom)
-      composer.render();
-    }
-    animate();
-
-    // ===== Resize =====
-    addEventListener('resize', () => {
-      camera.aspect = innerWidth / innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(innerWidth, innerHeight);
-      composer.setSize(innerWidth, innerHeight);
-    });
-  </script>
+window.addEventListener("resize", () => {
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
 </body>
 </html>
