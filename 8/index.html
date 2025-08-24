@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Ademiando - Desainer & Pengembang Web Interaktif</title>
 
     <!-- Tailwind CSS for UI overlay -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,25 +16,27 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #000000; /* Black background for space */
+            background-color: #000;
             color: #fafafa;
             margin: 0;
             overflow-x: hidden;
         }
 
+        /* Canvas sits behind content */
         #webgl-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            outline: none;
+            inset: 0;
             z-index: -1;
+            display: block;
+            width: 100%;
+            height: 100%;
         }
 
         .content-container {
             position: relative;
             z-index: 1;
             width: 100%;
-            height: 500vh; /* Height to control scroll length */
+            height: 500vh; /* control scroll */
         }
 
         .content-section {
@@ -49,12 +51,15 @@
             position: sticky;
             top: 0;
             opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-            text-shadow: 0 0 10px rgba(0,0,0,0.7); /* Add shadow for readability */
+            transition: opacity 0.45s ease-in-out;
+            text-shadow: 0 0 10px rgba(0,0,0,0.7);
         }
-        
-        .content-section.visible {
-            opacity: 1;
+        .content-section.visible { opacity: 1; }
+
+        /* Small responsive tweaks */
+        @media (max-width: 640px) {
+          h1 { font-size: 2.5rem; }
+          h2 { font-size: 1.6rem; }
         }
     </style>
 </head>
@@ -84,7 +89,7 @@
             <h2 class="text-4xl md:text-6xl font-bold">Animasi Interaktif</h2>
             <p class="mt-2 text-xl text-gray-400 max-w-2xl">Menghidupkan situs dengan animasi yang responsif dan bermakna.</p>
         </section>
-        
+
         <section id="section-4" class="content-section">
              <h2 class="text-4xl md:text-6xl font-bold">Mari Terhubung</h2>
              <p class="mt-4 max-w-xl text-lg text-gray-300">
@@ -96,253 +101,283 @@
         </section>
     </div>
 
-    <!-- Libraries -->
+    <!-- Module import map for three and addons -->
     <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
     <script type="importmap">
-        {
-            "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-            }
-        }
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
     </script>
+
+    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
+    <!-- Main upgraded globe script (module) -->
     <script type="module">
-        import * as THREE from 'three';
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { Lensflare, LensflareElement } from 'three/addons/objects/Lensflare.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
-        // ----- Setup (KEEP original layout & GSAP logic intact) -----
-        const canvas = document.querySelector('#webgl-canvas');
-        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.outputColorSpace = THREE.SRGBColorSpace;
+    // Renderer + canvas
+    const canvas = document.getElementById('webgl-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
 
-        const scene = new THREE.Scene();
+    // Scene & camera
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 4000);
+    camera.position.set(0, 0, 15);
 
-        // Camera kept similar to original but tuned for globe
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
-        camera.position.set(0, 0, 15);
+    // Controls (keep interactions)
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.minDistance = 7;
+    controls.maxDistance = 40;
 
-        // ----- LIGHTS: directional Sun + subtle ambient -----
-        const sunLight = new THREE.DirectionalLight(0xffffff, 1.6);
-        sunLight.position.set(25, 10, 20); // directional sun (you can tweak)
-        scene.add(sunLight);
+    // --- Background: Milky Way cube texture for cinematic depth ---
+    const cubeLoader = new THREE.CubeTextureLoader();
+    const cubeTex = cubeLoader.load([
+      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_px.jpg',
+      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_nx.jpg',
+      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_py.jpg',
+      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_ny.jpg',
+      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_pz.jpg',
+      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_nz.jpg',
+    ]);
+    scene.background = cubeTex;
 
-        const ambientLight = new THREE.AmbientLight(0x111111, 0.6);
-        scene.add(ambientLight);
+    // Lights: directional sun + subtle ambient
+    const sunLight = new THREE.DirectionalLight(0xffffff, 2.0);
+    sunLight.position.set(60, 10, 40);
+    sunLight.castShadow = false;
+    scene.add(sunLight);
 
-        // ----- TEXTURES (stable CDN sources) -----
-        const texLoader = new THREE.TextureLoader();
-        // Day / Night / Specular / Normal / Clouds - using stable threejs example assets or rawcdn
-        const dayMap = texLoader.load('https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg');
-        const nightMap = texLoader.load('https://rawcdn.githack.com/trekhleb/machine-learning-experiments/gh-pages/threejs/textures/earth_lights_2048.png');
-        const specMap = texLoader.load('https://threejs.org/examples/textures/earth_specular_2048.jpg');
-        const bumpMap = texLoader.load('https://threejs.org/examples/textures/earthbump1k.jpg');
-        const cloudMap = texLoader.load('https://threejs.org/examples/textures/earth_clouds_1024.png');
+    const ambient = new THREE.AmbientLight(0x0c0c0c, 1.0);
+    scene.add(ambient);
 
-        // improve anisotropy
-        [dayMap, nightMap, specMap, bumpMap, cloudMap].forEach(t => {
-            if (t && renderer.capabilities) {
-                t.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
-            }
-        });
+    // Texture loader (stable sources)
+    const loader = new THREE.TextureLoader();
+    const dayMap   = loader.load('https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg');
+    const nightMap = loader.load('https://rawcdn.githack.com/trekhleb/machine-learning-experiments/gh-pages/threejs/textures/earth_lights_2048.png');
+    const specMap  = loader.load('https://threejs.org/examples/textures/earth_specular_2048.jpg');
+    const bumpMap  = loader.load('https://threejs.org/examples/textures/earthbump1k.jpg');
+    const cloudMap = loader.load('https://threejs.org/examples/textures/earth_clouds_1024.png');
 
-        // ----- GLOBE (UPGRADED part only) -----
-        // Higher-poly geometry for smoother lighting and better normal detail
-        const globeGeometry = new THREE.SphereGeometry(5, 192, 192);
+    // Improve sampling
+    [dayMap, nightMap, specMap, bumpMap, cloudMap].forEach(t => {
+      if (t && renderer.capabilities) t.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
+    });
 
-        // Day material: Phong for specular highlights on ocean
-        const dayMaterial = new THREE.MeshPhongMaterial({
-            map: dayMap,
-            specularMap: specMap,
-            specular: new THREE.Color(0x444444),
-            shininess: 18,
-            bumpMap: bumpMap,
-            bumpScale: 0.04
-        });
-        const globeDay = new THREE.Mesh(globeGeometry, dayMaterial);
-        scene.add(globeDay);
+    // ----- GLOBE geometry (high poly for smooth shading) -----
+    const globeGeo = new THREE.SphereGeometry(5, 192, 192);
 
-        // Night material: custom shader that shows night map only on dark side (smooth terminator)
-        const nightUniforms = {
-            nightMap:  { value: nightMap },
-            sunDir:    { value: new THREE.Vector3().copy(sunLight.position).normalize() },
-            opacity:   { value: 1.0 }
-        };
+    // Day material uses phong (specular on oceans)
+    const dayMat = new THREE.MeshPhongMaterial({
+      map: dayMap,
+      specularMap: specMap,
+      specular: new THREE.Color(0x444444),
+      shininess: 18,
+      bumpMap: bumpMap,
+      bumpScale: 0.045
+    });
+    const globeDay = new THREE.Mesh(globeGeo, dayMat);
+    scene.add(globeDay);
 
-        const nightMaterial = new THREE.ShaderMaterial({
-            uniforms: nightUniforms,
-            vertexShader: `
-                varying vec2 vUv;
-                varying vec3 vNormalW;
-                void main() {
-                  vUv = uv;
-                  vNormalW = normalize(mat3(modelMatrix) * normal);
-                  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                }
-            `,
-            fragmentShader: `
-                uniform sampler2D nightMap;
-                uniform vec3 sunDir;
-                uniform float opacity;
-                varying vec2 vUv;
-                varying vec3 vNormalW;
-                void main() {
-                  // N dot L: if positive -> day, if negative -> night
-                  float ndl = dot(normalize(vNormalW), normalize(sunDir));
-                  // make a smooth transition (terminator soft)
-                  float nightFactor = smoothstep(0.12, -0.08, ndl);
-                  vec3 nightColor = texture2D(nightMap, vUv).rgb;
-                  // boost small lights and tone them
-                  nightColor = pow(nightColor, vec3(1.2));
-                  gl_FragColor = vec4(nightColor * nightFactor, opacity * nightFactor);
-                }
-            `,
-            transparent: true,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
-        });
+    // Night overlay: shader that fades in on dark side (smooth terminator)
+    const nightUniforms = {
+      nightMap: { value: nightMap },
+      sunDir:   { value: new THREE.Vector3().copy(sunLight.position).normalize() },
+      intensity:{ value: 1.0 }
+    };
 
-        const globeNight = new THREE.Mesh(globeGeometry, nightMaterial);
-        scene.add(globeNight);
-
-        // Clouds: separate sphere slightly bigger, semi-transparent, depthWrite false for soft blending
-        const cloudGeometry = new THREE.SphereGeometry(5.06, 160, 160);
-        const cloudMaterial = new THREE.MeshLambertMaterial({
-            map: cloudMap,
-            transparent: true,
-            opacity: 0.42,
-            depthWrite: false
-        });
-        const cloudLayer = new THREE.Mesh(cloudGeometry, cloudMaterial);
-        scene.add(cloudLayer);
-
-        // Atmosphere: simple view-dependent rim shader (backside)
-        const atmoGeometry = new THREE.SphereGeometry(5.18, 120, 120);
-        const atmoMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                glowColor: { value: new THREE.Color(0x4aa3ff) },
-                intensity: { value: 0.8 }
-            },
-            vertexShader: `
-                varying vec3 vNormalW;
-                varying vec3 vPosW;
-                void main(){
-                  vNormalW = normalize(mat3(modelMatrix) * normal);
-                  vPosW = (modelMatrix * vec4(position,1.0)).xyz;
-                  gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-                }
-            `,
-            fragmentShader: `
-                uniform vec3 glowColor;
-                uniform float intensity;
-                varying vec3 vNormalW;
-                varying vec3 vPosW;
-                void main(){
-                  vec3 viewDir = normalize(cameraPosition - vPosW);
-                  float rim = 1.0 - max(dot(normalize(vNormalW), viewDir), 0.0);
-                  rim = pow(rim, 3.0);
-                  gl_FragColor = vec4(glowColor, rim * 0.35 * intensity);
-                }
-            `,
-            blending: THREE.AdditiveBlending,
-            side: THREE.BackSide,
-            transparent: true,
-            depthWrite: false
-        });
-        const atmosphere = new THREE.Mesh(atmoGeometry, atmoMaterial);
-        scene.add(atmosphere);
-
-        // ----- STARFIELD (upgraded but lightweight) -----
-        const starGeo = new THREE.BufferGeometry();
-        const starCount = 9000;
-        const starPositions = new Float32Array(starCount * 3);
-        for (let i = 0; i < starCount; i++) {
-            const i3 = i * 3;
-            const r = 800 + Math.random() * 1200;
-            // random spherical distribution (avoid too many near center)
-            const theta = Math.acos(2 * Math.random() - 1);
-            const phi = 2 * Math.PI * Math.random();
-            starPositions[i3 + 0] = r * Math.sin(theta) * Math.cos(phi);
-            starPositions[i3 + 1] = r * Math.sin(theta) * Math.sin(phi);
-            starPositions[i3 + 2] = r * Math.cos(theta);
+    const nightMat = new THREE.ShaderMaterial({
+      uniforms: nightUniforms,
+      vertexShader: `
+        varying vec2 vUv;
+        varying vec3 vNormalW;
+        void main() {
+          vUv = uv;
+          vNormalW = normalize(mat3(modelMatrix) * normal);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }
-        starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-        const starMat = new THREE.PointsMaterial({ size: 0.6, color: 0xffffff, transparent: true, opacity: 0.85, depthWrite: false });
-        const starMesh = new THREE.Points(starGeo, starMat);
-        scene.add(starMesh);
-
-        // ----- Keep GSAP Scroll timeline and content interactions (original logic) -----
-        gsap.registerPlugin(ScrollTrigger);
-
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: ".content-container",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1,
-            }
-        });
-
-        // Animate camera position and rotation (kept same as original, tuned lightly)
-        tl.to(camera.position, { z: 8, y: 3 })
-          .to(camera.rotation, { x: -0.2 }, "<")
-          .to(globeDay.rotation, { y: 1.5 }, "<")
-          .to(cloudLayer.rotation, { y: 2.0 }, "<")
-          .to(camera.position, { z: 12, y: -2, x: -3 }, "25%")
-          .to(camera.rotation, { x: 0.3, y: -0.2 }, "25%")
-          .to(globeDay.rotation, { y: 3.0 }, "25%")
-          .to(cloudLayer.rotation, { y: 3.8 }, "25%")
-          .to(camera.position, { z: 8, y: 0, x: 0 }, "75%")
-          .to(camera.rotation, { x: 0, y: 0 }, "75%")
-          .to(globeDay.rotation, { y: 4.5 }, "75%")
-          .to(cloudLayer.rotation, { y: 5.5 }, "75%");
-
-
-        // HTML content fade in/out (original)
-        const sections = document.querySelectorAll('.content-section');
-        sections.forEach((section) => {
-            ScrollTrigger.create({
-                trigger: section,
-                start: 'top center',
-                end: 'bottom center',
-                onEnter: () => section.classList.add('visible'),
-                onLeave: () => section.classList.remove('visible'),
-                onEnterBack: () => section.classList.add('visible'),
-                onLeaveBack: () => section.classList.remove('visible'),
-            });
-        });
-
-        // ----- Animation Loop (globe-only upgrades live here) -----
-        let t = 0;
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // subtle auto-rotation for natural motion
-            globeDay.rotation.y += 0.0006;
-            globeNight.rotation.y = globeDay.rotation.y; // sync night overlay
-            cloudLayer.rotation.y += 0.001;
-
-            // update night shader's sun direction in case sunLight moves later
-            nightUniforms.sunDir.value.copy(sunLight.position).normalize();
-
-            // gentle star twinkle
-            t += 0.008;
-            starMat.opacity = 0.78 + Math.sin(t * 1.6) * 0.06;
-
-            renderer.render(scene, camera);
+      `,
+      fragmentShader: `
+        uniform sampler2D nightMap;
+        uniform vec3 sunDir;
+        uniform float intensity;
+        varying vec2 vUv;
+        varying vec3 vNormalW;
+        void main() {
+          float ndl = dot(normalize(vNormalW), normalize(sunDir));
+          // smooth terminator range tuned for realistic twilight
+          float nightFactor = smoothstep(0.12, -0.06, ndl);
+          vec3 lights = texture2D(nightMap, vUv).rgb;
+          // subtle boost and color correct
+          lights = pow(lights, vec3(1.15)) * 1.35;
+          gl_FragColor = vec4(lights * nightFactor * intensity, nightFactor * 0.95);
         }
-        animate();
+      `,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+    const globeNight = new THREE.Mesh(globeGeo, nightMat);
+    scene.add(globeNight);
 
-        // ----- Resize Handler -----
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+    // Clouds: separate thin layer (soft, semi-opaque)
+    const cloudGeo = new THREE.SphereGeometry(5.06, 160, 160);
+    const cloudMat = new THREE.MeshLambertMaterial({
+      map: cloudMap,
+      transparent: true,
+      opacity: 0.42,
+      depthWrite: false
+    });
+    const cloudLayer = new THREE.Mesh(cloudGeo, cloudMat);
+    scene.add(cloudLayer);
 
+    // Atmosphere: soft rim glow using view-dependent shader (subtle)
+    const atmoGeo = new THREE.SphereGeometry(5.2, 128, 128);
+    const atmoMat = new THREE.ShaderMaterial({
+      uniforms: {
+        glowColor: { value: new THREE.Color(0x7fbfff) },
+        coef: { value: 1.0 },
+        power: { value: 2.5 }
+      },
+      vertexShader: `
+        varying vec3 vNormalW;
+        varying vec3 vPosW;
+        void main(){
+          vNormalW = normalize(mat3(modelMatrix) * normal);
+          vPosW = (modelMatrix * vec4(position,1.0)).xyz;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 glowColor;
+        uniform float coef;
+        uniform float power;
+        varying vec3 vNormalW;
+        varying vec3 vPosW;
+        void main(){
+          vec3 viewDir = normalize(cameraPosition - vPosW);
+          float rim = 1.0 - max(dot(normalize(vNormalW), viewDir), 0.0);
+          rim = pow(rim * coef, power);
+          // tone down to be subtle; alpha controls overall strength
+          gl_FragColor = vec4(glowColor, rim * 0.28);
+        }
+      `,
+      blending: THREE.AdditiveBlending,
+      side: THREE.BackSide,
+      transparent: true,
+      depthWrite: false
+    });
+    const atmosphere = new THREE.Mesh(atmoGeo, atmoMat);
+    scene.add(atmosphere);
+
+    // --- Lens flare for Sun (cinematic highlights) ---
+    const flareTex0 = loader.load('https://threejs.org/examples/textures/lensflare/lensflare0.png');
+    const flareTex3 = loader.load('https://threejs.org/examples/textures/lensflare/lensflare3.png');
+    const lensflare = new Lensflare();
+    lensflare.addElement(new LensflareElement(flareTex0, 350, 0.0));
+    lensflare.addElement(new LensflareElement(flareTex3, 80, 0.55));
+    lensflare.addElement(new LensflareElement(flareTex3, 120, 0.9));
+    sunLight.add(lensflare);
+
+    // --- Starfield points (subtle twinkle using opacity modulation) ---
+    const starGeo = new THREE.BufferGeometry();
+    const starCount = 6000;
+    const positions = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount; i++) {
+      const phi = Math.acos(2*Math.random() - 1);
+      const theta = 2 * Math.PI * Math.random();
+      const r = 1200 + Math.random() * 800;
+      const ix = i*3;
+      positions[ix]   = r * Math.sin(phi) * Math.cos(theta);
+      positions[ix+1] = r * Math.sin(phi) * Math.sin(theta);
+      positions[ix+2] = r * Math.cos(phi);
+    }
+    starGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const starMat = new THREE.PointsMaterial({ size: 0.6, color: 0xffffff, transparent: true, opacity: 0.82, depthWrite: false });
+    const stars = new THREE.Points(starGeo, starMat);
+    scene.add(stars);
+
+    // --- Postprocessing: RenderPass + Bloom (soft for city lights & rim) ---
+    const composer = new EffectComposer(renderer);
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+    const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.28, 0.6, 0.85);
+    bloomPass.threshold = 0.82;
+    composer.addPass(bloomPass);
+
+    // --- GSAP Scroll animation (kept original timeline but adapted to new camera & globe meshes) ---
+    gsap.registerPlugin(ScrollTrigger);
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".content-container",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1
+      }
+    });
+
+    tl.to(camera.position, { z: 9, y: 3 }, 0)
+      .to(camera.rotation, { x: -0.18 }, 0)
+      .to(globeDay.rotation, { y: 1.5 }, 0)
+      .to(cloudLayer.rotation, { y: 2.0 }, 0)
+      .to(camera.position, { z: 13, y: -2, x: -3 }, 0.25)
+      .to(camera.rotation, { x: 0.32, y: -0.18 }, 0.25)
+      .to(globeDay.rotation, { y: 3.0 }, 0.25)
+      .to(cloudLayer.rotation, { y: 3.8 }, 0.25)
+      .to(camera.position, { z: 10, y: 0, x: 0 }, 0.75)
+      .to(camera.rotation, { x: 0, y: 0 }, 0.75)
+      .to(globeDay.rotation, { y: 4.2 }, 0.75)
+      .to(cloudLayer.rotation, { y: 5.2 }, 0.75);
+
+    // ----- Animation loop -----
+    let clock = new THREE.Clock();
+    let t = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = clock.getDelta();
+
+      // slow auto-rotation
+      globeDay.rotation.y += 0.0007;
+      globeNight.rotation.y = globeDay.rotation.y;
+      cloudLayer.rotation.y += 0.0011;
+
+      // update night shader sun direction (keeps terminator correct)
+      nightUniforms.sunDir.value.copy(sunLight.position).normalize();
+
+      // twinkle stars
+      t += dt;
+      starMat.opacity = 0.78 + Math.sin(t * 1.7) * 0.06;
+
+      // composer render (with bloom)
+      composer.render(dt);
+
+      controls.update();
+    }
+    animate();
+
+    // Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      composer.setSize(window.innerWidth, window.innerHeight);
+    });
     </script>
 </body>
 </html>
