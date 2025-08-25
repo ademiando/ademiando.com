@@ -1,0 +1,475 @@
+import React, { useState, useEffect, useRef, memo } from 'react';
+import { Plus, MoreVertical, ChevronUp, ChevronDown, ChevronsUpDown, FileDown, Search } from 'lucide-react';
+
+// --- KONFIGURASI & DATA MOCK ---
+
+// Pilihan mata uang yang diperluas
+const exchangeRates = {
+    USD: 1, IDR: 16400.50, EUR: 0.93, JPY: 157.50, GBP: 0.79, AUD: 1.50, CAD: 1.37, CHF: 0.90,
+};
+
+// Database aset yang lebih besar untuk simulasi pencarian
+const mockAssetDatabase = [
+    { symbol: 'AAPL', name: 'Apple Inc.', exchange: 'NASDAQ' },
+    { symbol: 'GOOGL', name: 'Alphabet Inc.', exchange: 'NASDAQ' },
+    { symbol: 'MSFT', name: 'Microsoft Corporation', exchange: 'NASDAQ' },
+    { symbol: 'AMZN', name: 'Amazon.com, Inc.', exchange: 'NASDAQ' },
+    { symbol: 'NVDA', name: 'NVIDIA Corporation', exchange: 'NASDAQ' },
+    { symbol: 'TSLA', name: 'Tesla, Inc.', exchange: 'NASDAQ' },
+    { symbol: 'META', name: 'Meta Platforms, Inc.', exchange: 'NASDAQ' },
+    { symbol: 'BBNI.JK', name: 'Bank Negara Indonesia', exchange: 'IDX' },
+    { symbol: 'BBCA.JK', name: 'Bank Central Asia', exchange: 'IDX' },
+    { symbol: 'TLKM.JK', name: 'Telkom Indonesia', exchange: 'IDX' },
+    { symbol: 'BTC-USD', name: 'Bitcoin', exchange: 'CRYPTO' },
+    { symbol: 'ETH-USD', name: 'Ethereum', exchange: 'CRYPTO' },
+    { symbol: 'SOL-USD', name: 'Solana', exchange: 'CRYPTO' },
+    { symbol: 'XRP-USD', name: 'Ripple', exchange: 'CRYPTO' },
+    { symbol: 'EURUSD=X', name: 'EUR/USD', exchange: 'FX' },
+    { symbol: 'GBPUSD=X', name: 'GBP/USD', exchange: 'FX' },
+    { symbol: 'USDJPY=X', name: 'USD/JPY', exchange: 'FX' },
+];
+
+// Data pasar awal (harga dalam USD)
+const initialMarketData = {
+    "AAPL": { name: "Apple Inc.", price: 189.50, prevClose: 190.45 },
+    "GOOGL": { name: "Alphabet Inc.", price: 135.10, prevClose: 136.25 },
+    "MSFT": { name: "Microsoft Corp.", price: 410.34, prevClose: 405.12 },
+    "AMZN": { name: "Amazon.com, Inc.", price: 179.22, prevClose: 181.30 },
+    "NVDA": { name: "NVIDIA Corp", price: 177.99, prevClose: 175.22 },
+    "TSLA": { name: "Tesla, Inc.", price: 245.01, prevClose: 248.40 },
+    "META": { name: "Meta Platforms", price: 330.50, prevClose: 325.80 },
+    "BBNI.JK": { name: "Bank Negara", price: 0.30, prevClose: 0.29 }, // Harga dikonversi ke USD
+    "BBCA.JK": { name: "Bank Central Asia", price: 0.60, prevClose: 0.61 },
+    "TLKM.JK": { name: "Telkom Indonesia", price: 0.25, prevClose: 0.26 },
+    "BTC-USD": { name: "Bitcoin", price: 41500.75, prevClose: 40890.11 },
+    "ETH-USD": { name: "Ethereum", price: 2210.40, prevClose: 2180.90 },
+    "SOL-USD": { name: "Solana", price: 95.50, prevClose: 92.30 },
+    "XRP-USD": { name: "Ripple", price: 0.62, prevClose: 0.61 },
+    "EURUSD=X": { name: "EUR/USD", price: 1.0895, prevClose: 1.0881 },
+    "GBPUSD=X": { name: "GBP/USD", price: 1.2650, prevClose: 1.2630 },
+    "USDJPY=X": { name: "USD/JPY", price: 157.50, prevClose: 157.20 },
+};
+
+const mockNews = [
+    { id: 1, symbol: "NVDA", source: "Bloomberg", title: "Nvidia Earnings Are the Stock Market Risk Event After Fed Rally", time: "2h ago", hasAudio: true },
+    { id: 2, symbol: "AAPL", source: "Reuters", title: "Apple Vision Pro facing production hurdles ahead of launch.", time: "5h ago", hasAudio: false },
+    { id: 3, symbol: "TLKM.JK", source: "CNBC Indonesia", title: "Telkom focuses on data center expansion in Southeast Asia.", time: "7h ago", hasAudio: false },
+    { id: 4, symbol: "BTC-USD", source: "CoinDesk", title: "Bitcoin ETF approval could be imminent, analysts say.", time: "1d ago", hasAudio: false },
+];
+
+// --- FUNGSI HELPER ---
+const formatCurrency = (value, currency = 'USD') => {
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency,
+        minimumFractionDigits: currency === 'IDR' || currency === 'JPY' ? 0 : 2,
+        maximumFractionDigits: currency === 'IDR' || currency === 'JPY' ? 0 : 2,
+    }).format(value);
+};
+
+const formatPercentage = (value) => `${value.toFixed(2)}%`;
+
+// --- KOMPONEN ---
+
+const TradingViewChartWidget = memo(({ portfolio }) => {
+    const containerRef = useRef(null);
+    const widgetId = useRef(`tradingview_${Math.random().toString(36).substring(2, 11)}`).current;
+
+    const getTradingViewSymbol = () => {
+        if (portfolio.length > 0 && portfolio[0].symbol) {
+            const asset = mockAssetDatabase.find(a => a.symbol === portfolio[0].symbol);
+            if (!asset) return 'SP:SPX';
+            
+            if (asset.exchange === 'CRYPTO') return `COINBASE:${asset.symbol.replace('-USD', 'USD')}`;
+            if (asset.exchange === 'FX') return `FX:${asset.symbol.replace('=X', '')}`;
+            if (asset.exchange === 'IDX') return `IDX:${asset.symbol.replace('.JK', '')}`;
+            return `${asset.exchange}:${asset.symbol}`;
+        }
+        return 'SP:SPX';
+    };
+
+    const tradingViewSymbol = getTradingViewSymbol();
+
+    useEffect(() => {
+        const currentRef = containerRef.current;
+        if (!currentRef) return;
+        currentRef.innerHTML = '';
+        const script = document.createElement('script');
+        script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+        script.type = "text/javascript";
+        script.async = true;
+        script.innerHTML = JSON.stringify({
+            "autosize": true, "symbol": tradingViewSymbol, "interval": "D", "timezone": "Etc/UTC", "theme": "dark", "style": "1", "locale": "en", "enable_publishing": false, "withdateranges": true, "allow_symbol_change": true, "container_id": widgetId, "studies": ["STD;SMA", "STD;RSI"],
+            "overrides": { "paneProperties.background": "#131722", "paneProperties.vertGridProperties.color": "rgba(42, 46, 57, 0.5)", "paneProperties.horzGridProperties.color": "rgba(42, 46, 57, 0.5)", "symbolWatermarkProperties.transparency": 90, "scalesProperties.textColor": "#AAA" }
+        });
+        currentRef.appendChild(script);
+        return () => { if (currentRef) currentRef.innerHTML = ''; };
+    }, [tradingViewSymbol, widgetId]);
+
+    return (
+        <div className="bg-[#181A20] p-4 rounded-lg h-[500px]">
+            <h2 className="text-lg font-semibold text-white mb-2">Portfolio Performance</h2>
+            <p className="text-xs text-gray-400 mb-4">Menampilkan aset utama ({tradingViewSymbol}). Gunakan fitur 'Bandingkan' di dalam grafik untuk menambah indeks seperti SPX atau saham lain.</p>
+            <div id={widgetId} ref={containerRef} className="h-[calc(100%-50px)] w-full"></div>
+        </div>
+    );
+});
+
+const PortfolioAllocationChart = memo(({ portfolio, marketData }) => {
+    const [hoveredSlice, setHoveredSlice] = useState(null);
+    const colors = ['#38BDF8', '#F87171', '#4ADE80', '#FACC15', '#A78BFA', '#2DD4BF', '#F472B6'];
+
+    const allocationData = portfolio.map(asset => {
+        const currentPriceUSD = marketData[asset.symbol]?.price || 0;
+        return {
+            symbol: asset.symbol,
+            value: currentPriceUSD * asset.quantity,
+        };
+    });
+
+    const totalValue = allocationData.reduce((sum, asset) => sum + asset.value, 0);
+
+    if (totalValue === 0) {
+        return (
+            <div className="bg-[#181A20] p-4 rounded-lg">
+                <h2 className="text-lg font-semibold text-white mb-4">Alokasi Portofolio</h2>
+                <div className="flex items-center justify-center h-48">
+                    <p className="text-gray-500">Data tidak cukup untuk menampilkan alokasi.</p>
+                </div>
+            </div>
+        );
+    }
+    
+    const pieData = allocationData.map(asset => ({
+        ...asset,
+        percentage: (asset.value / totalValue) * 100,
+    })).sort((a, b) => b.percentage - a.percentage);
+
+    let cumulativePercent = 0;
+    const getCoordinatesForPercent = (percent) => [Math.cos(2 * Math.PI * percent), Math.sin(2 * Math.PI * percent)];
+
+    const slices = pieData.map((slice, index) => {
+        const [startX, startY] = getCoordinatesForPercent(cumulativePercent / 100);
+        cumulativePercent += slice.percentage;
+        const [endX, endY] = getCoordinatesForPercent(cumulativePercent / 100);
+        const largeArcFlag = slice.percentage > 50 ? 1 : 0;
+        const pathData = [
+            `M ${startX} ${startY}`, // Move
+            `A 1 1 0 ${largeArcFlag} 1 ${endX} ${endY}`, // Arc
+            'L 0 0', // Line
+        ].join(' ');
+
+        return { ...slice, pathData, color: colors[index % colors.length] };
+    });
+
+    return (
+        <div className="bg-[#181A20] p-4 rounded-lg">
+            <h2 className="text-lg font-semibold text-white mb-4">Alokasi Portofolio</h2>
+            <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="relative w-48 h-48">
+                    <svg viewBox="-1 -1 2 2" className="transform -rotate-90">
+                        {slices.map((slice, index) => (
+                            <path
+                                key={index}
+                                d={slice.pathData}
+                                fill={slice.color}
+                                onMouseEnter={() => setHoveredSlice(slice.symbol)}
+                                onMouseLeave={() => setHoveredSlice(null)}
+                                className="transition-transform duration-200"
+                                style={{ transform: hoveredSlice === slice.symbol ? 'scale(1.05)' : 'scale(1)' }}
+                            />
+                        ))}
+                    </svg>
+                    {hoveredSlice && (
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div className="text-center">
+                                <p className="text-lg font-bold text-white">{hoveredSlice}</p>
+                                <p className="text-sm text-gray-300">{pieData.find(s => s.symbol === hoveredSlice)?.percentage.toFixed(2)}%</p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <div className="w-full md:w-auto">
+                    <ul className="space-y-2">
+                        {slices.slice(0, 5).map((slice, index) => (
+                             <li key={index} className="flex items-center text-sm" onMouseEnter={() => setHoveredSlice(slice.symbol)} onMouseLeave={() => setHoveredSlice(null)}>
+                                <span className="w-3 h-3 rounded-full mr-3" style={{ backgroundColor: slice.color }}></span>
+                                <span className="text-gray-300 mr-2">{slice.symbol}:</span>
+                                <span className="font-semibold text-white">{slice.percentage.toFixed(2)}%</span>
+                            </li>
+                        ))}
+                        {slices.length > 5 && <li className="text-xs text-gray-500 pt-1">dan {slices.length - 5} lainnya...</li>}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    );
+});
+
+
+const OverviewDashboard = ({ portfolio, marketData, currency }) => {
+    const rate = exchangeRates[currency];
+    const stats = portfolio.reduce((acc, asset) => {
+        const currentPriceUSD = marketData[asset.symbol]?.price || 0;
+        const prevCloseUSD = marketData[asset.symbol]?.prevClose || 0;
+        const purchasePriceUSD = asset.purchasePrice / (exchangeRates[asset.currency] || 1);
+        acc.totalValueUSD += currentPriceUSD * asset.quantity;
+        acc.totalCostUSD += purchasePriceUSD * asset.quantity;
+        acc.dayGainLossUSD += (currentPriceUSD - prevCloseUSD) * asset.quantity;
+        return acc;
+    }, { totalValueUSD: 0, totalCostUSD: 0, dayGainLossUSD: 0 });
+
+    const totalGainLossUSD = stats.totalValueUSD - stats.totalCostUSD;
+    const totalGainLossPercent = stats.totalCostUSD > 0 ? (totalGainLossUSD / stats.totalCostUSD) * 100 : 0;
+    const dayGainLossPercent = stats.totalCostUSD > 0 ? (stats.dayGainLossUSD / stats.totalCostUSD) * 100 : 0;
+
+    const StatCard = ({ title, value, percentage, isPositive }) => (
+        <div>
+            <p className="text-sm text-gray-400">{title}</p>
+            <div className="flex items-baseline space-x-2 mt-1">
+                <p className="text-xl font-semibold text-white">{value}</p>
+                <div className={`flex items-center text-sm font-medium ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                    {isPositive ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                    <span>{percentage}</span>
+                </div>
+            </div>
+        </div>
+    );
+
+    return (
+        <div className="bg-[#181A20] p-4 rounded-lg">
+            <div className="flex justify-between items-center"><h2 className="text-lg font-semibold text-white">Overview</h2><ChevronsUpDown className="text-gray-400 cursor-pointer" size={20} /></div>
+            <div className="grid grid-cols-2 gap-y-4 mt-4">
+                <StatCard title={`Total gain / Loss (${currency})`} value={formatCurrency(totalGainLossUSD * rate, currency)} percentage={formatPercentage(totalGainLossPercent)} isPositive={totalGainLossUSD >= 0} />
+                <StatCard title="Day gain / Loss" value={formatCurrency(stats.dayGainLossUSD * rate, currency)} percentage={formatPercentage(dayGainLossPercent)} isPositive={stats.dayGainLossUSD >= 0} />
+                <div><p className="text-sm text-gray-400">Value</p><p className="text-xl font-semibold text-white mt-1">{formatCurrency(stats.totalValueUSD * rate, currency)}</p></div>
+                <div><p className="text-sm text-gray-400">Cost</p><p className="text-xl font-semibold text-white mt-1">{formatCurrency(stats.totalCostUSD * rate, currency)}</p></div>
+            </div>
+        </div>
+    );
+};
+
+const AssetTable = ({ portfolio, marketData, onEdit, onRemove, onAdd, currency }) => {
+    const rate = exchangeRates[currency];
+    const exportToCSV = () => {
+        let csvContent = `data:text/csv;charset=utf-8,Symbol,Quantity,Purchase Price,Purchase Currency,Current Price (${currency}),Cost (${currency}),Value (${currency}),Gain/Loss (${currency})\n`;
+        portfolio.forEach(asset => {
+            const currentPriceUSD = marketData[asset.symbol]?.price || 0;
+            const purchasePriceUSD = asset.purchasePrice / (exchangeRates[asset.currency] || 1);
+            const costUSD = purchasePriceUSD * asset.quantity;
+            const valueUSD = currentPriceUSD * asset.quantity;
+            const gainLossUSD = valueUSD - costUSD;
+            csvContent += `${asset.symbol},${asset.quantity},${asset.purchasePrice},${asset.currency},${(currentPriceUSD * rate).toFixed(2)},${(costUSD * rate).toFixed(2)},${(valueUSD * rate).toFixed(2)},${(gainLossUSD * rate).toFixed(2)}\n`;
+        });
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "portfolio.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    return (
+        <div className="bg-[#181A20] p-4 rounded-lg">
+            <div className="flex justify-between items-center mb-4">
+                <div className="flex space-x-2">
+                    <button onClick={onAdd} className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1.5 text-sm rounded-md flex items-center space-x-1"><Plus size={16} /><span>Symbol</span></button>
+                    <button onClick={exportToCSV} className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1.5 text-sm rounded-md flex items-center space-x-1"><FileDown size={16} /><span>CSV</span></button>
+                </div>
+            </div>
+            <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                    <thead><tr className="border-b border-gray-700">{['Symbol', 'Qty', 'Price', 'Gain/Loss', 'Cost', 'Date', ''].map(h => <th key={h} className="p-2 text-xs font-medium text-gray-400">{h}</th>)}</tr></thead>
+                    <tbody>
+                        {portfolio.map(asset => {
+                            const currentData = marketData[asset.symbol]; if (!currentData) return null;
+                            const purchasePriceUSD = asset.purchasePrice / (exchangeRates[asset.currency] || 1);
+                            const costUSD = purchasePriceUSD * asset.quantity;
+                            const valueUSD = currentData.price * asset.quantity;
+                            const gainLossUSD = valueUSD - costUSD;
+                            const isPositive = gainLossUSD >= 0;
+                            return (
+                                <tr key={asset.id} className="border-b border-gray-800 hover:bg-gray-700/50">
+                                    <td className="p-2"><p className="font-bold text-white">{asset.symbol}</p><p className="text-xs text-gray-500">{currentData.name}</p></td>
+                                    <td className="p-2 text-white">{asset.quantity}</td>
+                                    <td className="p-2 text-white">{formatCurrency(currentData.price * rate, currency)}</td>
+                                    <td className={`p-2 font-medium ${isPositive ? 'text-green-400' : 'text-red-400'}`}>{formatCurrency(gainLossUSD * rate, currency)}</td>
+                                    <td className="p-2 text-white">{formatCurrency(costUSD * rate, currency)}</td>
+                                    <td className="p-2 text-gray-400 text-sm">{asset.date}</td>
+                                    <td className="p-2 text-right">
+                                        <div className="relative group"><MoreVertical size={18} className="text-gray-400 cursor-pointer" />
+                                            <div className="absolute right-0 mt-2 w-28 bg-gray-900 border border-gray-700 rounded-md shadow-lg z-10 hidden group-hover:block">
+                                                <a href="#" onClick={(e) => { e.preventDefault(); onEdit(asset); }} className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Edit</a>
+                                                <a href="#" onClick={(e) => { e.preventDefault(); onRemove(asset.id); }} className="block px-4 py-2 text-sm text-red-400 hover:bg-gray-700">Remove</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};
+
+const NewsFeed = ({ portfolio, news }) => {
+    const portfolioSymbols = portfolio.map(a => a.symbol);
+    const relevantNews = news.filter(item => portfolioSymbols.includes(item.symbol));
+    return (
+        <div className="bg-[#181A20] p-4 rounded-lg">
+            <h2 className="text-lg font-semibold text-white mb-4">Watchlist News</h2>
+            <div className="space-y-4">
+                {relevantNews.map(item => (
+                    <div key={item.id}><p className="text-sm text-gray-300 hover:text-white cursor-pointer">{item.title}</p><div className="flex justify-between items-center mt-1"><p className="text-xs text-gray-500">{item.time}</p>{item.hasAudio && <button className="text-xs text-cyan-400 hover:underline">LISTEN</button>}</div></div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+const AssetModal = ({ isOpen, onClose, onSave, asset }) => {
+    const [formData, setFormData] = useState({ symbol: '', quantity: '', purchasePrice: '', date: '', currency: 'USD' });
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+
+    useEffect(() => {
+        if (asset) {
+            setFormData({ ...asset, quantity: asset.quantity.toString(), purchasePrice: asset.purchasePrice.toString() });
+            setSearchQuery(asset.symbol);
+        } else {
+            setFormData({ symbol: '', quantity: '', purchasePrice: '', date: new Date().toISOString().split('T')[0].replace(/-/g, '/').substring(2), currency: 'USD' });
+            setSearchQuery('');
+        }
+        setSearchResults([]);
+    }, [asset, isOpen]);
+
+    useEffect(() => {
+        if (searchQuery.length > 1) {
+            const results = mockAssetDatabase.filter(a =>
+                a.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                a.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setSearchResults(results.slice(0, 5)); // Batasi hasil
+        } else {
+            setSearchResults([]);
+        }
+    }, [searchQuery]);
+
+    if (!isOpen) return null;
+
+    const handleSelectAsset = (selectedAsset) => {
+        setFormData({ ...formData, symbol: selectedAsset.symbol });
+        setSearchQuery(selectedAsset.symbol);
+        setSearchResults([]);
+    };
+
+    const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+    const handleSubmit = (e) => { e.preventDefault(); onSave({ ...formData, quantity: parseFloat(formData.quantity), purchasePrice: parseFloat(formData.purchasePrice) }); };
+
+    return (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 backdrop-blur-sm">
+            <div className="bg-[#1D2026] p-6 rounded-lg shadow-2xl w-full max-w-sm border border-gray-700">
+                <h2 className="text-xl font-bold mb-6 text-white">{asset ? 'Edit Asset' : 'Add Asset'}</h2>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="relative">
+                        <label className="block text-xs font-medium text-gray-400 mb-1">Search Symbol</label>
+                        <div className="flex items-center">
+                            <Search size={18} className="absolute left-3 text-gray-500" />
+                            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="e.g., Apple or AAPL" className="w-full bg-gray-800 text-white p-2 pl-10 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none" />
+                        </div>
+                        {searchResults.length > 0 && (
+                            <div className="absolute w-full bg-gray-800 border border-gray-600 mt-1 rounded-md z-10">
+                                {searchResults.map(res => (
+                                    <div key={res.symbol} onClick={() => handleSelectAsset(res)} className="p-2 hover:bg-gray-700 cursor-pointer">
+                                        <p className="font-bold text-white">{res.symbol}</p>
+                                        <p className="text-xs text-gray-400">{res.name}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                    <div><label className="block text-xs font-medium text-gray-400 mb-1">Quantity</label><input type="number" step="any" name="quantity" value={formData.quantity} onChange={handleChange} placeholder="e.g., 10" className="w-full bg-gray-800 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none" /></div>
+                    <div className="grid grid-cols-3 gap-2">
+                        <div className="col-span-2"><label className="block text-xs font-medium text-gray-400 mb-1">Purchase Price</label><input type="number" step="any" name="purchasePrice" value={formData.purchasePrice} onChange={handleChange} placeholder="e.g., 160.00" className="w-full bg-gray-800 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none" /></div>
+                        <div><label className="block text-xs font-medium text-gray-400 mb-1">Currency</label><select name="currency" value={formData.currency} onChange={handleChange} className="w-full bg-gray-800 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none">{Object.keys(exchangeRates).map(c => <option key={c} value={c}>{c}</option>)}</select></div>
+                    </div>
+                    <div><label className="block text-xs font-medium text-gray-400 mb-1">Date</label><input type="text" name="date" value={formData.date} onChange={handleChange} placeholder="YY/MM/DD" className="w-full bg-gray-800 text-white p-2 rounded-md border border-gray-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none" /></div>
+                    <div className="flex justify-end space-x-4 pt-4"><button type="button" onClick={onClose} className="px-4 py-2 rounded-md bg-gray-600 hover:bg-gray-500 transition-colors text-sm">Cancel</button><button type="submit" className="px-4 py-2 rounded-md bg-cyan-600 hover:bg-cyan-700 transition-colors text-sm">Save</button></div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default function App() {
+    const [portfolio, setPortfolio] = useState([]);
+    const [marketData, setMarketData] = useState(initialMarketData);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingAsset, setEditingAsset] = useState(null);
+    const [displayCurrency, setDisplayCurrency] = useState('USD');
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        try {
+            const savedPortfolio = localStorage.getItem('portfolio_v4');
+            const savedCurrency = localStorage.getItem('displayCurrency_v4');
+            if (savedPortfolio) setPortfolio(JSON.parse(savedPortfolio));
+            else setPortfolio([{ id: 1, symbol: 'NVDA', quantity: 10, purchasePrice: 160.00, date: '25/08/22', currency: 'USD' }, { id: 2, symbol: 'BBCA.JK', quantity: 100, purchasePrice: 9500, date: '25/07/15', currency: 'IDR' }]);
+            if (savedCurrency) setDisplayCurrency(savedCurrency);
+        } catch (error) { console.error("Gagal memuat data dari localStorage", error); setPortfolio([{ id: 1, symbol: 'NVDA', quantity: 10, purchasePrice: 160.00, date: '25/08/22', currency: 'USD' }]); } finally { setIsLoading(false); }
+    }, []);
+
+    useEffect(() => {
+        if (!isLoading) {
+            try { localStorage.setItem('portfolio_v4', JSON.stringify(portfolio)); localStorage.setItem('displayCurrency_v4', displayCurrency); } catch (error) { console.error("Gagal menyimpan data ke localStorage", error); }
+        }
+    }, [portfolio, displayCurrency, isLoading]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setMarketData(prevData => {
+                const newData = { ...prevData };
+                for (const symbol in newData) { newData[symbol].price += (Math.random() - 0.5) * (newData[symbol].price * 0.01); }
+                return newData;
+            });
+        }, 2000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const handleOpenModal = (asset = null) => { setEditingAsset(asset); setIsModalOpen(true); };
+    const handleCloseModal = () => { setEditingAsset(null); setIsModalOpen(false); };
+    const handleSaveAsset = (assetData) => {
+        if (!assetData.symbol) { alert("Please select a valid symbol from the search."); return; }
+        if (assetData.id) setPortfolio(portfolio.map(a => a.id === assetData.id ? { ...a, ...assetData } : a));
+        else setPortfolio([...portfolio, { ...assetData, id: Date.now() }]);
+        handleCloseModal();
+    };
+    const handleRemoveAsset = (id) => setPortfolio(portfolio.filter(a => a.id !== id));
+
+    if (isLoading) return <div className="bg-black min-h-screen flex items-center justify-center"><p className="text-white text-xl">Loading Watchlist...</p></div>;
+
+    return (
+        <div className="bg-black min-h-screen text-gray-300 font-sans">
+            <header className="bg-[#181A20] p-3 flex justify-between items-center border-b border-gray-800 sticky top-0 z-20">
+                <h1 className="text-xl font-bold text-white">My Watchlist</h1>
+                <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-400">Display Currency:</span>
+                    <select value={displayCurrency} onChange={(e) => setDisplayCurrency(e.target.value)} className="bg-gray-700 text-white text-sm rounded-md p-1 border border-gray-600 focus:outline-none focus:ring-1 focus:ring-cyan-500">{Object.keys(exchangeRates).map(c => <option key={c} value={c}>{c}</option>)}</select>
+                </div>
+            </header>
+            <main className="p-2 sm:p-4 max-w-7xl mx-auto">
+                <div className="space-y-4">
+                    <OverviewDashboard portfolio={portfolio} marketData={marketData} currency={displayCurrency} />
+                    <PortfolioAllocationChart portfolio={portfolio} marketData={marketData} />
+                    <TradingViewChartWidget portfolio={portfolio} />
+                    <AssetTable portfolio={portfolio} marketData={marketData} onEdit={handleOpenModal} onRemove={handleRemoveAsset} onAdd={() => handleOpenModal(null)} currency={displayCurrency} />
+                    <NewsFeed portfolio={portfolio} news={mockNews} />
+                </div>
+            </main>
+            <AssetModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveAsset} asset={editingAsset} />
+        </div>
+    );
+}
