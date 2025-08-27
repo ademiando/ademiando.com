@@ -1,236 +1,197 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>CV — Ade Oftomiando</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV Ade Oftomiando</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    :root{
-      --accent: #2563eb;
-      --bg: #f9fafb;
-      --card: #ffffff;
-      --text: #0f172a;
-      --muted: #475569;
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      background: #f9fafb;
+      color: #111827;
     }
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,Helvetica;line-height:1.45}
-    /* Controls (hidden when printing) */
-    .controls{position:fixed;right:16px;top:16px;display:flex;flex-direction:column;gap:8px;z-index:1300}
-    .controls button,.controls input[type="color"]{border:0;background:var(--card);padding:8px;border-radius:8px;box-shadow:0 6px 18px rgba(2,6,23,0.06);cursor:pointer}
-    .controls button{display:flex;align-items:center;gap:8px;font-weight:600}
-    .controls input[type="color"]{width:44px;height:44px;padding:0}
-    .no-print{pointer-events:auto}
-    @media print{.controls{display:none}}
-    /* Card */
-    .wrap{max-width:900px;margin:34px auto;padding:26px;background:var(--card);border-radius:12px;box-shadow:0 10px 36px rgba(2,6,23,0.06)}
-    header{display:flex;flex-direction:column;align-items:center;gap:8px;padding-bottom:8px;border-bottom:4px solid var(--accent)}
-    h1{margin:0;color:var(--accent);font-size:24px}
-    .meta{color:var(--muted);font-size:14px}
-    .contacts{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
-    a.clean{color:inherit;text-decoration:none;font-weight:600}
-    /* Sections */
-    .grid{display:grid;gap:18px;margin-top:18px}
-    section{padding:12px;border-radius:10px}
-    h2{margin:0 0 8px 0;color:var(--accent);font-size:15px;border-bottom:2px solid rgba(0,0,0,0.04);display:inline-block;padding-bottom:6px}
-    ul.tagged{list-style:none;padding-left:0;margin:8px 0 0 0}
-    ul.tagged li{position:relative;padding-left:1.6em;margin-bottom:10px}
-    ul.tagged li::before{content:'●';position:absolute;left:0;top:0;color:var(--accent)}
-    p, li{font-size:14px;color:var(--text);margin:0}
-    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
-    footer img{width:80px;margin-top:8px}
-    /* Responsive */
-    @media (max-width:720px){.wrap{margin:12px;padding:18px}.controls{right:8px;top:8px}}
+    header {
+      background: var(--accent, #2563eb);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    header p {
+      margin: 0.3rem 0;
+      font-size: 0.95rem;
+    }
+    .toolbar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      background: #f3f4f6;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .toolbar button, .toolbar input[type=color] {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+      background: white;
+    }
+    section {
+      margin-bottom: 2rem;
+    }
+    h2 {
+      color: var(--accent, #2563eb);
+      border-bottom: 2px solid var(--accent, #2563eb);
+      display: inline-block;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    ul {
+      padding-left: 1.2rem;
+    }
+    @media print {
+      .toolbar { display: none; }
+      body { background: white; }
+      .container { box-shadow: none; padding: 0; }
+    }
   </style>
 </head>
 <body>
-  <!-- Controls -->
-  <div class="controls no-print" role="toolbar" aria-label="Controls">
-    <button id="langToggle" title="Toggle language (ID/EN)"><i class="fa-solid fa-globe"></i><span id="langLabel">ID</span></button>
-    <input id="colorPicker" type="color" value="#2563eb" title="Pick accent color">
-    <button id="printBtn" onclick="window.print()" title="Print / Save as PDF"><i class="fa-solid fa-print"></i> Print</button>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <button id="langToggle"><i class="fa-solid fa-globe"></i></button>
+    <input type="color" id="colorPicker" value="#2563eb">
+    <button onclick="window.print()"><i class="fa-solid fa-print"></i></button>
   </div>
 
-  <main class="wrap" id="cvWrap">
-    <header>
-      <h1 id="name">Ade Oftomiando</h1>
-      <div class="meta" id="location">Wonosobo, Indonesia • 10 Mei 1999</div>
-      <div class="contacts" id="contacts">
-        <a class="clean" id="waLink" href="https://wa.me/6285726951002" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i>&nbsp;0857-2695-1002</a>
-        <a class="clean" id="mailLink" href="mailto:ademiandoo@gmail.com"><i class="fa-regular fa-envelope"></i>&nbsp;ademiandoo@gmail.com</a>
-        <a class="clean" id="ghLink" href="https://github.com/ademiando" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i>&nbsp;ademiando</a>
-        <a class="clean" id="webLink" href="https://ademiando.com/cv" target="_blank" rel="noopener"><i class="fa-solid fa-globe"></i>&nbsp;ademiando.com/cv</a>
-      </div>
-    </header>
+  <!-- Header -->
+  <header>
+    <h1>Ade Oftomiando</h1>
+    <p>Wonosobo, Indonesia | 10 Mei 1999</p>
+    <p>
+      <i class="fa-brands fa-whatsapp"></i> 085726951002 | 
+      <i class="fa-solid fa-envelope"></i> ademiandoo@gmail.com | 
+      <i class="fa-brands fa-github"></i> ademiando
+    </p>
+  </header>
 
-    <div class="grid">
+  <div class="container" id="cv">
 
-      <!-- SUMMARY -->
-      <section>
-        <h2 data-lang="id">Ringkasan Diri</h2>
-        <h2 data-lang="en" style="display:none">Summary</h2>
+    <!-- Ringkasan -->
+    <section>
+      <h2 data-lang="id">Ringkasan Diri</h2>
+      <h2 data-lang="en" style="display:none">Summary</h2>
+      <p data-lang="id">
+        Saya adalah individu proaktif dengan latar belakang autodidak di bidang investasi kripto dan saham sejak 2020. Ketertarikan saya pada teknologi mendorong saya mempelajari pemrograman web untuk menciptakan alat analisis data, automasi, serta visualisasi portofolio. Tujuan saya adalah menghadirkan solusi investasi yang lebih akurat, praktis, dan mudah diakses.
+      </p>
+      <p data-lang="en" style="display:none">
+        I am a proactive self-learner with hands-on experience in cryptocurrency and stock investments since 2020. My passion for technology has driven me to explore web development, aiming to build tools for data analysis, automation, and portfolio visualization. My mission is to deliver investment solutions that are accurate, practical, and accessible.
+      </p>
+    </section>
 
-        <p data-lang="id">
-          Saya seorang individu proaktif dan autodidak dengan pengalaman praktis dalam investasi kripto dan saham sejak 2020. 
-          Ketertarikan saya pada teknologi, data, dan pemrograman mendorong pembuatan alat analitis — automasi dan visualisasi portofolio — 
-          untuk mendukung perjalanan investasi saya secara sistematis dan berkelanjutan.
-        </p>
+    <!-- Pengalaman -->
+    <section>
+      <h2 data-lang="id">Pengalaman</h2>
+      <h2 data-lang="en" style="display:none">Experience</h2>
+      <ul>
+        <li data-lang="id">
+          <strong>Instruktur & Analis Komunitas Kripto</strong> (2020 – 2022)<br>
+          Membimbing anggota komunitas dalam memahami strategi investasi kripto, mengelola forum diskusi, serta menganalisis tren pasar untuk portofolio pribadi.
+        </li>
+        <li data-lang="en" style="display:none">
+          <strong>Crypto Community Instructor & Analyst</strong> (2020 – 2022)<br>
+          Guided community members in understanding crypto investment strategies, managed discussions, and analyzed market trends for personal portfolios.
+        </li>
+        <li data-lang="id">
+          <strong>Pengusaha Salad Buah</strong> (2022 – 2023)<br>
+          Mengelola operasional usaha kecil, dari produksi hingga pemasaran, serta membangun loyalitas pelanggan.
+        </li>
+        <li data-lang="en" style="display:none">
+          <strong>Fruit Salad Entrepreneur</strong> (2022 – 2023)<br>
+          Managed a small business operation end-to-end, from production to marketing, while fostering customer loyalty.
+        </li>
+        <li data-lang="id">
+          <strong>Barista</strong> (2023 – Sekarang)<br>
+          Menyajikan kopi dengan standar kualitas tinggi serta membangun pengalaman pelanggan yang ramah dan profesional.
+        </li>
+        <li data-lang="en" style="display:none">
+          <strong>Barista</strong> (2023 – Present)<br>
+          Delivered high-quality coffee beverages while creating a welcoming and professional customer experience.
+        </li>
+      </ul>
+    </section>
 
-        <p data-lang="en" style="display:none">
-          I am a proactive, self-taught professional with hands-on experience in cryptocurrency and stock investments since 2020. 
-          My interest in technology, data and programming drives me to build analytical tools — automation and portfolio visualizations — 
-          that support a structured and sustainable investment journey.
-        </p>
-      </section>
+    <!-- Proyek -->
+    <section>
+      <h2 data-lang="id">Proyek</h2>
+      <h2 data-lang="en" style="display:none">Project</h2>
+      <p data-lang="id">
+        <strong>BloomBoard – Platform Pelacak Portofolio & Lab Trading</strong><br>
+        Merancang situs web yang memungkinkan pengguna memantau portofolio investasi tanpa login, menyimpan data secara independen melalui integrasi Supabase. Platform ini dilengkapi laboratorium trading untuk menguji strategi dengan data historis, mendukung eksekusi otomatis berbasis kode/robot, serta menyediakan halaman trading nyata dengan koneksi langsung ke wallet atau broker. Selain itu, fitur agregator berita cerdas menghadirkan artikel relevan yang disesuaikan dengan komposisi portofolio, serta opsi kustomisasi tampilan sesuai kebutuhan investor.
+      </p>
+      <p data-lang="en" style="display:none">
+        <strong>BloomBoard – Portfolio Tracker & Trading Lab</strong><br>
+        Designed a web platform that allows users to track investments without login, with independent data storage via Supabase. The platform includes a trading lab to test strategies using historical data, supports automated execution with custom code or bots, and offers live trading by connecting directly to wallets or brokers. Additionally, an intelligent news aggregator delivers curated articles aligned with the user’s portfolio composition, alongside customizable views tailored for each investor.
+      </p>
+    </section>
 
-      <!-- EXPERIENCE -->
-      <section>
-        <h2 data-lang="id">Pengalaman</h2>
-        <h2 data-lang="en" style="display:none">Experience</h2>
+    <!-- Keterampilan -->
+    <section>
+      <h2 data-lang="id">Keterampilan</h2>
+      <h2 data-lang="en" style="display:none">Skills</h2>
+      <ul>
+        <li>Analisis Pasar Kripto & Saham / Crypto & Stock Market Analysis</li>
+        <li>Manajemen Portofolio / Portfolio Management</li>
+        <li>Komunikasi Komunitas / Community Engagement</li>
+        <li>HTML, CSS, JavaScript</li>
+        <li>Git & GitHub, Vercel, Supabase</li>
+        <li>Automasi & Robot Trading / Automation & Trading Bots</li>
+        <li>Manajemen Waktu & Kerja Tim / Time Management & Teamwork</li>
+        <li>Kemahiran Bahasa Inggris / English Proficiency</li>
+      </ul>
+    </section>
 
-        <ul class="tagged">
-          <li>
-            <div data-lang="id">
-              <strong>Instruktur & Analis Komunitas — Axie Infinity</strong> (2020 – 2022)<br>
-              • Bertugas sebagai pemain & pembimbing: memimpin sesi pelatihan strategi, menyusun materi onboarding, dan menjelaskan mekanika token/NFT kepada anggota.<br>
-              • Melakukan analisis on-chain dasar, mengorganisir guild kecil, serta menerapkan praktik manajemen risiko pada portofolio komunitas.
-            </div>
-            <div data-lang="en" style="display:none">
-              <strong>Instructor & Analyst — Axie Infinity Community</strong> (2020 – 2022)<br>
-              • Acted as player & mentor: led training on strategy, prepared onboarding materials, and explained token/NFT mechanics to members.<br>
-              • Performed basic on-chain analysis, organized small guilds, and applied risk-management practices to community portfolios.
-            </div>
-          </li>
+    <!-- Minat -->
+    <section>
+      <h2 data-lang="id">Minat & Hobi</h2>
+      <h2 data-lang="en" style="display:none">Interests</h2>
+      <p data-lang="id">Mendaki gunung, membaca filsafat, mempelajari ekonomi makro dan politik, serta aktif berinvestasi dan melakukan riset pasar.</p>
+      <p data-lang="en" style="display:none">Hiking, reading philosophy, exploring macroeconomics and politics, while actively investing and conducting market research.</p>
+    </section>
 
-          <li>
-            <div data-lang="id">
-              <strong>Pengusaha — Salad Buah</strong> (2022 – 2023)<br>
-              • Mengelola operasional harian: produksi, kontrol kualitas, pemasaran sederhana, dan layanan pelanggan; membangun loyalitas melalui konsistensi.
-            </div>
-            <div data-lang="en" style="display:none">
-              <strong>Entrepreneur — Fruit Salad</strong> (2022 – 2023)<br>
-              • Managed day-to-day operations: production, QC, basic marketing, and customer service; improved loyalty through consistency.
-            </div>
-          </li>
+  </div>
 
-          <li>
-            <div data-lang="id">
-              <strong>Barista</strong> (2023 – Sekarang)<br>
-              • Menyajikan produk kopi berkualitas dan menjaga standar layanan; melatih komunikasi & efisiensi operasional.
-            </div>
-            <div data-lang="en" style="display:none">
-              <strong>Barista</strong> (2023 – Present)<br>
-              • Prepared high-quality coffee and maintained service standards; honed communication and operational efficiency.
-            </div>
-          </li>
-        </ul>
-      </section>
-
-      <!-- PROJECT -->
-      <section>
-        <h2 data-lang="id">Proyek Utama</h2>
-        <h2 data-lang="en" style="display:none">Main Project</h2>
-
-        <p data-lang="id">
-          <strong>BloomBoard — Portfolio Tracker & Research Lab</strong><br>
-          • Merancang platform pelacak portofolio bergaya Bloomberg dengan penyimpanan data independen menggunakan Supabase.<br>
-          • Menyediakan modul Lab untuk backtesting, eksperimen strategi, dan analisis pola historis; mendukung eksekusi otomatis via script/robot dan trading nyata melalui koneksi wallet DEX/CEX/broker (mis. MetaMask).<br>
-          • Fitur agregator berita cerdas menyajikan informasi relevan berdasarkan eksposur portofolio; pengguna dapat mengkustomisasi indikator, alert, dan tampilan.
-        </p>
-
-        <p data-lang="en" style="display:none">
-          <strong>BloomBoard — Portfolio Tracker & Research Lab</strong><br>
-          • Designed a Bloomberg-style portfolio tracker with independent user data storage via Supabase.<br>
-          • Offers a Lab module for backtesting, strategy experiments, and historical-pattern analysis; supports automated execution via scripts/bots and live trading through wallet connections (DEX/CEX/brokers such as MetaMask).<br>
-          • Includes an intelligent news aggregator that surfaces coverage relevant to each user’s portfolio; users can customize indicators, alerts and views.
-        </p>
-      </section>
-
-      <!-- SKILLS -->
-      <section>
-        <h2 data-lang="id">Keterampilan</h2>
-        <h2 data-lang="en" style="display:none">Skills</h2>
-
-        <ul class="tagged" data-lang="id">
-          <li>Analisis Pasar Kripto & Saham</li>
-          <li>Manajemen Portofolio & Strategi Investasi</li>
-          <li>Komunikasi & Pembinaan Komunitas</li>
-          <li>HTML, CSS, JavaScript</li>
-          <li>Git & GitHub, Vercel, Supabase</li>
-          <li>Automasi & Robot Trading</li>
-          <li>Integrasi Wallet / Web3</li>
-          <li>Manajemen Waktu & Kerja Tim</li>
-          <li>Berpikir Analitis</li>
-          <li>Bahasa Inggris — Intermediate</li>
-        </ul>
-
-        <ul class="tagged" data-lang="en" style="display:none">
-          <li>Crypto & Stock Market Analysis</li>
-          <li>Portfolio Management & Investment Strategy</li>
-          <li>Community Communication & Coaching</li>
-          <li>HTML, CSS, JavaScript</li>
-          <li>Git & GitHub, Vercel, Supabase</li>
-          <li>Automation & Trading Bots</li>
-          <li>Wallet Integration / Web3</li>
-          <li>Time Management & Teamwork</li>
-          <li>Analytical Thinking</li>
-          <li>English — Intermediate</li>
-        </ul>
-      </section>
-
-      <!-- INTERESTS -->
-      <section>
-        <h2 data-lang="id">Minat & Hobi</h2>
-        <h2 data-lang="en" style="display:none">Interests & Hobbies</h2>
-
-        <p data-lang="id">Mendaki gunung, menelaah ekonomi makro, filsafat, politik, riset pasar, dan pengembangan sistem analisis perdagangan.</p>
-        <p data-lang="en" style="display:none">Hiking, studying macroeconomics, philosophy & politics, market research, and developing trading analysis systems.</p>
-      </section>
-
-    </div>
-
-    <footer>
-      <div>Scan untuk versi online — <a class="clean" href="https://ademiando.com/cv" target="_blank" rel="noopener">ademiando.com/cv</a></div>
-      <div><img alt="QR to ademiando.com/cv" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://ademiando.com/cv"></div>
-      <div style="margin-top:8px;color:var(--muted)">© <span id="yr"></span> Ade Oftomiando</div>
-    </footer>
-  </main>
-
-<script>
-  // init year
-  document.getElementById('yr').textContent = new Date().getFullYear();
-
-  // language control: show only elements that match selected language
-  const LANG_KEY = 'cv-lang';
-  const savedLang = localStorage.getItem(LANG_KEY) || 'id';
-  function setLang(lang){
-    document.querySelectorAll('[data-lang]').forEach(el=>{
-      if(el.getAttribute('data-lang') === lang) el.style.display = '';
-      else el.style.display = 'none';
+  <!-- Script -->
+  <script>
+    // Toggle Bahasa
+    const toggleBtn = document.getElementById('langToggle');
+    toggleBtn.addEventListener('click', () => {
+      document.querySelectorAll('[data-lang]').forEach(el => {
+        el.style.display = el.style.display === 'none' ? '' : 'none';
+      });
     });
-    document.getElementById('langLabel').textContent = (lang === 'id') ? 'ID' : 'EN';
-    localStorage.setItem(LANG_KEY, lang);
-    document.documentElement.lang = (lang === 'id') ? 'id' : 'en';
-  }
-  // toggle button
-  document.getElementById('langToggle').addEventListener('click', ()=>{
-    const cur = localStorage.getItem(LANG_KEY) || 'id';
-    setLang(cur === 'id' ? 'en' : 'id');
-  });
-  setLang(savedLang);
 
-  // color picker: set accent and persist
-  const colorPicker = document.getElementById('colorPicker');
-  const ACCENT_KEY = 'cv-accent';
-  const savedAccent = localStorage.getItem(ACCENT_KEY);
-  if(savedAccent){ document.documentElement.style.setProperty('--accent', savedAccent); colorPicker.value = savedAccent; }
-  colorPicker.addEventListener('input', (e)=>{
-    const val = e.target.value;
-    document.documentElement.style.setProperty('--accent', val);
-    localStorage.setItem(ACCENT_KEY, val);
-  });
+    // Warna Aksen
+    const colorPicker = document.getElementById('colorPicker');
+    colorPicker.addEventListener('input', e => {
+      document.documentElement.style.setProperty('--accent', e.target.value);
+    });
+  </script>
 
-  // ensure external links open safely (already set rel noopener where used)
-</script>
 </body>
 </html>
