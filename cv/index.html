@@ -1,277 +1,176 @@
-<!doctype html>
-
-<html lang="id">
+<!DOCTYPE html><html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CV — Ade Oftomiando</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV Ade Oftomiando</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    :root{ --accent:#1e88e5; --bg:#f6f7fb; --text:#25303b }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;color:var(--text);-webkit-font-smoothing:antialiased}/* Control bar (hidden in print) */
-.control-bar{position:fixed;left:0;right:0;top:10px;display:flex;gap:10px;justify-content:flex-end;padding:8px 14px;z-index:1200}
-.control{background:#fff;border:1px solid rgba(16,24,40,0.06);padding:8px 10px;border-radius:8px;display:inline-flex;gap:8px;align-items:center;box-shadow:0 6px 18px rgba(12,18,28,0.04)}
-.control select,.control button,.control input[type="color"], .control input[type="range"]{border:0;background:transparent;cursor:pointer;font-size:14px}
-.control button{padding:6px 10px}
-.rgb-sliders{display:flex;gap:8px;align-items:center}
-.rgb-sliders input[type=range]{width:80px}
-
-/* CV card */
-.card{max-width:820px;margin:70px auto;padding:28px;background:#fff;border-radius:12px;box-shadow:0 10px 36px rgba(10,20,30,0.06)}
-header{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
-.left{min-width:0}
-h1{font-size:22px;margin:0;color:var(--accent);letter-spacing:0.2px}
-.meta{color:#5b6b7a;font-size:14px;margin-top:6px}
-.contacts{margin-top:14px;font-size:14px;color:#334155;display:flex;flex-wrap:wrap;gap:12px}
-.contacts a{color:inherit;text-decoration:none}
-
-/* Sections */
-.grid{display:grid;grid-template-columns:1fr;gap:18px;margin-top:18px}
-h2{font-size:15px;margin:0 0 8px 0;color:var(--accent);font-weight:700}
-p, li{font-size:14px;color:#273645}
-.section{padding:14px;border-radius:10px;background:linear-gradient(180deg, rgba(14,78,160,0.02), transparent)}
-.job{margin-bottom:12px}
-.job h3{margin:0;font-size:15px}
-.job .date{font-size:13px;color:#556575}
-ul{margin:8px 0 0 18px}
-
-/* skills */
-.skills{display:flex;flex-wrap:wrap;gap:8px}
-.skill{padding:6px 10px;border-radius:999px;background:rgba(0,0,0,0.04);font-size:13px}
-
-/* small utilities */
-.muted{color:#5b6b7a}
-
-/* Print rules: hide controls, compact layout, force single page when possible */
-@media print{
-  body{background:#fff}
-  .control-bar{display:none}
-  .card{margin:0;padding:14mm;border-radius:0;box-shadow:none}
-  h1{font-size:20px}
-  .section{background:transparent}
-  .skills .skill{background:transparent}
-  @page{size:A4;margin:12mm}
-  /* Avoid page-break inside key sections */
-  header, .section, .job{page-break-inside:avoid}
-}
-
-/* Responsive */
-@media (max-width:720px){
-  .control-bar{left:8px;right:8px;top:8px}
-  .card{margin:100px 12px}
-  header{flex-direction:column;align-items:flex-start;gap:12px}
-  .control .muted{display:none}
-  .rgb-sliders input[type=range]{width:64px}
-}
-
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      background: #f9fafb;
+      color: #111827;
+    }
+    header {
+      background: var(--accent, #2563eb);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    header p {
+      margin: 0.3rem 0;
+      font-size: 0.95rem;
+    }
+    .toolbar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      background: #f3f4f6;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .toolbar button, .toolbar input[type=color] {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+      background: white;
+    }
+    section {
+      margin-bottom: 2rem;
+    }
+    h2 {
+      color: var(--accent, #2563eb);
+      border-bottom: 2px solid var(--accent, #2563eb);
+      display: inline-block;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    ul {
+      padding-left: 1.2rem;
+    }
+    @media print {
+      .toolbar { display: none; }
+      body { background: white; }
+      .container { box-shadow: none; padding: 0; }
+    }
   </style>
 </head>
-<body>  <!-- Controls (not printed) -->  <div class="control-bar" role="region" aria-label="Toolbar">
-    <div class="control">
-      <button id="langToggle" title="Toggle language (Bahasa/English)" aria-label="Toggle language"><i class="fa-solid fa-globe"></i>&nbsp;<span id="langLabel">ID</span></button>
-    </div><div class="control" title="Warna highlight (sesuaikan dengan slider RGB atau picker)">
-  <label for="colorPicker" class="muted" style="margin-right:6px">Warna</label>
-  <input id="colorPicker" type="color" value="#1e88e5" aria-label="Pilih warna tema" />
-  <div class="rgb-sliders">
-    <input id="r" type="range" min="0" max="255" value="30" title="R" aria-label="Red slider">
-    <input id="g" type="range" min="0" max="255" value="136" title="G" aria-label="Green slider">
-    <input id="b" type="range" min="0" max="255" value="229" title="B" aria-label="Blue slider">
-  </div>
-</div>
+<body>  <div class="toolbar">
+    <button id="langToggle"><i class="fa-solid fa-globe"></i></button>
+    <input type="color" id="colorPicker" value="#2563eb">
+    <button onclick="window.print()"><i class="fa-solid fa-print"></i></button>
+  </div>  <header>
+    <h1>Ade Oftomiando</h1>
+    <p>Wonosobo, Indonesia | 10 Mei 1999</p>
+    <p><i class="fa-brands fa-whatsapp"></i> 085726951002 | <i class="fa-solid fa-envelope"></i> ademiandoo@gmail.com | <i class="fa-brands fa-github"></i> ademiando</p>
+  </header>  <div class="container" id="cv">
+    <!-- Ringkasan -->
+    <section>
+      <h2 data-lang="id">Ringkasan Diri</h2>
+      <h2 data-lang="en" style="display:none">Summary</h2>
+      <p data-lang="id">
+        Saya adalah individu proaktif dengan latar belakang autodidak di bidang investasi kripto dan saham sejak 2020. Ketertarikan saya pada teknologi mendorong saya mempelajari pemrograman web untuk menciptakan alat analisis data, automasi, serta visualisasi portofolio. Tujuan saya adalah menghadirkan solusi investasi yang lebih akurat, praktis, dan mudah diakses.
+      </p>
+      <p data-lang="en" style="display:none">
+        I am a proactive self-learner with hands-on experience in cryptocurrency and stock investments since 2020. My passion for technology has driven me to explore web development, aiming to build tools for data analysis, automation, and portfolio visualization. My mission is to deliver investment solutions that are accurate, practical, and accessible.
+      </p>
+    </section><!-- Pengalaman -->
+<section>
+  <h2 data-lang="id">Pengalaman</h2>
+  <h2 data-lang="en" style="display:none">Experience</h2>
+  <ul>
+    <li data-lang="id">
+      <strong>Instruktur & Analis Komunitas Kripto</strong> (2020 – 2022)<br>
+      Membimbing anggota komunitas dalam memahami strategi investasi kripto, mengelola forum diskusi, serta menganalisis tren pasar untuk portofolio pribadi.
+    </li>
+    <li data-lang="en" style="display:none">
+      <strong>Crypto Community Instructor & Analyst</strong> (2020 – 2022)<br>
+      Guided community members in understanding crypto investment strategies, managed discussions, and analyzed market trends for personal portfolios.
+    </li>
+    <li data-lang="id">
+      <strong>Pengusaha Salad Buah</strong> (2022 – 2023)<br>
+      Mengelola operasional usaha kecil, dari produksi hingga pemasaran, serta membangun loyalitas pelanggan.
+    </li>
+    <li data-lang="en" style="display:none">
+      <strong>Fruit Salad Entrepreneur</strong> (2022 – 2023)<br>
+      Managed a small business operation end-to-end, from production to marketing, while fostering customer loyalty.
+    </li>
+    <li data-lang="id">
+      <strong>Barista</strong> (2023 – Sekarang)<br>
+      Menyajikan kopi dengan standar kualitas tinggi serta membangun pengalaman pelanggan yang ramah dan profesional.
+    </li>
+    <li data-lang="en" style="display:none">
+      <strong>Barista</strong> (2023 – Present)<br>
+      Delivered high-quality coffee beverages while creating a welcoming and professional customer experience.
+    </li>
+  </ul>
+</section>
 
-<div class="control">
-  <button id="printBtn" onclick="window.print()" title="Cetak / Simpan PDF"><i class="fa-solid fa-print"></i>&nbsp;Cetak</button>
-</div>
+<!-- Proyek -->
+<section>
+  <h2 data-lang="id">Proyek</h2>
+  <h2 data-lang="en" style="display:none">Project</h2>
+  <p data-lang="id">
+    <strong>BloomBoard – Platform Pelacak Portofolio & Lab Trading</strong><br>
+    Merancang situs web yang memungkinkan pengguna memantau portofolio investasi tanpa login, menyimpan data secara independen melalui integrasi Supabase. Platform ini dilengkapi laboratorium trading untuk menguji strategi dengan data historis, mendukung eksekusi otomatis berbasis kode/robot, serta menyediakan halaman trading nyata dengan koneksi langsung ke wallet atau broker. Selain itu, fitur agregator berita cerdas menghadirkan artikel relevan yang disesuaikan dengan komposisi portofolio, serta opsi kustomisasi tampilan sesuai kebutuhan investor.
+  </p>
+  <p data-lang="en" style="display:none">
+    <strong>BloomBoard – Portfolio Tracker & Trading Lab</strong><br>
+    Designed a web platform that allows users to track investments without login, with independent data storage via Supabase. The platform includes a trading lab to test strategies using historical data, supports automated execution with custom code or bots, and offers live trading by connecting directly to wallets or brokers. Additionally, an intelligent news aggregator delivers curated articles aligned with the user’s portfolio composition, alongside customizable views tailored for each investor.
+  </p>
+</section>
 
-  </div>  <!-- CV Card -->  <article class="card" id="cvCard">
-    <header>
-      <div class="left">
-        <h1 id="name">Ade Oftomiando</h1>
-        <div class="meta" id="location">Wonosobo, Indonesia • 10 Mei 1999</div>
-        <div class="contacts" id="contacts">
-          <a href="https://wa.me/6285726951002" id="wa"><i class="fa-brands fa-whatsapp"></i>&nbsp;0857-2695-1002</a>
-          <a href="mailto:ademiandoo@gmail.com"><i class="fa-regular fa-envelope"></i>&nbsp;ademiandoo@gmail.com</a>
-          <a href="https://github.com/ademiando" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i>&nbsp;ademiando</a>
-        </div>
-      </div>
-      <div class="right muted" style="max-width:42%;text-align:right">
-        <div id="profileSummaryShort">Individu proaktif dan autodidak — menggabungkan analisis finansial dan pengembangan alat teknologi untuk keputusan investasi yang lebih andal.</div>
-      </div>
-    </header><div class="grid">
-  <!-- Ringkasan / Summary -->
-  <section class="section" id="summarySection">
-    <h2 id="summaryTitle">Ringkasan</h2>
-    <p id="summaryBody">Individu yang proaktif dan autodidak dengan pengalaman komprehensif dalam investasi kripto dan pasar saham sejak 2020. Perjalanan ini membentuk ketajaman analitis dalam membaca pola pasar, mengelola eksposur risiko, dan merancang strategi yang terukur. Saat ini saya mengembangkan keterampilan pemrograman (HTML, CSS, JavaScript) untuk merancang alat analisis data, automasi, dan visualisasi portofolio yang mendukung pengambilan keputusan berbasis bukti.</p>
-  </section>
+<!-- Keterampilan -->
+<section>
+  <h2 data-lang="id">Keterampilan</h2>
+  <h2 data-lang="en" style="display:none">Skills</h2>
+  <ul>
+    <li>Analisis Pasar Kripto & Saham / Crypto & Stock Market Analysis</li>
+    <li>Manajemen Portofolio / Portfolio Management</li>
+    <li>Komunikasi Komunitas / Community Engagement</li>
+    <li>HTML, CSS, JavaScript</li>
+    <li>Git & GitHub, Vercel, Supabase</li>
+    <li>Automasi & Robot Trading / Automation & Trading Bots</li>
+    <li>Manajemen Waktu & Kerja Tim / Time Management & Teamwork</li>
+    <li>Kemahiran Bahasa Inggris / English Proficiency</li>
+  </ul>
+</section>
 
-  <!-- Pengalaman -->
-  <section class="section" id="experienceSection">
-    <h2 id="experienceTitle">Pengalaman</h2>
+<!-- Minat -->
+<section>
+  <h2 data-lang="id">Minat & Hobi</h2>
+  <h2 data-lang="en" style="display:none">Interests</h2>
+  <p data-lang="id">Mendaki gunung, membaca filsafat, mempelajari ekonomi makro dan politik, serta aktif berinvestasi dan melakukan riset pasar.</p>
+  <p data-lang="en" style="display:none">Hiking, reading philosophy, exploring macroeconomics and politics, while actively investing and conducting market research.</p>
+</section>
 
-    <div class="job">
-      <h3 id="job1Title">Barista</h3>
-      <div class="date">2023 – Sekarang</div>
-      <ul id="job1Bullet">
-        <li>Menyajikan produk kopi dengan standar kualitas tinggi dan konsistensi operasional.</li>
-        <li>Meningkatkan pengalaman pelanggan melalui komunikasi efektif dan layanan cepat.</li>
-      </ul>
-    </div>
+  </div>  <script>
+    // Toggle Bahasa
+    const toggleBtn = document.getElementById('langToggle');
+    toggleBtn.addEventListener('click', () => {
+      document.querySelectorAll('[data-lang]').forEach(el => {
+        el.style.display = el.style.display === 'none' ? '' : 'none';
+      });
+    });
 
-    <div class="job">
-      <h3 id="job2Title">Pengusaha — Salad Buah</h3>
-      <div class="date">2022 – 2023</div>
-      <ul id="job2Bullet">
-        <li>Mengelola seluruh siklus usaha kecil, mulai produksi, pemasaran, hingga layanan pelanggan.</li>
-        <li>Mencapai target penjualan dan membangun loyalitas pelanggan melalui kualitas dan konsistensi.</li>
-      </ul>
-    </div>
-
-    <div class="job">
-      <h3 id="job3Title">Instruktur & Analis Komunitas Kripto</h3>
-      <div class="date">2020 – 2022</div>
-      <ul id="job3Bullet">
-        <li>Membimbing anggota baru untuk memahami konsep fundamental dan strategi investasi pada ekosistem kripto.</li>
-        <li>Melakukan analisis pasar, menyusun panduan strategi, dan mengevaluasi kinerja portofolio pribadi.</li>
-        <li>Berperan aktif dalam diskusi komunitas untuk mengadvokasi praktik investasi yang beretika dan berbasis data.</li>
-      </ul>
-    </div>
-
-  </section>
-
-  <!-- Proyek (satu saja) -->
-  <section class="section" id="projectsSection">
-    <h2 id="projectsTitle">Proyek Utama</h2>
-
-    <div class="job">
-      <h3>BloomBoard — Portfolio Tracker & Research Lab</h3>
-      <div class="date">Proyek pribadi — Sistem terintegrasi</div>
-      <ul>
-        <li id="bloomDesc">Merancang dan mengembangkan BloomBoard, sebuah sistem pelacak portofolio bergaya Bloomberg yang memungkinkan pengguna menyimpan dan mengelola basis data investasi mereka secara independen melalui Supabase. Platform ini dilengkapi fitur kustomisasi portofolio, sehingga pelacak dapat disesuaikan dengan preferensi aset dan strategi pengguna. Selain itu, BloomBoard menghadirkan modul "Lab" untuk menguji strategi trading, menganalisis pola pasar historis, dan menjalankan eksekusi order otomatis menggunakan script/robot. Sebagai nilai tambah, sistem mengagregasi berita dari berbagai sumber dan menandai informasi yang relevan berdasarkan komposisi portofolio pengguna—sehingga insight berita muncul sesuai eksposur investasi setiap pengguna. Untuk perdagangan nyata, platform mendukung koneksi langsung ke wallet (DEX/CEX/broker seperti MetaMask) sehingga eksekusi dapat dilakukan tanpa mekanisme login tradisional sambil menjaga isolasi data pengguna.</li>
-      </ul>
-    </div>
-
-  </section>
-
-  <!-- Keterampilan -->
-  <section class="section" id="skillsSection">
-    <h2 id="skillsTitle">Keterampilan</h2>
-    <div class="skills" id="skillsList">
-      <span class="skill">Analisis Pasar Kripto & Saham</span>
-      <span class="skill">Manajemen Portofolio</span>
-      <span class="skill">Komunikasi Komunitas</span>
-      <span class="skill">HTML & CSS</span>
-      <span class="skill">JavaScript</span>
-      <span class="skill">Git & GitHub</span>
-      <span class="skill">Supabase (DB)</span>
-      <span class="skill">Automasi & Scripting</span>
-      <span class="skill">Integrasi Wallet / Web3</span>
-      <span class="skill">Manajemen Waktu</span>
-      <span class="skill">Berpikir Analitis</span>
-      <span class="skill">Bahasa Inggris — Intermediate</span>
-    </div>
-  </section>
-
-  <!-- Minat -->
-  <section class="section" id="interestsSection">
-    <h2 id="interestsTitle">Minat & Hobi</h2>
-    <p id="interestsBody">Mendaki gunung, riset ekonomi makro, filsafat, politik, serta pengembangan sistem untuk analisis dan eksekusi perdagangan.</p>
-  </section>
-
-</div>
-
-  </article>  <script>
-    // LANGUAGE DATA (ID & EN) - polished, academic tone
-    const LANG = {
-      id: {
-        langLabel: 'ID',
-        name: 'Ade Oftomiando',
-        location: 'Wonosobo, Indonesia • 10 Mei 1999',
-        contacts: { waText: '0857-2695-1002', email: 'ademiandoo@gmail.com', github: 'ademiando' },
-        summaryTitle: 'Ringkasan',
-        summaryBody: 'Saya adalah individu proaktif dan autodidak dengan pengalaman komprehensif dalam investasi kripto dan pasar saham sejak 2020. Perjalanan ini membentuk ketajaman analitis dalam membaca pola pasar, mengelola eksposur risiko, dan merancang strategi terukur. Saat ini saya mengembangkan keterampilan pemrograman (HTML, CSS, JavaScript) untuk merancang alat analisis data, automasi, dan visualisasi portofolio yang mendukung pengambilan keputusan berbasis bukti.',
-        experienceTitle: 'Pengalaman',
-        jobs: [
-          {title: 'Barista', date: '2023 – Sekarang', bullets: ['Menyajikan produk kopi dengan standar kualitas tinggi dan konsistensi operasional.','Meningkatkan pengalaman pelanggan melalui komunikasi efektif dan layanan efisien.']},
-          {title: 'Pengusaha — Salad Buah', date: '2022 – 2023', bullets: ['Mengelola siklus usaha kecil secara menyeluruh, dari produksi hingga pemasaran dan layanan pelanggan.','Mencapai target penjualan dan membangun loyalitas melalui kualitas dan konsistensi.']},
-          {title: 'Instruktur & Analis Komunitas Kripto', date: '2020 – 2022', bullets: ['Membimbing anggota baru dalam memahami konsep fundamental dan strategi investasi di ekosistem kripto.','Melakukan analisis pasar, menyusun panduan strategi, dan mengevaluasi kinerja portofolio pribadi.','Berperan aktif dalam diskusi komunitas untuk mengadvokasi praktik investasi yang etis dan berbasis data.']}
-        ],
-        projectsTitle: 'Proyek Utama',
-        bloomDesc: 'Merancang dan mengembangkan BloomBoard — sebuah sistem pelacak portofolio bergaya Bloomberg yang memungkinkan pengguna menyimpan dan mengelola database investasi secara independen melalui Supabase. Platform ini menyediakan kustomisasi portofolio, modul "Lab" untuk pengujian strategi, analisis pola historis, eksekusi otomatis via script/robot, serta agregator berita yang mengutamakan informasi relevan berdasarkan eksposur portofolio pengguna. Untuk aktivitas perdagangan riil, platform mendukung koneksi ke wallet (DEX/CEX/broker seperti MetaMask) tanpa memerlukan mekanisme login tradisional, sembari menjaga isolasi data pengguna.',
-        skillsTitle: 'Keterampilan',
-        interestsTitle: 'Minat & Hobi'
-      },
-      en: {
-        langLabel: 'EN',
-        name: 'Ade Oftomiando',
-        location: 'Wonosobo, Indonesia • 10 May 1999',
-        contacts: { waText: '+62 857-2695-1002', email: 'ademiandoo@gmail.com', github: 'ademiando' },
-        summaryTitle: 'Summary',
-        summaryBody: 'I am a proactive, self-taught professional with comprehensive experience in cryptocurrency and equity investments since 2020. This trajectory has honed my analytical acuity for identifying market patterns, managing exposure, and formulating measured strategies. I am currently expanding my programming competencies (HTML, CSS, JavaScript) to design data analysis tools, automation pipelines, and portfolio visualizations that support evidence-based investment decisions.',
-        experienceTitle: 'Experience',
-        jobs: [
-          {title: 'Barista', date: '2023 – Present', bullets: ['Prepare high-quality coffee products with consistent operational standards.','Enhance customer experience through effective communication and efficient service.']},
-          {title: 'Entrepreneur — Fruit Salad', date: '2022 – 2023', bullets: ['Managed end-to-end small business operations, from production to marketing and customer service.','Built customer loyalty and achieved sales targets through consistent quality.']},
-          {title: 'Crypto Community Instructor & Analyst', date: '2020 – 2022', bullets: ['Mentored newcomers on fundamental concepts and investment strategy within crypto ecosystems.','Performed market analysis, drafted strategy guides, and evaluated personal portfolio performance.','Actively engaged in community discussions to promote ethical, data-driven investing practices.']}
-        ],
-        projectsTitle: 'Main Project',
-        bloomDesc: 'Designed and developed BloomBoard — a Bloomberg-style portfolio tracker that enables users to independently store and manage their investment databases via Supabase. The platform supports customizable portfolios, a "Lab" module for backtesting strategies and analyzing historical market patterns, automated order execution via scripts/bots, and a news aggregator that surfaces relevant coverage based on each user\'s portfolio exposure. For live trading, BloomBoard integrates with wallets (DEX/CEX/brokers such as MetaMask) without conventional login flows while preserving user data isolation.',
-        skillsTitle: 'Skills',
-        interestsTitle: 'Interests & Hobbies'
-      }
-    };
-
-    // Current language state
-    let currentLang = localStorage.getItem('cv-lang') || 'id';
-
-    function renderLanguage(lang){
-      const d = LANG[lang];
-      document.getElementById('langLabel').textContent = d.langLabel;
-      document.getElementById('name').textContent = d.name;
-      document.getElementById('location').textContent = d.location;
-      document.getElementById('wa').innerHTML = '<i class="fa-brands fa-whatsapp"></i>&nbsp;'+d.contacts.waText;
-      document.querySelector('#contacts a[href^="mailto:"]').textContent = d.contacts.email;
-      document.querySelector('#contacts a[href^="mailto:"]').href = 'mailto:'+d.contacts.email;
-      document.querySelector('#contacts a[href*="github"]').textContent = d.contacts.github;
-      document.getElementById('summaryTitle').textContent = d.summaryTitle;
-      document.getElementById('summaryBody').textContent = d.summaryBody;
-      document.getElementById('experienceTitle').textContent = d.experienceTitle;
-
-      // jobs
-      const jobs = d.jobs;
-      const jobIds = [['job1Title','job1Bullet'],['job2Title','job2Bullet'],['job3Title','job3Bullet']];
-      for(let i=0;i<jobs.length;i++){
-        document.getElementById(jobIds[i][0]).textContent = jobs[i].title;
-        const jobNode = document.getElementById(jobIds[i][0]).parentElement;
-        jobNode.querySelector('.date').textContent = jobs[i].date;
-        const ul = jobNode.querySelector('ul'); ul.innerHTML=''; jobs[i].bullets.forEach(b=>{const li=document.createElement('li'); li.textContent=b; ul.appendChild(li);});
-      }
-
-      document.getElementById('projectsTitle').textContent = d.projectsTitle;
-      document.getElementById('bloomDesc').textContent = d.bloomDesc;
-      document.getElementById('skillsTitle').textContent = d.skillsTitle;
-      document.getElementById('interestsTitle').textContent = d.interestsTitle;
-
-      localStorage.setItem('cv-lang', lang);
-    }
-
-    // initial render
-    renderLanguage(currentLang);
-
-    // Toggle lang button
-    document.getElementById('langToggle').addEventListener('click', ()=>{ currentLang = currentLang === 'id' ? 'en' : 'id'; renderLanguage(currentLang); });
-
-    // Color controls: color picker + RGB sliders
+    // Warna Aksen
     const colorPicker = document.getElementById('colorPicker');
-    const r = document.getElementById('r'); const g = document.getElementById('g'); const b = document.getElementById('b');
-    function rgbToHex(rr,gg,bb){ return '#'+[rr,gg,bb].map(x=>{ const h=Number(x).toString(16); return h.length==1? '0'+h : h }).join(''); }
-    function updateAccentFromSliders(){ const hex=rgbToHex(r.value,g.value,b.value); colorPicker.value=hex; document.documentElement.style.setProperty('--accent',hex); }
-    function updateSlidersFromPicker(){ const hex=colorPicker.value; const rv=parseInt(hex.slice(1,3),16); const gv=parseInt(hex.slice(3,5),16); const bv=parseInt(hex.slice(5,7),16); r.value=rv; g.value=gv; b.value=bv; document.documentElement.style.setProperty('--accent',hex); }
-    r.addEventListener('input', updateAccentFromSliders); g.addEventListener('input', updateAccentFromSliders); b.addEventListener('input', updateAccentFromSliders);
-    colorPicker.addEventListener('input', updateSlidersFromPicker);
-    // load saved color
-    const savedColor = localStorage.getItem('cv-accent'); if(savedColor){ colorPicker.value=savedColor; updateSlidersFromPicker(); }
-    colorPicker.addEventListener('change', ()=>{ localStorage.setItem('cv-accent', colorPicker.value); });
-
+    colorPicker.addEventListener('input', e => {
+      document.documentElement.style.setProperty('--accent', e.target.value);
+    });
   </script></body>
 </html>
