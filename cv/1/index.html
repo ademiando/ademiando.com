@@ -1,170 +1,277 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CV Ade Oftomiando</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f9f9f9;
-      color: #333;
-      line-height: 1.6;
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 2rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    header h1 {
-      font-size: 2rem;
-      margin-bottom: 0.3rem;
-    }
-    header p {
-      margin: 0.2rem 0;
-      color: #555;
-    }
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-    .section {
-      margin-bottom: 1.5rem;
-    }
-    .section h2 {
-      font-size: 1.3rem;
-      margin-bottom: 0.8rem;
-      border-bottom: 2px solid #ddd;
-      padding-bottom: 0.3rem;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    ul li {
-      margin-bottom: 0.6rem;
-    }
-    .footer {
-      margin-top: 2rem;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #777;
-    }
-    #qrcode {
-      margin-top: 0.5rem;
-    }
-    /* Print settings */
-    @media print {
-      body {
-        background: #fff;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      .no-print {
-        display: none !important;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Ade Oftomiando</title>
+    <!-- Tailwind CSS CDN untuk styling yang lebih modern -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter sebagai font default -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --accent-color: #2563eb;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Mengatur visibilitas elemen berdasarkan atribut lang pada <html> */
+        html[lang="id"] [data-lang="en"] {
+            display: none;
+        }
+        html[lang="en"] [data-lang="id"] {
+            display: none;
+        }
+
+        /* Mengubah warna aksen untuk elemen header dan h2 saat dicetak */
+        @media print {
+            .bg-accent-print {
+                background-color: var(--accent-color) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .text-accent-print {
+                color: var(--accent-color) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .border-accent-print {
+                border-color: var(--accent-color) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <h1>Ade Oftomiando</h1>
-      <p>Wonosobo, Indonesia | 10 Mei 1999</p>
-      <p>
-        <a href="mailto:ademiandoo@gmail.com"><i class="fa-solid fa-envelope"></i> ademiandoo@gmail.com</a> | 
-        <a href="https://wa.me/6285726951002" target="_blank"><i class="fa-brands fa-whatsapp"></i> 085726951002</a> | 
-        <a href="https://github.com/ademiando" target="_blank"><i class="fa-brands fa-github"></i> ademiando</a>
-      </p>
+<body class="bg-slate-100 text-gray-800 antialiased">
+
+    <!-- Toolbar: Tombol untuk Aksi Interaktif -->
+    <div class="toolbar flex justify-end gap-2 bg-gray-100 py-2 px-4 border-b border-gray-200 sticky top-0 z-10 print:hidden">
+        <!-- Tombol Toggle Bahasa -->
+        <div class="relative flex items-center bg-gray-200 rounded-full h-8 px-1">
+            <button id="langToggleID" class="px-2 font-medium text-sm rounded-full transition-colors duration-200">ID</button>
+            <button id="langToggleEN" class="px-2 font-medium text-sm rounded-full transition-colors duration-200">EN</button>
+        </div>
+        <!-- Tombol Pemilih Warna -->
+        <div class="relative flex items-center bg-gray-200 rounded-full h-8 px-1">
+            <span class="absolute w-6 h-6 rounded-full" style="background-color: var(--accent-color)"></span>
+            <input type="color" id="colorPicker" value="#2563eb" class="relative z-10 w-6 h-6 opacity-0 cursor-pointer">
+        </div>
+        <!-- Tombol Cetak -->
+        <button onclick="window.print()" class="text-xl text-gray-600 hover:text-gray-900 transition"><i class="fa-solid fa-print"></i></button>
+    </div>
+
+    <!-- Header CV -->
+    <header class="bg-blue-600 text-white p-6 md:p-8 text-center bg-accent-print">
+        <h1 class="text-3xl md:text-4xl font-bold">Ade Oftomiando</h1>
+        <p class="mt-1 text-sm md:text-base opacity-90">Wonosobo, Indonesia | 10 Mei 1999</p>
+        <div class="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-2 text-sm md:text-base opacity-90">
+            <a href="https://wa.me/6285726951002" target="_blank" rel="noopener noreferrer" class="hover:underline transition"><i class="fa-brands fa-whatsapp"></i> 085726951002</a>
+            <a href="mailto:ademiandoo@gmail.com" class="hover:underline transition"><i class="fa-solid fa-envelope"></i> ademiandoo@gmail.com</a>
+            <a href="https://github.com/ademiando" target="_blank" rel="noopener noreferrer" class="hover:underline transition"><i class="fa-brands fa-github"></i> ademiando</a>
+        </div>
+    </div>
     </header>
 
-    <div class="section" id="summary">
-      <h2>Ringkasan Diri</h2>
-      <p>
-        Individu proaktif dan autodidak dengan pengalaman praktis di investasi kripto & saham sejak 2020. 
-        Memiliki ketertarikan besar pada <strong>teknologi dan inovasi digital</strong> sebagai fondasi untuk mendukung perjalanan investasi. 
-        Sedang memperdalam keterampilan dalam coding, automasi, dan visualisasi portofolio guna menghadirkan keputusan investasi yang lebih terukur.
-      </p>
-    </div>
+    <!-- Konten Utama CV -->
+    <div class="container max-w-4xl mx-auto p-4 md:p-8 lg:p-12 bg-white shadow-lg rounded-xl mt-6 mb-10">
 
-    <div class="section" id="experience">
-      <h2>Pengalaman</h2>
-      <ul>
-        <li>
-          <strong>Instruktur & Mentor Komunitas Axie Infinity</strong> (2020 - 2022)  
-          <br>Membimbing pemain baru dalam memahami ekosistem game berbasis blockchain Axie Infinity. 
-          Memberikan pelatihan strategi, analisis tokenomics, serta mengelola diskusi komunitas untuk menjaga keberlanjutan ekosistem. 
-          Berperan aktif dalam mengembangkan pola pikir investasi jangka panjang melalui media game.
-        </li>
-        <li>
-          <strong>Pengusaha Salad Buah</strong> (2022 - 2023)  
-          <br>Mengelola seluruh operasional bisnis kecil, mulai dari produksi, pemasaran, hingga pelayanan pelanggan. 
-          Berhasil membangun loyalitas pelanggan melalui inovasi rasa dan kualitas produk.
-        </li>
-        <li>
-          <strong>Barista</strong> (2023 - Sekarang)  
-          <br>Menyajikan produk kopi dengan standar kualitas tinggi, meningkatkan pengalaman pelanggan dengan pelayanan ramah dan efisien.
-        </li>
-      </ul>
-    </div>
+        <!-- Bagian Profil -->
+        <section class="mb-8">
+            <h2 class="text-xl md:text-2xl font-semibold text-blue-600 border-b-2 border-blue-600 inline-block pb-1 mb-4 text-accent-print border-accent-print">
+                <span data-lang="id">Profil</span>
+                <span data-lang="en">Profile</span>
+            </h2>
+            <p data-lang="id">
+                Saya adalah individu proaktif dengan pengalaman autodidak di bidang investasi kripto dan saham sejak 2020. Ketertarikan pada teknologi mendorong saya mempelajari pemrograman web untuk membangun alat analisis data, visualisasi portofolio, dan solusi praktis yang mendukung pengambilan keputusan investasi. Fokus saya adalah menghadirkan inovasi yang akurat, efisien, dan mudah diakses.
+            </p>
+            <p data-lang="en">
+                I am a proactive individual with self-taught experience in cryptocurrency and stock investments since 2020. My interest in technology has driven me to learn web programming to build data analysis tools, portfolio visualization, and practical solutions that support investment decision-making. My focus is on delivering innovations that are accurate, efficient, and easily accessible.
+            </p>
+        </section>
 
-    <div class="section" id="projects">
-      <h2>Proyek</h2>
-      <p>
-        <strong>Aplikasi Pelacak Portofolio Investasi</strong>  
-        <br>Membangun situs web mirip Bloomberg yang memungkinkan pengguna memantau portofolio tanpa login. 
-        Sistem terintegrasi dengan Supabase, menyediakan database independen untuk tiap pengguna. 
-        Terdapat halaman <em>Lab</em> untuk uji coba strategi trading, analisis pola historis, hingga eksekusi order berbasis kode & robot trading. 
-        Selain itu, aplikasi dapat terhubung langsung ke wallet (DEX/CEX/Broker) untuk trading nyata, serta mengumpulkan berita pasar relevan sesuai portofolio pengguna.
-      </p>
-    </div>
+        <!-- Bagian Pengalaman -->
+        <section class="mb-8">
+            <h2 class="text-xl md:text-2xl font-semibold text-blue-600 border-b-2 border-blue-600 inline-block pb-1 mb-4 text-accent-print border-accent-print">
+                <span data-lang="id">Pengalaman</span>
+                <span data-lang="en">Experience</span>
+            </h2>
+            <ul class="space-y-4">
+                <li data-lang="id">
+                    <strong>Instruktur & Mentor Komunitas Kripto</strong> (2020 – 2022)<br>
+                    • Aktif sebagai pemain dan pelatih di ekosistem Axie Infinity.<br>
+                    • Membimbing pemain baru dalam strategi permainan dan pengelolaan aset digital.<br>
+                    • Mengelola diskusi komunitas untuk memahami tren pasar kripto terkini.
+                </li>
+                <li data-lang="en">
+                    <strong>Crypto Community Instructor & Mentor</strong> (2020 – 2022)<br>
+                    • Actively participated as a player and coach in the Axie Infinity ecosystem.<br>
+                    • Guided new players on game strategies and digital asset management.<br>
+                    • Managed community discussions to understand the latest crypto market trends.
+                </li>
+                <li data-lang="id">
+                    <strong>Pengusaha Salad Buah</strong> (2022 – 2023)<br>
+                    Mengelola operasional usaha kecil, dari produksi hingga pemasaran, serta membangun loyalitas pelanggan.
+                </li>
+                <li data-lang="en">
+                    <strong>Fruit Salad Entrepreneur</strong> (2022 – 2023)<br>
+                    Managed a small business operation end-to-end, from production to marketing, while fostering customer loyalty.
+                </li>
+                <li data-lang="id">
+                    <strong>Barista</strong> (2023 – Sekarang)<br>
+                    Menyajikan kopi dengan standar kualitas tinggi serta membangun pengalaman pelanggan yang ramah dan profesional.
+                </li>
+                <li data-lang="en">
+                    <strong>Barista</strong> (2023 – Present)<br>
+                    Delivered high-quality coffee beverages while creating a welcoming and professional customer experience.
+                </li>
+            </ul>
+        </section>
 
-    <div class="section" id="skills">
-      <h2>Keterampilan</h2>
-      <ul>
-        <li><strong>Analisis Pasar Kripto & Saham</strong></li>
-        <li><strong>Manajemen Portofolio</strong></li>
-        <li><strong>Komunikasi Komunitas</strong></li>
-        <li><strong>HTML, CSS, JavaScript</strong></li>
-        <li><strong>Git & GitHub</strong></li>
-        <li><strong>Vercel Deployment</strong></li>
-        <li><strong>Manajemen Waktu & Kerja Tim</strong></li>
-        <li><strong>Pelayanan Pelanggan</strong></li>
-        <li><strong>Berpikir Analitis</strong></li>
-        <li><strong>Bahasa Inggris</strong></li>
-      </ul>
-    </div>
+        <!-- Bagian Keterampilan -->
+        <section class="mb-8">
+            <h2 class="text-xl md:text-2xl font-semibold text-blue-600 border-b-2 border-blue-600 inline-block pb-1 mb-4 text-accent-print border-accent-print">
+                <span data-lang="id">Keterampilan</span>
+                <span data-lang="en">Skills</span>
+            </h2>
+            <ul class="space-y-1">
+                <li data-lang="id">Analisis pasar kripto & saham</li>
+                <li data-lang="en">Crypto & stock market analysis</li>
+                <li data-lang="en">Portfolio & investment management</li>
+                <li data-lang="id">Manajemen portofolio & investasi</li>
+                <li data-lang="id">Komunikasi & pengelolaan komunitas</li>
+                <li data-lang="en">Communication & community management</li>
+                <li data-lang="id">Git & GitHub</li>
+                <li data-lang="en">Git & GitHub</li>
+                <li data-lang="id">Vercel & Supabase</li>
+                <li data-lang="en">Vercel & Supabase</li>
+                <li data-lang="id">Manajemen waktu & kerja tim</li>
+                <li data-lang="en">Time management & teamwork</li>
+                <li data-lang="id">Bahasa Inggris (aktif)</li>
+                <li data-lang="en">English proficiency (active)</li>
+            </ul>
+        </section>
+        
+        <!-- Bagian Proyek -->
+        <section class="mb-8">
+            <h2 class="text-xl md:text-2xl font-semibold text-blue-600 border-b-2 border-blue-600 inline-block pb-1 mb-4 text-accent-print border-accent-print">
+                <span data-lang="id">Proyek</span>
+                <span data-lang="en">Project</span>
+            </h2>
+            <p class="mb-1">
+                <span data-lang="id">
+                    <strong>BloomBoard – Platform Pelacak Portofolio & Lab Trading</strong>
+                    <a href="https://bloomboard-two.vercel.app/" target="_blank" rel="noopener noreferrer" class="inline-block text-gray-800 hover:text-blue-600 transition ml-1">
+                        <i class="fa-solid fa-up-right-from-square text-xs"></i>
+                    </a>
+                    <br>Mengembangkan platform web untuk pemantauan portofolio investasi dengan integrasi Supabase, tanpa login. Fitur utama:
+                </span>
+                <span data-lang="en">
+                    <strong>BloomBoard – Portfolio Tracker & Trading Lab</strong>
+                    <a href="https://bloomboard-two.vercel.app/" target="_blank" rel="noopener noreferrer" class="inline-block text-gray-800 hover:text-blue-600 transition ml-1">
+                        <i class="fa-solid fa-up-right-from-square text-xs"></i>
+                    </a>
+                    <br>Developed a web platform for monitoring investment portfolios with Supabase integration, no login required. Key features:
+                </span>
+            </p>
+            <ul data-lang="id" class="list-disc list-inside space-y-1 mt-2">
+                <li>Pelacak portofolio dengan penyimpanan data independen</li>
+                <li>Lab trading untuk uji strategi dengan data historis & eksekusi otomatis berbasis kode/robot</li>
+                <li>Trading nyata terhubung langsung ke wallet atau broker</li>
+                <li>Agregator berita cerdas sesuai komposisi portofolio</li>
+                <li>Kustomisasi tampilan sesuai preferensi pengguna</li>
+            </ul>
+            <ul data-lang="en" class="list-disc list-inside space-y-1 mt-2">
+                <li>Portfolio tracker with independent data storage</li>
+                <li>Trading lab to test strategies with historical data & code/bot-based automated execution</li>
+                <li>Live trading connected directly to wallets or brokers</li>
+                <li>Intelligent news aggregator curated to portfolio composition</li>
+                <li>Customizable views tailored to user preferences</li>
+            </ul>
+        </section>
+        
+        <!-- Bagian Hobi & Minat -->
+        <section class="mb-8">
+            <h2 class="text-xl md:text-2xl font-semibold text-blue-600 border-b-2 border-blue-600 inline-block pb-1 mb-4 text-accent-print border-accent-print">
+                <span data-lang="id">Hobi & Minat</span>
+                <span data-lang="en">Hobbies & Interests</span>
+            </h2>
+            <ul data-lang="id" class="list-disc list-inside space-y-1">
+                <li>Mendaki gunung & kegiatan outdoor</li>
+                <li>Membaca buku (filsafat, bisnis, investasi)</li>
+                <li>Seni & kreativitas</li>
+                <li>Pertanian & aktivitas perkebunan</li>
+            </ul>
+            <ul data-lang="en" class="list-disc list-inside space-y-1">
+                <li>Hiking & outdoor activities</li>
+                <li>Reading books (philosophy, business, investment)</li>
+                <li>Arts & creativity</li>
+                <li>Farming & gardening activities</li>
+            </ul>
 
-    <div class="section" id="interests">
-      <h2>Minat</h2>
-      <p>Mendaki gunung, ekonomi makro, filsafat, politik, riset pasar, serta eksplorasi teknologi digital untuk investasi.</p>
-    </div>
+            <!-- Kode QR dan Tautan dipindahkan ke dalam section ini -->
+            <div class="mt-8">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=https://ademiando.com/cv" alt="QR Code to CV" class="w-12 h-12 bg-white p-1 rounded-lg shadow-sm">
+                <a href="https://ademiando.com/cv" class="mt-2 block text-xs text-gray-600 hover:text-blue-600 transition no-underline">
+                    <span data-lang="id">Scan untuk versi online:</span>
+                    <span data-lang="en">Scan to online version:</span>
+                    ademiando.com/cv
+                </a>
+            </div>
+        </section>
 
-    <div class="footer">
-      <p>Scan untuk versi online:</p>
-      <div id="qrcode"></div>
-      <p>&copy; 2025 Ade Oftomiando</p>
     </div>
-  </div>
+    
+    <script>
+        // Menginisialisasi elemen dan variabel
+        const colorPicker = document.getElementById('colorPicker');
+        const langToggleID = document.getElementById('langToggleID');
+        const langToggleEN = document.getElementById('langToggleEN');
+        const root = document.documentElement;
+        
+        // Fungsi untuk mengganti bahasa dengan mengubah atribut lang pada tag html
+        function setLanguage(lang) {
+            root.setAttribute('lang', lang);
+            
+            // Memperbarui gaya tombol toggle
+            if (lang === 'id') {
+                langToggleID.classList.add('bg-white', 'shadow-sm');
+                langToggleEN.classList.remove('bg-white', 'shadow-sm');
+            } else {
+                langToggleEN.classList.add('bg-white', 'shadow-sm');
+                langToggleID.classList.remove('bg-white', 'shadow-sm');
+            }
+        }
 
-  <!-- QRCode.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script>
-    new QRCode(document.getElementById("qrcode"), {
-      text: "https://ademiando.com/cv",
-      width: 80,
-      height: 80
-    });
-  </script>
+        // Fungsi untuk memperbarui warna aksen utama melalui CSS variable
+        function updateAccentColor(color) {
+            root.style.setProperty('--accent-color', color);
+            
+            // Memperbarui warna teks pada tombol toggle
+            const currentLang = root.getAttribute('lang');
+            if (currentLang === 'id') {
+                langToggleID.style.color = color;
+            } else {
+                langToggleEN.style.color = color;
+            }
+        }
+
+        // Event listener untuk tombol toggle bahasa
+        langToggleID.addEventListener('click', () => setLanguage('id'));
+        langToggleEN.addEventListener('click', () => setLanguage('en'));
+        
+        // Event listener untuk pemilih warna
+        colorPicker.addEventListener('input', (e) => updateAccentColor(e.target.value));
+
+        // Mengatur bahasa dan warna awal saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage('id'); // Mengatur bahasa default ke Indonesia
+            const initialColor = colorPicker.value;
+            updateAccentColor(initialColor);
+        });
+    </script>
 </body>
 </html>
