@@ -14,6 +14,7 @@
     <style>
         :root {
             --accent-color: #2563eb;
+            --text-on-accent: #ffffff;
         }
         body {
             font-family: 'Inter', sans-serif;
@@ -43,6 +44,11 @@
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
+            .text-on-accent-print {
+                color: var(--text-on-accent) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
         }
     </style>
 </head>
@@ -52,7 +58,7 @@
     <div class="toolbar flex justify-end gap-2 bg-gray-100 py-2 px-4 border-b border-gray-200 sticky top-0 z-10 print:hidden">
         <!-- Tombol Toggle Bahasa -->
         <div class="relative flex items-center bg-gray-200 rounded-full h-8 px-1">
-            <button id="langToggleID" class="px-2 font-medium text-sm rounded-full transition-colors duration-200">ID</button>
+            <button id="langToggleID" class="px-2 font-medium text-sm rounded-full transition-colors duration-200" style="color: var(--accent-color)">ID</button>
             <button id="langToggleEN" class="px-2 font-medium text-sm rounded-full transition-colors duration-200">EN</button>
         </div>
         <!-- Tombol Pemilih Warna -->
@@ -65,22 +71,22 @@
     </div>
 
     <!-- Header CV -->
-    <header class="bg-blue-600 text-white p-6 md:p-8 text-center bg-accent-print">
-        <h1 class="text-3xl md:text-4xl font-bold">Ade Oftomiando</h1>
-        <p class="mt-1 text-sm md:text-base opacity-90">Wonosobo, Indonesia | 10 Mei 1999</p>
+    <header class="p-6 md:p-8 text-center" style="background-color: var(--accent-color)">
+        <h1 class="text-3xl md:text-4xl font-bold" style="color: var(--text-on-accent)">Ade Oftomiando</h1>
+        <p class="mt-1 text-sm md:text-base opacity-90" style="color: var(--text-on-accent)">Wonosobo, Indonesia | 10 Mei 1999</p>
         <div class="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-2 text-sm md:text-base opacity-90">
-            <a href="https://wa.me/6285726951002" target="_blank" rel="noopener noreferrer" class="hover:underline transition"><i class="fa-brands fa-whatsapp"></i> 085726951002</a>
-            <a href="mailto:ademiandoo@gmail.com" class="hover:underline transition"><i class="fa-solid fa-envelope"></i> ademiandoo@gmail.com</a>
-            <a href="https://github.com/ademiando" target="_blank" rel="noopener noreferrer" class="hover:underline transition"><i class="fa-brands fa-github"></i> ademiando</a>
+            <a href="https://wa.me/6285726951002" target="_blank" rel="noopener noreferrer" class="hover:underline transition" style="color: var(--text-on-accent)"><i class="fa-brands fa-whatsapp"></i> 085726951002</a>
+            <a href="mailto:ademiandoo@gmail.com" class="hover:underline transition" style="color: var(--text-on-accent)"><i class="fa-solid fa-envelope"></i> ademiandoo@gmail.com</a>
+            <a href="https://github.com/ademiando" target="_blank" rel="noopener noreferrer" class="hover:underline transition" style="color: var(--text-on-accent)"><i class="fa-brands fa-github"></i> ademiando</a>
         </div>
     </header>
 
-    <!-- Konten Utama CV -->
-    <div class="container max-w-4xl mx-auto p-4 md:p-8 lg:p-12 bg-white shadow-lg rounded-xl mt-6 mb-10">
+    <!-- Konten Utama CV (dibuat menyatu seperti satu lembar kertas) -->
+    <div class="container max-w-4xl mx-auto p-4 md:p-8 lg:p-12 bg-white shadow-lg mt-6 mb-10">
 
         <!-- Bagian Profil -->
         <section class="mb-8">
-            <h2 class="text-xl md:text-2xl font-semibold text-blue-600 border-b-2 border-blue-600 inline-block pb-1 mb-4 text-accent-print border-accent-print">
+            <h2 class="text-xl md:text-2xl font-semibold border-b-2 inline-block pb-1 mb-4" style="color: var(--accent-color); border-color: var(--accent-color)">
                 <span data-lang="id">Profil</span>
                 <span data-lang="en">Profile</span>
             </h2>
@@ -94,7 +100,7 @@
 
         <!-- Bagian Pengalaman -->
         <section class="mb-8">
-            <h2 class="text-xl md:text-2xl font-semibold text-blue-600 border-b-2 border-blue-600 inline-block pb-1 mb-4 text-accent-print border-accent-print">
+            <h2 class="text-xl md:text-2xl font-semibold border-b-2 inline-block pb-1 mb-4" style="color: var(--accent-color); border-color: var(--accent-color)">
                 <span data-lang="id">Pengalaman</span>
                 <span data-lang="en">Experience</span>
             </h2>
@@ -132,7 +138,7 @@
 
         <!-- Bagian Keterampilan -->
         <section class="mb-8">
-            <h2 class="text-xl md:text-2xl font-semibold text-blue-600 border-b-2 border-blue-600 inline-block pb-1 mb-4 text-accent-print border-accent-print">
+            <h2 class="text-xl md:text-2xl font-semibold border-b-2 inline-block pb-1 mb-4" style="color: var(--accent-color); border-color: var(--accent-color)">
                 <span data-lang="id">Keterampilan</span>
                 <span data-lang="en">Skills</span>
             </h2>
@@ -156,13 +162,25 @@
         
         <!-- Bagian Proyek -->
         <section class="mb-8">
-            <h2 class="text-xl md:text-2xl font-semibold text-blue-600 border-b-2 border-blue-600 inline-block pb-1 mb-4 text-accent-print border-accent-print">
+            <h2 class="text-xl md:text-2xl font-semibold border-b-2 inline-block pb-1 mb-4" style="color: var(--accent-color); border-color: var(--accent-color)">
                 <span data-lang="id">Proyek</span>
                 <span data-lang="en">Project</span>
             </h2>
-            <p data-lang="id">
-                <strong>BloomBoard – Platform Pelacak Portofolio & Lab Trading</strong><br>
-                Mengembangkan platform web untuk pemantauan portofolio investasi dengan integrasi Supabase, tanpa login. Fitur utama:
+            <p class="mb-1">
+                <span data-lang="id">
+                    <strong>BloomBoard – Platform Pelacak Portofolio & Lab Trading</strong>
+                    <a href="https://bloomboard-two.vercel.app/" target="_blank" rel="noopener noreferrer" class="inline-block text-gray-800 hover:text-blue-600 transition ml-1">
+                        <i class="fa-solid fa-up-right-from-square text-xs"></i>
+                    </a>
+                    <br>Mengembangkan platform web untuk pemantauan portofolio investasi dengan integrasi Supabase, tanpa login. Fitur utama:
+                </span>
+                <span data-lang="en">
+                    <strong>BloomBoard – Portfolio Tracker & Trading Lab</strong>
+                    <a href="https://bloomboard-two.vercel.app/" target="_blank" rel="noopener noreferrer" class="inline-block text-gray-800 hover:text-blue-600 transition ml-1">
+                        <i class="fa-solid fa-up-right-from-square text-xs"></i>
+                    </a>
+                    <br>Developed a web platform for monitoring investment portfolios with Supabase integration, no login required. Key features:
+                </span>
             </p>
             <ul data-lang="id" class="list-disc list-inside space-y-1 mt-2">
                 <li>Pelacak portofolio dengan penyimpanan data independen</li>
@@ -171,10 +189,6 @@
                 <li>Agregator berita cerdas sesuai komposisi portofolio</li>
                 <li>Kustomisasi tampilan sesuai preferensi pengguna</li>
             </ul>
-            <p data-lang="en">
-                <strong>BloomBoard – Portfolio Tracker & Trading Lab</strong><br>
-                Developed a web platform for monitoring investment portfolios with Supabase integration, no login required. Key features:
-            </p>
             <ul data-lang="en" class="list-disc list-inside space-y-1 mt-2">
                 <li>Portfolio tracker with independent data storage</li>
                 <li>Trading lab to test strategies with historical data & code/bot-based automated execution</li>
@@ -184,9 +198,9 @@
             </ul>
         </section>
         
-        <!-- Bagian Hobi & Minat + Kode QR -->
+        <!-- Bagian Hobi & Minat -->
         <section class="mb-8">
-            <h2 class="text-xl md:text-2xl font-semibold text-blue-600 border-b-2 border-blue-600 inline-block pb-1 mb-4 text-accent-print border-accent-print">
+            <h2 class="text-xl md:text-2xl font-semibold border-b-2 inline-block pb-1 mb-4" style="color: var(--accent-color); border-color: var(--accent-color)">
                 <span data-lang="id">Hobi & Minat</span>
                 <span data-lang="en">Hobbies & Interests</span>
             </h2>
@@ -203,14 +217,13 @@
                 <li>Farming & gardening activities</li>
             </ul>
 
-            <!-- Kode QR dipindahkan ke sini -->
-            <div class="text-center mt-6">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://ademiando.com/cv" alt="QR Code to CV" class="mx-auto bg-white p-2 rounded-lg shadow-sm">
-                <p class="mt-2 text-sm text-gray-600">
-                    <span data-lang="id">Scan untuk versi online</span>
-                    <span data-lang="en">Scan for online version</span>
-                </p>
-            </div>
+            <!-- Kode QR dan Tautan dipindahkan langsung ke dalam section ini tanpa div terpisah -->
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=https://ademiando.com/cv" alt="QR Code to CV" class="w-12 h-12 bg-white p-1 shadow-sm mt-4">
+            <a href="https://ademiando.com/cv" class="mt-2 block text-xs text-gray-600 hover:text-blue-600 transition no-underline">
+                <span data-lang="id">Scan untuk versi online:</span>
+                <span data-lang="en">Scan to online version:</span>
+                ademiando.com/cv
+            </a>
         </section>
 
     </div>
@@ -235,10 +248,34 @@
                 langToggleID.classList.remove('bg-white', 'shadow-sm');
             }
         }
+        
+        // Fungsi untuk menghitung luminance (kecerahan) warna
+        function getLuminance(hex) {
+            // Hapus '#' jika ada
+            const cleanHex = hex.startsWith('#') ? hex.slice(1) : hex;
+            
+            // Konversi hex ke nilai RGB
+            const r = parseInt(cleanHex.substring(0, 2), 16);
+            const g = parseInt(cleanHex.substring(2, 4), 16);
+            const b = parseInt(cleanHex.substring(4, 6), 16);
+            
+            // Hitung luminance menggunakan formula W3C
+            const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+            
+            return luminance;
+        }
 
         // Fungsi untuk memperbarui warna aksen utama melalui CSS variable
         function updateAccentColor(color) {
+            // Set warna aksen baru
             root.style.setProperty('--accent-color', color);
+            
+            // Tentukan warna teks berdasarkan luminance warna aksen
+            const luminance = getLuminance(color);
+            // Jika warna cerah (luminance > 0.5), gunakan abu-abu gelap (#333)
+            // Jika warna gelap, gunakan putih (#FFFFFF)
+            const textOnAccentColor = luminance > 0.5 ? '#333333' : '#FFFFFF';
+            root.style.setProperty('--text-on-accent', textOnAccentColor);
             
             // Memperbarui warna teks pada tombol toggle
             const currentLang = root.getAttribute('lang');
