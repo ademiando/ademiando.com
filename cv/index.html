@@ -15,6 +15,7 @@
         :root {
             --accent-color: #2563eb;
             --text-on-accent: #ffffff;
+            --section-title-color: #2563eb;
         }
         body {
             font-family: 'Inter', sans-serif;
@@ -34,18 +35,14 @@
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
-            .text-accent-print {
-                color: var(--accent-color) !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .border-accent-print {
-                border-color: var(--accent-color) !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
             .text-on-accent-print {
                 color: var(--text-on-accent) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .section-title-print {
+                color: var(--section-title-color) !important;
+                border-color: var(--section-title-color) !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
@@ -71,13 +68,13 @@
     </div>
 
     <!-- Header CV -->
-    <header class="p-6 md:p-8 text-center" style="background-color: var(--accent-color)">
-        <h1 class="text-3xl md:text-4xl font-bold" style="color: var(--text-on-accent)">Ade Oftomiando</h1>
-        <p class="mt-1 text-sm md:text-base opacity-90" style="color: var(--text-on-accent)">Wonosobo, Indonesia | 10 Mei 1999</p>
+    <header class="p-6 md:p-8 text-center bg-accent-print" style="background-color: var(--accent-color)">
+        <h1 class="text-3xl md:text-4xl font-bold text-on-accent-print" style="color: var(--text-on-accent)">Ade Oftomiando</h1>
+        <p class="mt-1 text-sm md:text-base opacity-90 text-on-accent-print" style="color: var(--text-on-accent)">Bali, Indonesia | 10 Mei 1999</p>
         <div class="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-2 text-sm md:text-base opacity-90">
-            <a href="https://wa.me/6285726951002" target="_blank" rel="noopener noreferrer" class="hover:underline transition" style="color: var(--text-on-accent)"><i class="fa-brands fa-whatsapp"></i> 085726951002</a>
-            <a href="mailto:ademiandoo@gmail.com" class="hover:underline transition" style="color: var(--text-on-accent)"><i class="fa-solid fa-envelope"></i> ademiandoo@gmail.com</a>
-            <a href="https://github.com/ademiando" target="_blank" rel="noopener noreferrer" class="hover:underline transition" style="color: var(--text-on-accent)"><i class="fa-brands fa-github"></i> ademiando</a>
+            <a href="https://wa.me/6285726951002" target="_blank" rel="noopener noreferrer" class="hover:underline transition text-on-accent-print" style="color: var(--text-on-accent)"><i class="fa-brands fa-whatsapp"></i> 085726951002</a>
+            <a href="mailto:ademiandoo@gmail.com" class="hover:underline transition text-on-accent-print" style="color: var(--text-on-accent)"><i class="fa-solid fa-envelope"></i> ademiandoo@gmail.com</a>
+            <a href="https://github.com/ademiando" target="_blank" rel="noopener noreferrer" class="hover:underline transition text-on-accent-print" style="color: var(--text-on-accent)"><i class="fa-brands fa-github"></i> ademiando</a>
         </div>
     </header>
 
@@ -86,7 +83,7 @@
 
         <!-- Bagian Profil -->
         <section class="mb-8">
-            <h2 class="text-xl md:text-2xl font-semibold border-b-2 inline-block pb-1 mb-4" style="color: var(--accent-color); border-color: var(--accent-color)">
+            <h2 class="text-xl md:text-2xl font-semibold border-b-2 inline-block pb-1 mb-4 section-title-print" style="color: var(--section-title-color); border-color: var(--section-title-color)">
                 <span data-lang="id">Profil</span>
                 <span data-lang="en">Profile</span>
             </h2>
@@ -100,7 +97,7 @@
 
         <!-- Bagian Pengalaman -->
         <section class="mb-8">
-            <h2 class="text-xl md:text-2xl font-semibold border-b-2 inline-block pb-1 mb-4" style="color: var(--accent-color); border-color: var(--accent-color)">
+            <h2 class="text-xl md:text-2xl font-semibold border-b-2 inline-block pb-1 mb-4 section-title-print" style="color: var(--section-title-color); border-color: var(--section-title-color)">
                 <span data-lang="id">Pengalaman</span>
                 <span data-lang="en">Experience</span>
             </h2>
@@ -138,7 +135,7 @@
 
         <!-- Bagian Keterampilan -->
         <section class="mb-8">
-            <h2 class="text-xl md:text-2xl font-semibold border-b-2 inline-block pb-1 mb-4" style="color: var(--accent-color); border-color: var(--accent-color)">
+            <h2 class="text-xl md:text-2xl font-semibold border-b-2 inline-block pb-1 mb-4 section-title-print" style="color: var(--section-title-color); border-color: var(--section-title-color)">
                 <span data-lang="id">Keterampilan</span>
                 <span data-lang="en">Skills</span>
             </h2>
@@ -162,7 +159,7 @@
         
         <!-- Bagian Proyek -->
         <section class="mb-8">
-            <h2 class="text-xl md:text-2xl font-semibold border-b-2 inline-block pb-1 mb-4" style="color: var(--accent-color); border-color: var(--accent-color)">
+            <h2 class="text-xl md:text-2xl font-semibold border-b-2 inline-block pb-1 mb-4 section-title-print" style="color: var(--section-title-color); border-color: var(--section-title-color)">
                 <span data-lang="id">Proyek</span>
                 <span data-lang="en">Project</span>
             </h2>
@@ -200,7 +197,7 @@
         
         <!-- Bagian Hobi & Minat -->
         <section class="mb-8">
-            <h2 class="text-xl md:text-2xl font-semibold border-b-2 inline-block pb-1 mb-4" style="color: var(--accent-color); border-color: var(--accent-color)">
+            <h2 class="text-xl md:text-2xl font-semibold border-b-2 inline-block pb-1 mb-4 section-title-print" style="color: var(--section-title-color); border-color: var(--section-title-color)">
                 <span data-lang="id">Hobi & Minat</span>
                 <span data-lang="en">Hobbies & Interests</span>
             </h2>
@@ -272,11 +269,16 @@
             
             // Tentukan warna teks berdasarkan luminance warna aksen
             const luminance = getLuminance(color);
-            // Jika warna cerah (luminance > 0.5), gunakan abu-abu gelap (#333)
-            // Jika warna gelap, gunakan putih (#FFFFFF)
-            const textOnAccentColor = luminance > 0.5 ? '#333333' : '#FFFFFF';
+            const isLight = luminance > 0.5;
+            
+            // Warna untuk teks di header
+            const textOnAccentColor = isLight ? '#333333' : '#FFFFFF';
             root.style.setProperty('--text-on-accent', textOnAccentColor);
             
+            // Warna untuk judul bagian konten
+            const sectionTitleColor = isLight ? '#333333' : color;
+            root.style.setProperty('--section-title-color', sectionTitleColor);
+
             // Memperbarui warna teks pada tombol toggle
             const currentLang = root.getAttribute('lang');
             if (currentLang === 'id') {
