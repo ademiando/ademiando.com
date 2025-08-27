@@ -13,28 +13,33 @@
     
     <style>
         :root {
-            --accent: #2563eb;
+            --accent-color: #2563eb;
         }
         body {
             font-family: 'Inter', sans-serif;
         }
-        [data-lang="en"] {
+        /* Mengatur visibilitas elemen berdasarkan atribut lang pada <html> */
+        html[lang="id"] [data-lang="en"] {
             display: none;
         }
+        html[lang="en"] [data-lang="id"] {
+            display: none;
+        }
+
         /* Mengubah warna aksen untuk elemen header dan h2 saat dicetak */
         @media print {
             .bg-accent-print {
-                background-color: var(--accent) !important;
+                background-color: var(--accent-color) !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
             .text-accent-print {
-                color: var(--accent) !important;
+                color: var(--accent-color) !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
             .border-accent-print {
-                border-color: var(--accent) !important;
+                border-color: var(--accent-color) !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
@@ -47,12 +52,12 @@
     <div class="toolbar flex justify-end gap-2 bg-gray-100 py-2 px-4 border-b border-gray-200 sticky top-0 z-10 print:hidden">
         <!-- Tombol Toggle Bahasa -->
         <div class="relative flex items-center bg-gray-200 rounded-full h-8 px-1">
-            <button id="langToggleID" class="px-2 font-medium text-sm rounded-full transition-colors duration-200 bg-white shadow-sm text-blue-600">ID</button>
+            <button id="langToggleID" class="px-2 font-medium text-sm rounded-full transition-colors duration-200">ID</button>
             <button id="langToggleEN" class="px-2 font-medium text-sm rounded-full transition-colors duration-200">EN</button>
         </div>
         <!-- Tombol Pemilih Warna -->
         <div class="relative flex items-center bg-gray-200 rounded-full h-8 px-1">
-            <span class="absolute w-6 h-6 rounded-full" style="background-color: var(--accent)"></span>
+            <span class="absolute w-6 h-6 rounded-full" style="background-color: var(--accent-color)"></span>
             <input type="color" id="colorPicker" value="#2563eb" class="relative z-10 w-6 h-6 opacity-0 cursor-pointer">
         </div>
         <!-- Tombol Cetak -->
@@ -211,55 +216,51 @@
     </div>
     
     <script>
+        // Menginisialisasi elemen dan variabel
         const colorPicker = document.getElementById('colorPicker');
         const langToggleID = document.getElementById('langToggleID');
         const langToggleEN = document.getElementById('langToggleEN');
         const root = document.documentElement;
         
-        // Fungsi untuk mengganti bahasa
+        // Fungsi untuk mengganti bahasa dengan mengubah atribut lang pada tag html
         function setLanguage(lang) {
             root.setAttribute('lang', lang);
-            document.querySelectorAll(`[data-lang]`).forEach(el => {
-                if (el.getAttribute('data-lang') === lang) {
-                    el.style.display = '';
-                } else {
-                    el.style.display = 'none';
-                }
-            });
             
-            // Perbarui gaya tombol toggle
+            // Memperbarui gaya tombol toggle
             if (lang === 'id') {
-                langToggleID.classList.add('bg-white', 'shadow-sm', 'text-blue-600');
-                langToggleEN.classList.remove('bg-white', 'shadow-sm', 'text-blue-600');
+                langToggleID.classList.add('bg-white', 'shadow-sm');
+                langToggleEN.classList.remove('bg-white', 'shadow-sm');
             } else {
-                langToggleEN.classList.add('bg-white', 'shadow-sm', 'text-blue-600');
-                langToggleID.classList.remove('bg-white', 'shadow-sm', 'text-blue-600');
+                langToggleEN.classList.add('bg-white', 'shadow-sm');
+                langToggleID.classList.remove('bg-white', 'shadow-sm');
             }
         }
 
-        // Fungsi untuk mengganti warna aksen
+        // Fungsi untuk memperbarui warna aksen utama melalui CSS variable
         function updateAccentColor(color) {
-            root.style.setProperty('--accent', color);
-            // Mengubah warna kelas Tailwind secara dinamis
-            const accentBg = document.querySelector('.bg-blue-600');
-            const accentText = document.querySelectorAll('.text-blue-600');
-            const accentBorder = document.querySelectorAll('.border-blue-600');
-
-            if (accentBg) accentBg.style.backgroundColor = color;
-            accentText.forEach(el => el.style.color = color);
-            accentBorder.forEach(el => el.style.borderColor = color);
+            root.style.setProperty('--accent-color', color);
+            
+            // Memperbarui warna teks pada tombol toggle
+            const currentLang = root.getAttribute('lang');
+            if (currentLang === 'id') {
+                langToggleID.style.color = color;
+            } else {
+                langToggleEN.style.color = color;
+            }
         }
 
+        // Event listener untuk tombol toggle bahasa
         langToggleID.addEventListener('click', () => setLanguage('id'));
         langToggleEN.addEventListener('click', () => setLanguage('en'));
+        
+        // Event listener untuk pemilih warna
         colorPicker.addEventListener('input', (e) => updateAccentColor(e.target.value));
 
-        // Mengatur warna awal saat memuat halaman
-        updateAccentColor(colorPicker.value);
-
-        // Initial language setup
+        // Mengatur bahasa dan warna awal saat halaman dimuat
         document.addEventListener('DOMContentLoaded', () => {
-            setLanguage('id'); // Set default language to Indonesian
+            setLanguage('id'); // Mengatur bahasa default ke Indonesia
+            const initialColor = colorPicker.value;
+            updateAccentColor(initialColor);
         });
     </script>
 </body>
