@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CV - Ade Oftomiando</title>
+  <title>CV Ade Oftomiando</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
-      font-family: "Segoe UI", Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
       background: #f9f9f9;
@@ -15,218 +15,156 @@
       line-height: 1.6;
     }
     .container {
-      max-width: 850px;
-      margin: 40px auto;
+      max-width: 900px;
+      margin: 0 auto;
       background: #fff;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+      padding: 2rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     header {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 2rem;
     }
     header h1 {
-      margin: 0;
-      font-size: 2em;
-      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 0.3rem;
     }
     header p {
-      margin: 5px 0;
-      font-size: 1em;
-      color: #666;
+      margin: 0.2rem 0;
+      color: #555;
     }
-    .contact {
-      margin-top: 10px;
-      font-size: 0.95em;
-    }
-    .contact a {
-      margin: 0 8px;
+    a {
+      color: inherit;
       text-decoration: none;
-      color: #333;
-    }
-    h2 {
-      border-bottom: 2px solid #eee;
-      padding-bottom: 5px;
-      margin-top: 30px;
-      color: #444;
-      font-size: 1.3em;
     }
     .section {
-      margin-top: 20px;
+      margin-bottom: 1.5rem;
     }
-    .job {
-      margin-bottom: 20px;
-    }
-    .job h3 {
-      margin: 0;
-      font-size: 1.1em;
-      font-weight: 600;
-    }
-    .job span {
-      font-size: 0.9em;
-      color: #666;
+    .section h2 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 0.3rem;
     }
     ul {
-      margin: 8px 0 0 20px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
     }
-    .controls {
-      text-align: right;
-      margin-bottom: 20px;
+    ul li {
+      margin-bottom: 0.6rem;
     }
-    .controls button {
-      background: #444;
-      color: #fff;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-left: 10px;
-      font-size: 0.9em;
+    .footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #777;
     }
-    .controls button:hover {
-      background: #222;
+    #qrcode {
+      margin-top: 0.5rem;
     }
-    /* Print styling */
+    /* Print settings */
     @media print {
       body {
         background: #fff;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
-      .controls {
-        display: none;
-      }
-      .container {
-        box-shadow: none;
-        border-radius: 0;
-        margin: 0;
-        padding: 20px;
-      }
-      @page {
-        size: A4;
-        margin: 1.5cm;
+      .no-print {
+        display: none !important;
       }
     }
   </style>
 </head>
 <body>
-  <div class="controls">
-    <button onclick="toggleLang()"><i class="fa-solid fa-globe"></i> Bahasa</button>
-    <button onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button>
-  </div>
-  <div class="container" id="cv">
-
+  <div class="container">
     <header>
       <h1>Ade Oftomiando</h1>
       <p>Wonosobo, Indonesia | 10 Mei 1999</p>
-      <div class="contact">
-        <a href="https://wa.me/6285726951002"><i class="fa-brands fa-whatsapp"></i> 0857-2695-1002</a> |
-        <a href="mailto:ademiandoo@gmail.com"><i class="fa-solid fa-envelope"></i> ademiandoo@gmail.com</a> |
-        <a href="https://github.com/ademiando"><i class="fa-brands fa-github"></i> ademiando</a>
-      </div>
+      <p>
+        <a href="mailto:ademiandoo@gmail.com"><i class="fa-solid fa-envelope"></i> ademiandoo@gmail.com</a> | 
+        <a href="https://wa.me/6285726951002" target="_blank"><i class="fa-brands fa-whatsapp"></i> 085726951002</a> | 
+        <a href="https://github.com/ademiando" target="_blank"><i class="fa-brands fa-github"></i> ademiando</a>
+      </p>
     </header>
 
-    <!-- Ringkasan -->
-    <section class="section" id="summary">
-      <h2>Ringkasan</h2>
+    <div class="section" id="summary">
+      <h2>Ringkasan Diri</h2>
       <p>
-        Individu yang proaktif dan autodidak dengan pengalaman di dunia investasi kripto dan saham sejak 2020. 
-        Berpengalaman membaca tren pasar, mengelola risiko, serta memanfaatkan peluang investasi secara strategis. 
-        Saat ini mendalami keterampilan pemrograman (HTML, CSS, JavaScript) untuk membangun aplikasi analisis data, 
-        automasi, dan visualisasi portofolio — mengintegrasikan keuangan dengan teknologi.
+        Individu proaktif dan autodidak dengan pengalaman praktis di investasi kripto & saham sejak 2020. 
+        Memiliki ketertarikan besar pada <strong>teknologi dan inovasi digital</strong> sebagai fondasi untuk mendukung perjalanan investasi. 
+        Sedang memperdalam keterampilan dalam coding, automasi, dan visualisasi portofolio guna menghadirkan keputusan investasi yang lebih terukur.
       </p>
-    </section>
+    </div>
 
-    <!-- Pengalaman -->
-    <section class="section" id="experience">
+    <div class="section" id="experience">
       <h2>Pengalaman</h2>
+      <ul>
+        <li>
+          <strong>Instruktur & Mentor Komunitas Axie Infinity</strong> (2020 - 2022)  
+          <br>Membimbing pemain baru dalam memahami ekosistem game berbasis blockchain Axie Infinity. 
+          Memberikan pelatihan strategi, analisis tokenomics, serta mengelola diskusi komunitas untuk menjaga keberlanjutan ekosistem. 
+          Berperan aktif dalam mengembangkan pola pikir investasi jangka panjang melalui media game.
+        </li>
+        <li>
+          <strong>Pengusaha Salad Buah</strong> (2022 - 2023)  
+          <br>Mengelola seluruh operasional bisnis kecil, mulai dari produksi, pemasaran, hingga pelayanan pelanggan. 
+          Berhasil membangun loyalitas pelanggan melalui inovasi rasa dan kualitas produk.
+        </li>
+        <li>
+          <strong>Barista</strong> (2023 - Sekarang)  
+          <br>Menyajikan produk kopi dengan standar kualitas tinggi, meningkatkan pengalaman pelanggan dengan pelayanan ramah dan efisien.
+        </li>
+      </ul>
+    </div>
 
-      <div class="job">
-        <h3>Instruktur & Analis Komunitas Kripto</h3>
-        <span>2020 – 2022</span>
-        <ul>
-          <li>Membimbing anggota baru dalam memahami konsep fundamental dan strategi investasi di ekosistem kripto.</li>
-          <li>Aktif dalam forum komunitas untuk berbagi analisis pasar dan peluang investasi.</li>
-          <li>Mengelola portofolio pribadi dan melakukan evaluasi strategi secara berkala.</li>
-        </ul>
-      </div>
-
-      <div class="job">
-        <h3>Pengusaha Salad Buah</h3>
-        <span>2022 – 2023</span>
-        <ul>
-          <li>Mengelola bisnis kecil secara menyeluruh, mulai dari produksi, pemasaran, hingga layanan pelanggan.</li>
-          <li>Membangun loyalitas pelanggan dan mencapai target penjualan secara konsisten.</li>
-        </ul>
-      </div>
-
-      <div class="job">
-        <h3>Barista</h3>
-        <span>2023 – Sekarang</span>
-        <ul>
-          <li>Menyajikan kopi dengan standar kualitas tinggi.</li>
-          <li>Menciptakan pengalaman pelanggan yang positif melalui interaksi yang ramah dan layanan yang efisien.</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- Proyek -->
-    <section class="section" id="projects">
+    <div class="section" id="projects">
       <h2>Proyek</h2>
-      <div class="job">
-        <h3>Aplikasi Pelacak Harga Kripto (Web)</h3>
-        <ul>
-          <li>Membangun aplikasi web sederhana untuk menampilkan harga kripto secara real-time dari API publik.</li>
-        </ul>
-      </div>
-      <div class="job">
-        <h3>Agregator Berita Investasi</h3>
-        <ul>
-          <li>Mengembangkan platform web untuk mengumpulkan berita ekonomi dan kripto dari berbagai sumber terpercaya.</li>
-        </ul>
-      </div>
-    </section>
+      <p>
+        <strong>Aplikasi Pelacak Portofolio Investasi</strong>  
+        <br>Membangun situs web mirip Bloomberg yang memungkinkan pengguna memantau portofolio tanpa login. 
+        Sistem terintegrasi dengan Supabase, menyediakan database independen untuk tiap pengguna. 
+        Terdapat halaman <em>Lab</em> untuk uji coba strategi trading, analisis pola historis, hingga eksekusi order berbasis kode & robot trading. 
+        Selain itu, aplikasi dapat terhubung langsung ke wallet (DEX/CEX/Broker) untuk trading nyata, serta mengumpulkan berita pasar relevan sesuai portofolio pengguna.
+      </p>
+    </div>
 
-    <!-- Keterampilan -->
-    <section class="section" id="skills">
+    <div class="section" id="skills">
       <h2>Keterampilan</h2>
       <ul>
-        <li>Analisis Pasar Kripto & Saham</li>
-        <li>Manajemen Portofolio</li>
-        <li>Komunikasi Komunitas</li>
-        <li>HTML, CSS, JavaScript</li>
-        <li>Git & GitHub</li>
-        <li>Vercel Deployment</li>
-        <li>Manajemen Waktu</li>
-        <li>Kerja Tim</li>
-        <li>Pelayanan Pelanggan</li>
-        <li>Berpikir Analitis</li>
-        <li>Bahasa Inggris (Intermediate)</li>
+        <li><strong>Analisis Pasar Kripto & Saham</strong></li>
+        <li><strong>Manajemen Portofolio</strong></li>
+        <li><strong>Komunikasi Komunitas</strong></li>
+        <li><strong>HTML, CSS, JavaScript</strong></li>
+        <li><strong>Git & GitHub</strong></li>
+        <li><strong>Vercel Deployment</strong></li>
+        <li><strong>Manajemen Waktu & Kerja Tim</strong></li>
+        <li><strong>Pelayanan Pelanggan</strong></li>
+        <li><strong>Berpikir Analitis</strong></li>
+        <li><strong>Bahasa Inggris</strong></li>
       </ul>
-    </section>
+    </div>
 
-    <!-- Minat -->
-    <section class="section" id="interests">
+    <div class="section" id="interests">
       <h2>Minat</h2>
-      <p>Mendaki gunung, riset ekonomi makro, filsafat, politik, serta investasi jangka panjang.</p>
-    </section>
+      <p>Mendaki gunung, ekonomi makro, filsafat, politik, riset pasar, serta eksplorasi teknologi digital untuk investasi.</p>
+    </div>
+
+    <div class="footer">
+      <p>Scan untuk versi online:</p>
+      <div id="qrcode"></div>
+      <p>&copy; 2025 Ade Oftomiando</p>
+    </div>
   </div>
 
+  <!-- QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    let lang = "id";
-    function toggleLang() {
-      lang = lang === "id" ? "en" : "id";
-      document.getElementById("summary").querySelector("h2").innerText = lang === "id" ? "Ringkasan" : "Summary";
-      document.getElementById("experience").querySelector("h2").innerText = lang === "id" ? "Pengalaman" : "Experience";
-      document.getElementById("projects").querySelector("h2").innerText = lang === "id" ? "Proyek" : "Projects";
-      document.getElementById("skills").querySelector("h2").innerText = lang === "id" ? "Keterampilan" : "Skills";
-      document.getElementById("interests").querySelector("h2").innerText = lang === "id" ? "Minat" : "Interests";
-
-      // Summary
-      document.getElementById("summary").querySelector("p").innerText =
-        lang === "id"
-          ? "Individu yang proaktif dan autodidak dengan pengalaman di dunia investasi kripto dan saham sejak 2020. Berpengalaman membaca tren pasar, mengelola risiko, serta memanfaatkan peluang investasi secara strategis. Saat ini mendalami keterampilan pemrograman (HTML, CSS, JavaScript) untuk membangun aplikasi analisis data, automasi, dan visualisasi portofolio — mengintegrasikan keuangan dengan teknologi."
-          : "A proactive and self-taught individual with experience in cryptocurrency and stock investments since 2020. Skilled in analyzing market trends, managing risks, and identifying strategic investment opportunities. Currently developing programming skills (HTML, CSS, JavaScript) to build tools for data analysis, automation, and portfolio visualization — integrating finance with technology.";
-    }
+    new QRCode(document.getElementById("qrcode"), {
+      text: "https://ademiando.com/cv",
+      width: 80,
+      height: 80
+    });
   </script>
 </body>
 </html>
