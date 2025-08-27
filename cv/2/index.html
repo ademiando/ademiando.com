@@ -1,198 +1,252 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CV Ade Miando</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV Ade Oftomiando</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+    :root {
+      --r: 30;
+      --g: 60;
+      --b: 200;
+      --primary: rgb(var(--r), var(--g), var(--b));
+    }
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
       margin: 0;
       padding: 0;
-      background: #fff;
+      background: #fdfdfd;
       color: #333;
     }
     .container {
-      max-width: 900px;
+      max-width: 850px;
       margin: auto;
-      padding: 40px;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 30px;
+      background: #fff;
+      padding: 2rem 3rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.08);
     }
     header h1 {
       margin: 0;
-      font-size: 2em;
-      font-weight: bold;
+      font-size: 2rem;
+      color: var(--primary);
     }
     header p {
-      margin: 5px 0;
+      margin: 0.2rem 0;
+      color: #555;
     }
-    a {
-      color: inherit;
+    .contact a {
+      margin-right: 1rem;
       text-decoration: none;
+      color: #333;
     }
     .section {
-      margin-bottom: 25px;
+      margin-top: 2rem;
     }
     .section h2 {
-      font-size: 1.3em;
-      border-bottom: 2px solid var(--accent, #333);
-      padding-bottom: 5px;
-      margin-bottom: 10px;
+      color: var(--primary);
+      margin-bottom: .6rem;
     }
     ul {
       margin: 0;
-      padding-left: 20px;
+      padding-left: 1.2rem;
     }
-    .actions {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      display: flex;
-      gap: 10px;
-    }
-    .actions button, .actions input[type="color"] {
-      border: none;
-      background: #f0f0f0;
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .qr {
+    ul li { margin-bottom: .4rem; }
+    footer {
       text-align: center;
-      margin-top: 30px;
+      margin-top: 2rem;
+      font-size: .8rem;
+      color: #666;
+    }
+    footer img {
+      width: 70px;
+      margin-top: .5rem;
+    }
+    /* Control Panel */
+    .controls {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: .5rem;
+      z-index: 100;
+    }
+    .controls button, .controls input[type="color"] {
+      border: none;
+      padding: .5rem .8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: .9rem;
+      background: var(--primary);
+      color: #fff;
+    }
+    .controls input[type="color"] {
+      padding: 0;
+      width: 40px;
+      height: 40px;
     }
     @media print {
-      .actions { display: none; }
-      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .controls { display: none !important; }
+      body { background: #fff; }
+      .container { box-shadow: none; }
     }
   </style>
 </head>
 <body>
-  <div class="actions">
+  <!-- Controls -->
+  <div class="controls">
     <button id="langToggle"><i class="fa-solid fa-globe"></i></button>
-    <input type="color" id="colorPicker" value="#333333" />
+    <input type="color" id="colorPicker" value="#1e3cc8">
     <button onclick="window.print()"><i class="fa-solid fa-print"></i></button>
   </div>
 
   <div class="container" id="cv">
     <header>
-      <h1>Ade Miando</h1>
-      <p>
-        <a href="https://wa.me/6281234567890"><i class="fa-brands fa-whatsapp"></i> +62 812-3456-7890</a> ·
-        <a href="mailto:ademiandoo@gmail.com"><i class="fa-solid fa-envelope"></i> ademiandoo@gmail.com</a> ·
+      <h1>Ade Oftomiando</h1>
+      <p>Wonosobo, Indonesia | 10 Mei 1999</p>
+      <div class="contact">
+        <a href="https://wa.me/6285726951002"><i class="fa-brands fa-whatsapp"></i> 0857-2695-1002</a>
+        <a href="mailto:ademiandoo@gmail.com"><i class="fa-solid fa-envelope"></i> ademiandoo@gmail.com</a>
         <a href="https://github.com/ademiando"><i class="fa-brands fa-github"></i> ademiando</a>
-      </p>
+        <a href="https://ademiando.com/cv"><i class="fa-solid fa-globe"></i> ademiando.com/cv</a>
+      </div>
     </header>
 
-    <!-- Ringkasan -->
-    <div class="section" data-id>
+    <section class="section" id="summary">
       <h2>Ringkasan Diri</h2>
       <p>
-        Seorang profesional dengan latar belakang di bidang teknologi digital dan pelatihan, 
-        memiliki ketertarikan mendalam pada inovasi yang mendukung perjalanan investasi. 
-        Berpengalaman dalam mengelola komunitas, membimbing individu, serta membangun solusi digital 
-        yang responsif terhadap kebutuhan pasar.
+        Individu proaktif dan autodidak dengan pengalaman sejak 2020 di dunia investasi kripto dan saham. 
+        Memiliki ketertarikan kuat pada teknologi, data, dan pemrograman (HTML, CSS, JavaScript) 
+        untuk membangun aplikasi analisis, automasi, serta visualisasi portofolio yang mendukung perjalanan investasi secara terukur dan berkelanjutan.
       </p>
-    </div>
-    <div class="section" data-en style="display:none">
-      <h2>Summary</h2>
-      <p>
-        A professional with a background in digital technology and training, 
-        deeply passionate about innovations that support the investment journey. 
-        Experienced in community management, mentoring individuals, and developing digital solutions 
-        that adapt to market needs.
-      </p>
-    </div>
+    </section>
 
-    <!-- Pengalaman -->
-    <div class="section" data-id>
+    <section class="section" id="experience">
       <h2>Pengalaman</h2>
       <ul>
-        <li><b>Instruktur & Pelatih Komunitas Game (2020–2022)</b><br>
-          Membimbing pemain baru dalam permainan <i>Axie Infinity</i>, memberikan strategi, 
-          mengatur sesi pelatihan, dan membangun komunitas aktif yang berorientasi pada pertumbuhan 
-          keterampilan serta manajemen aset digital.
+        <li><strong>Instruktur & Analis Komunitas Kripto (2020 - 2022)</strong><br>
+          - Membimbing pemain baru dalam ekosistem <em>Axie Infinity</em>, termasuk strategi bermain dan manajemen aset digital.<br>
+          - Menjadi pelatih komunitas dengan pendekatan praktis agar anggota memahami peluang dan risiko di dunia kripto.<br>
+          - Berperan aktif dalam forum, menyusun strategi portofolio, serta melakukan analisis fundamental dan teknikal.
         </li>
-        <li><b>Pengembang Independen</b><br>
-          Merancang proyek digital yang mendukung ekosistem investasi berbasis teknologi.
+        <li><strong>Pengusaha Salad Buah (2022 - 2023)</strong><br>
+          - Mengelola bisnis kecil dari produksi hingga pemasaran.<br>
+          - Membangun loyalitas pelanggan dan mencapai target penjualan.
         </li>
-      </ul>
-    </div>
-    <div class="section" data-en style="display:none">
-      <h2>Experience</h2>
-      <ul>
-        <li><b>Instructor & Community Trainer (2020–2022)</b><br>
-          Mentored new players in <i>Axie Infinity</i>, provided strategies, conducted training sessions, 
-          and built an active community focused on skill growth and digital asset management.
-        </li>
-        <li><b>Independent Developer</b><br>
-          Designed digital projects supporting investment ecosystems driven by technology.
+        <li><strong>Barista (2023 - Sekarang)</strong><br>
+          - Menyajikan kopi dengan standar kualitas tinggi.<br>
+          - Memberikan pelayanan pelanggan yang ramah dan efisien.
         </li>
       </ul>
-    </div>
+    </section>
 
-    <!-- Proyek -->
-    <div class="section" data-id>
+    <section class="section" id="projects">
       <h2>Proyek</h2>
-      <p>
-        <b>Bloomberg-style Portfolio Tracker</b> – Platform web yang memungkinkan pengguna melacak portofolio 
-        tanpa login, menyimpan data secara independen dengan integrasi Supabase, dilengkapi dengan halaman 
-        laboratorium untuk uji coba strategi trading, analisis pola historis, eksekusi dengan bot, serta 
-        koneksi langsung ke wallet (DEX/CEX/broker). Sistem ini juga mengintegrasikan berita relevan sesuai 
-        kepemilikan investasi pengguna.
-      </p>
-    </div>
-    <div class="section" data-en style="display:none">
-      <h2>Project</h2>
-      <p>
-        <b>Bloomberg-style Portfolio Tracker</b> – A web platform that enables users to track portfolios 
-        without login, store data independently with Supabase integration, equipped with a lab page for 
-        strategy testing, historical pattern analysis, bot execution, and direct connection to wallets 
-        (DEX/CEX/broker). The system also integrates relevant news tailored to the user’s investment holdings.
-      </p>
-    </div>
+      <ul>
+        <li><strong>Bloomberg-Style Portfolio Tracker</strong><br>
+          Membangun situs pelacak portofolio tanpa login dengan integrasi <em>Supabase</em>, 
+          memungkinkan tiap pengguna menyimpan data investasinya secara independen. 
+          Aplikasi dilengkapi <em>Lab Trading</em> untuk uji coba strategi, analisis pola pasar historis, 
+          eksekusi otomatis melalui bot, serta halaman trading nyata via koneksi wallet DEX/CEX.  
+          Fitur tambahan berupa agregasi berita yang relevan dengan portofolio sehingga mendukung keputusan investasi secara kontekstual.
+        </li>
+      </ul>
+    </section>
 
-    <!-- Keterampilan -->
-    <div class="section" data-id>
+    <section class="section" id="skills">
       <h2>Keterampilan</h2>
       <ul>
-        <li>Pengembangan Web (React, Supabase)</li>
-        <li>Analisis Pasar & Investasi</li>
-        <li>Pembinaan Komunitas</li>
-        <li>Kemampuan Bahasa: Indonesia, Inggris</li>
+        <li>Analisis Pasar Kripto & Saham</li>
+        <li>Manajemen Portofolio & Strategi Investasi</li>
+        <li>Komunikasi & Bimbingan Komunitas</li>
+        <li>HTML, CSS, JavaScript, Git & GitHub, Vercel</li>
+        <li>Manajemen Waktu & Kerja Tim</li>
+        <li>Pelayanan Pelanggan</li>
+        <li>Berpikir Analitis</li>
+        <li>Bahasa: Indonesia (aktif), Inggris (profesional)</li>
       </ul>
-    </div>
-    <div class="section" data-en style="display:none">
-      <h2>Skills</h2>
-      <ul>
-        <li>Web Development (React, Supabase)</li>
-        <li>Market & Investment Analysis</li>
-        <li>Community Coaching</li>
-        <li>Languages: Indonesian, English</li>
-      </ul>
-    </div>
+    </section>
 
-    <div class="qr">
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://ademiando.com/cv" alt="QR Code CV">
-      <p><small>Scan untuk versi online</small></p>
-    </div>
+    <section class="section" id="interests">
+      <h2>Minat</h2>
+      <p>Mendaki gunung, mengeksplorasi ekonomi makro, filsafat, politik, serta mengembangkan aplikasi berbasis data untuk mendukung perjalanan investasi.</p>
+    </section>
+
+    <footer>
+      <p>Scan untuk versi online:</p>
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://ademiando.com/cv" alt="QR CV">
+    </footer>
   </div>
 
   <script>
-    // Toggle Bahasa
-    const toggle = document.getElementById('langToggle');
-    toggle.addEventListener('click', () => {
-      document.querySelectorAll('[data-id]').forEach(el => el.style.display = el.style.display === 'none' ? '' : 'none');
-      document.querySelectorAll('[data-en]').forEach(el => el.style.display = el.style.display === 'none' ? '' : 'none');
+    // Toggle bahasa
+    const langToggle = document.getElementById('langToggle');
+    let lang = 'id';
+    langToggle.addEventListener('click', () => {
+      lang = lang === 'id' ? 'en' : 'id';
+      if (lang === 'en') {
+        document.getElementById('summary').querySelector('h2').innerText = 'Summary';
+        document.getElementById('summary').querySelector('p').innerText = 
+          "A proactive and self-taught individual with hands-on experience in crypto and stock investments since 2020. Strongly interested in technology, data, and programming (HTML, CSS, JavaScript) to build analysis, automation, and portfolio visualization tools that support a structured and sustainable investment journey.";
+        
+        document.getElementById('experience').querySelector('h2').innerText = 'Experience';
+        document.getElementById('experience').querySelector('ul').innerHTML = `
+          <li><strong>Crypto Community Instructor & Analyst (2020 - 2022)</strong><br>
+            - Guided new players in the <em>Axie Infinity</em> ecosystem, including strategies and digital asset management.<br>
+            - Acted as a trainer, helping the community understand both opportunities and risks in crypto.<br>
+            - Engaged in forums, built portfolio strategies, and conducted both fundamental and technical analysis.
+          </li>
+          <li><strong>Fruit Salad Entrepreneur (2022 - 2023)</strong><br>
+            - Managed a small business from production to marketing.<br>
+            - Built customer loyalty and achieved sales targets.
+          </li>
+          <li><strong>Barista (2023 - Present)</strong><br>
+            - Served high-quality coffee.<br>
+            - Delivered friendly and efficient customer service.
+          </li>
+        `;
+
+        document.getElementById('projects').querySelector('h2').innerText = 'Project';
+        document.getElementById('projects').querySelector('ul').innerHTML = `
+          <li><strong>Bloomberg-Style Portfolio Tracker</strong><br>
+            Built a portfolio tracking site without login using <em>Supabase</em>, 
+            enabling users to store their investment data independently. 
+            Features include a <em>Trading Lab</em> for strategy testing, historical market pattern analysis, 
+            automated execution via bots, and live trading through wallet connection (DEX/CEX).  
+            An additional feature aggregates news relevant to the user’s portfolio to support contextual investment decisions.
+          </li>
+        `;
+
+        document.getElementById('skills').querySelector('h2').innerText = 'Skills';
+        document.getElementById('skills').querySelector('ul').innerHTML = `
+          <li>Crypto & Stock Market Analysis</li>
+          <li>Portfolio Management & Investment Strategy</li>
+          <li>Community Communication & Mentoring</li>
+          <li>HTML, CSS, JavaScript, Git & GitHub, Vercel</li>
+          <li>Time Management & Teamwork</li>
+          <li>Customer Service</li>
+          <li>Analytical Thinking</li>
+          <li>Languages: Indonesian (native), English (professional)</li>
+        `;
+
+        document.getElementById('interests').querySelector('h2').innerText = 'Interests';
+        document.getElementById('interests').querySelector('p').innerText = 
+          "Hiking, exploring macroeconomics, philosophy, politics, and developing data-driven applications to support investment journey.";
+      } else {
+        location.reload(); // reload ke bahasa Indonesia default
+      }
     });
-    // Ganti warna accent
-    document.getElementById('colorPicker').addEventListener('input', e => {
-      document.documentElement.style.setProperty('--accent', e.target.value);
+
+    // Color picker
+    const colorPicker = document.getElementById('colorPicker');
+    colorPicker.addEventListener('input', (e) => {
+      const hex = e.target.value;
+      const r = parseInt(hex.substr(1,2),16);
+      const g = parseInt(hex.substr(3,2),16);
+      const b = parseInt(hex.substr(5,2),16);
+      document.documentElement.style.setProperty('--r', r);
+      document.documentElement.style.setProperty('--g', g);
+      document.documentElement.style.setProperty('--b', b);
     });
   </script>
 </body>
