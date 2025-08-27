@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV Ade Oftomiando</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 0; padding: 0;
+      background: #f8f9fa; color: #333;
+      line-height: 1.6;
+    }
+    header.control-bar {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: #fff; border-bottom: 1px solid #ddd;
+      padding: 8px 16px; display: flex; gap: 12px;
+      align-items: center; z-index: 1000;
+    }
+    header.control-bar button, header.control-bar select {
+      border: 1px solid #ccc; background: #fff;
+      padding: 6px 12px; border-radius: 6px;
+      cursor: pointer; font-size: 14px;
+    }
+    header.control-bar button:hover,
+    header.control-bar select:hover { background: #f0f0f0; }
+    @media print {
+      header.control-bar { display: none; }
+      body { background: #fff; }
+    }
+    main {
+      max-width: 900px; margin: 100px auto 50px auto;
+      background: #fff; padding: 40px;
+      border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 { font-size: 28px; margin-bottom: 0; color: var(--primary, #1e88e5); }
+    h2 { font-size: 20px; margin-top: 28px; color: var(--primary, #1e88e5); border-bottom: 1px solid #eee; padding-bottom: 4px; }
+    .contact { margin-top: 8px; font-size: 14px; color: #555; }
+    .contact a { color: #555; text-decoration: none; margin-right: 14px; }
+    .section { margin-top: 20px; }
+    ul { padding-left: 20px; margin: 0; }
+    li { margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <!-- Control Bar -->
+  <header class="control-bar">
+    <button onclick="toggleLanguage()">🌐 Bahasa: <span id="langLabel">ID</span></button>
+    <select id="themeSelect" onchange="setTheme(this.value)">
+      <option value="blue">Biru</option>
+      <option value="green">Hijau</option>
+      <option value="purple">Ungu</option>
+      <option value="amber">Amber</option>
+      <option value="slate">Slate</option>
+    </select>
+    <button onclick="window.print()"><i class="fa fa-print"></i> Cetak</button>
+  </header>
+
+  <!-- CV Content -->
+  <main id="cv">
+    <section class="intro">
+      <h1 id="name">Ade Oftomiando</h1>
+      <div class="contact">
+        <i class="fa fa-location-dot"></i> Wonosobo, Indonesia | 10 Mei 1999<br>
+        <a href="mailto:ademiandoo@gmail.com"><i class="fa fa-envelope"></i> ademiandoo@gmail.com</a>
+        <a href="tel:+6285726951002"><i class="fa fa-phone"></i> 085726951002</a>
+        <a href="https://wa.me/6285726951002"><i class="fa fa-brands fa-whatsapp"></i> WhatsApp</a>
+        <a href="https://github.com/ademiando"><i class="fa fa-brands fa-github"></i> GitHub</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 id="summaryTitle">Ringkasan Diri</h2>
+      <p id="summaryText">
+        Individu proaktif dan autodidak dengan pengalaman investasi kripto dan saham sejak 2020. 
+        Terbiasa membaca tren pasar, mengelola risiko, dan memanfaatkan peluang. 
+        Saat ini mendalami pemrograman (HTML, CSS, JavaScript) untuk membangun aplikasi analisis data, 
+        automasi, dan visualisasi portofolio—menggabungkan analisis finansial dengan teknologi.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2 id="experienceTitle">Pengalaman</h2>
+      <ul id="experienceList">
+        <li>
+          <b>Barista</b> (2023 – Sekarang)<br>
+          Menyajikan kopi dengan standar tinggi dan menghadirkan pengalaman pelanggan yang hangat melalui layanan efisien.
+        </li>
+        <li>
+          <b>Instruktur & Analis Komunitas Kripto</b> (2020 – Sekarang)<br>
+          Membimbing anggota baru dengan strategi investasi, menjelaskan konsep fundamental, dan menganalisis tren pasar.
+        </li>
+        <li>
+          <b>Pengusaha Salad Buah</b> (2022 – 2023)<br>
+          Mengelola operasional bisnis kecil dari produksi hingga pemasaran, membangun loyalitas pelanggan.
+        </li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2 id="projectsTitle">Proyek</h2>
+      <ul id="projectsList">
+        <li><b>Aplikasi Pelacak Harga Kripto (Web)</b> — Web app untuk menampilkan harga kripto real-time dari API publik.</li>
+        <li><b>Agregator Berita Investasi</b> — Platform pengumpul berita ekonomi & kripto terpercaya untuk analisis fundamental.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2 id="skillsTitle">Keterampilan</h2>
+      <p id="skillsText">
+        Analisis Pasar, Manajemen Portofolio, Komunikasi Komunitas, HTML, CSS, JavaScript, Git, Vercel, 
+        Manajemen Waktu, Kerja Tim, Layanan Pelanggan, Berpikir Analitis.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2 id="interestsTitle">Minat & Hobi</h2>
+      <p id="interestsText">
+        Mendaki gunung, riset ekonomi makro, filsafat, politik, dan investasi jangka panjang.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    const langData = {
+      id: {
+        summaryTitle: "Ringkasan Diri",
+        summaryText: "Individu proaktif dan autodidak dengan pengalaman investasi kripto dan saham sejak 2020. Terbiasa membaca tren pasar, mengelola risiko, dan memanfaatkan peluang. Saat ini mendalami pemrograman (HTML, CSS, JavaScript) untuk membangun aplikasi analisis data, automasi, dan visualisasi portofolio—menggabungkan analisis finansial dengan teknologi.",
+        experienceTitle: "Pengalaman",
+        projectsTitle: "Proyek",
+        skillsTitle: "Keterampilan",
+        interestsTitle: "Minat & Hobi",
+        langLabel: "ID"
+      },
+      en: {
+        summaryTitle: "Summary",
+        summaryText: "A proactive and self-taught individual with investment experience in crypto and stocks since 2020. Skilled in reading market trends, managing risks, and seizing opportunities. Currently deepening skills in programming (HTML, CSS, JavaScript) to build data analysis, automation, and portfolio visualization tools—integrating finance with technology.",
+        experienceTitle: "Experience",
+        projectsTitle: "Projects",
+        skillsTitle: "Skills",
+        interestsTitle: "Interests",
+        langLabel: "EN"
+      }
+    };
+    let currentLang = "id";
+    function toggleLanguage() {
+      currentLang = currentLang === "id" ? "en" : "id";
+      const data = langData[currentLang];
+      document.getElementById("summaryTitle").textContent = data.summaryTitle;
+      document.getElementById("summaryText").textContent = data.summaryText;
+      document.getElementById("experienceTitle").textContent = data.experienceTitle;
+      document.getElementById("projectsTitle").textContent = data.projectsTitle;
+      document.getElementById("skillsTitle").textContent = data.skillsTitle;
+      document.getElementById("interestsTitle").textContent = data.interestsTitle;
+      document.getElementById("langLabel").textContent = data.langLabel;
+    }
+    function setTheme(theme) {
+      const colors = {
+        blue: "#1e88e5", green: "#2e7d32", purple: "#6a1b9a",
+        amber: "#ff8f00", slate: "#37474f"
+      };
+      document.documentElement.style.setProperty("--primary", colors[theme]);
+      localStorage.setItem("theme", theme);
+    }
+    const savedTheme = localStorage.getItem("theme") || "blue";
+    setTheme(savedTheme);
+    document.getElementById("themeSelect").value = savedTheme;
+  </script>
+</body>
+</html>
