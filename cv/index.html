@@ -1,216 +1,187 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CV — Ade Oftomiando</title>
-  <meta name="description" content="CV profesional Ade Oftomiando — ringkasan, pengalaman, proyek, pendidikan, keterampilan, dan minat." />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV Ade Oftomiando</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root{
-      --bg:#f6f8fb; --card:#ffffff; --muted:#6b7280; --accent:#0f74ff; --glass: rgba(255,255,255,0.6);
-      --radius:12px; --shadow: 0 6px 24px rgba(17,24,39,0.08);
-    }
-    [data-theme="dark"]{ --bg:#0b1020; --card:#071226; --muted:#9aa6bf; --accent:#5fb0ff; --glass: rgba(255,255,255,0.03); }
-    *{box-sizing:border-box}
-    html,body{height:100%; margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); color:var(--muted); -webkit-font-smoothing:antialiased}
-    .container{max-width:1000px;margin:28px auto;padding:20px}
-    .grid{display:grid;grid-template-columns:320px 1fr;gap:20px}
-    @media (max-width:820px){.grid{grid-template-columns:1fr}}/* Sidebar */
-.card{background:linear-gradient(180deg,var(--card),var(--glass));padding:22px;border-radius:var(--radius);box-shadow:var(--shadow)}
-.profile{display:flex;flex-direction:column;gap:8px}
-h1{margin:0;font-size:22px;color:var(--accent)}
-.muted{color:var(--muted);font-size:14px}
-.contact{margin-top:12px;display:flex;flex-direction:column;gap:6px}
-.chip{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;background:rgba(0,0,0,0.03);font-size:13px}
-.section-title{font-weight:700;color:var(--accent);margin:12px 0}
-
-/* Main */
-.main{display:flex;flex-direction:column;gap:14px}
-.summary p{color:#243447;line-height:1.5;margin:0}
-.exp-item{border-left:3px solid rgba(15,116,255,0.12);padding:12px 14px;margin-bottom:8px;border-radius:8px;background:linear-gradient(180deg,rgba(15,116,255,0.03),transparent)}
-.exp-item h4{margin:0;color:#0b1220}
-.exp-meta{font-size:13px;color:var(--muted);margin-top:6px}
-
-/* Projects */
-.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.proj{padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(15,116,255,0.03),transparent);box-shadow:0 4px 14px rgba(2,6,23,0.04)}
-.proj a{display:inline-block;margin-right:8px;margin-top:8px;text-decoration:none}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;border:0;background:var(--accent);color:white;font-weight:600;cursor:pointer}
-.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted)}
-
-/* Skills */
-.skill-list{display:flex;flex-wrap:wrap;gap:8px}
-.skill{padding:8px 10px;border-radius:999px;background:rgba(0,0,0,0.04);font-size:13px}
-
-/* Footer actions */
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-
-a{color:inherit}
-.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,0,0,0.04),transparent);margin:8px 0;border-radius:99px}
-
-button:focus, a:focus{outline:3px solid rgba(15,116,255,0.15);outline-offset:3px}
-
+    body { font-family: 'Inter', sans-serif; }
+    .section-title { @apply text-xl font-semibold border-b pb-1 mb-3; }
   </style>
 </head>
-<body>
-  <div class="container" id="cv-root">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+<body class="bg-gray-100 text-gray-800">
+  <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 my-10">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
       <div>
-        <strong class="muted">Curriculum Vitae — Profesional</strong>
+        <h1 class="text-3xl font-bold">Ade Oftomiando</h1>
+        <p class="text-gray-600">Wonosobo, Indonesia | 10 Mei 1999</p>
       </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button class="btn ghost" id="toggle-theme" aria-pressed="false">Toggle Tema</button>
-        <button class="btn" id="print-btn">Cetak / Simpan PDF</button>
-      </div>
-    </div><div class="grid">
-  <!-- SIDEBAR -->
-  <aside class="card" aria-label="Informasi kontak dan ringkasan singkat">
-    <div class="profile">
-      <h1>Ade Oftomiando</h1>
-      <div class="muted">Wonosobo, Indonesia • 10 Mei 1999</div>
-    </div>
-
-    <div class="contact" role="list">
-      <div class="chip" role="listitem"><strong>Email</strong>&nbsp;&nbsp;<span style="margin-left:auto">ademiandoo@gmail.com</span></div>
-      <div class="chip" role="listitem"><strong>Telepon</strong>&nbsp;&nbsp;<span style="margin-left:auto">0857-2695-1002</span></div>
-      <div class="chip" role="listitem"><strong>GitHub</strong>&nbsp;&nbsp;<a href="https://github.com/ademiando" target="_blank" rel="noopener">@ademiando</a></div>
-    </div>
-
-    <div class="divider" aria-hidden></div>
-    <div>
-      <div class="section-title">Ringkasan Diri</div>
-      <p style="color:#223047;font-size:14px;line-height:1.5">Individu proaktif dan autodidak dengan pengalaman investasi kripto dan pasar saham sejak 2020. Saat ini mengembangkan keterampilan pemrograman web (HTML, CSS, JavaScript) untuk membangun aplikasi analisis data, automasi, dan visualisasi portofolio demi mendukung keputusan investasi yang lebih tepat dan terukur.</p>
-    </div>
-
-    <div class="divider" aria-hidden></div>
-    <div>
-      <div class="section-title">Keterampilan</div>
-      <div class="skill-list">
-        <span class="skill">Analisis Pasar Kripto</span>
-        <span class="skill">Manajemen Portofolio</span>
-        <span class="skill">HTML</span>
-        <span class="skill">CSS</span>
-        <span class="skill">JavaScript</span>
-        <span class="skill">Git & GitHub</span>
-        <span class="skill">Vercel</span>
-        <span class="skill">Komunikasi Komunitas</span>
-        <span class="skill">Pelayanan Pelanggan</span>
+      <div class="mt-4 sm:mt-0">
+        <p>📧 <a href="mailto:ademiandoo@gmail.com" class="text-blue-600 hover:underline">ademiandoo@gmail.com</a></p>
+        <p>📱 085726951002</p>
+        <p>💼 ademiando</p>
       </div>
     </div>
 
-    <div class="divider" aria-hidden></div>
-    <div>
-      <div class="section-title">Minat</div>
-      <p class="muted" style="margin:0;font-size:14px">Mendaki gunung, mendalami ekonomi makro, filsafat, politik, serta riset dan investasi pasar.</p>
+    <!-- Toggle Bahasa -->
+    <div class="flex justify-end mb-6">
+      <select id="lang" class="border rounded-lg px-3 py-1 text-sm">
+        <option value="id">Bahasa Indonesia</option>
+        <option value="en">English</option>
+      </select>
     </div>
-  </aside>
 
-  <!-- MAIN -->
-  <main class="main">
-    <section class="card" aria-labelledby="experience-title">
-      <h2 id="experience-title" class="section-title">Pengalaman</h2>
+    <!-- Konten -->
+    <div id="content">
+      <!-- Ringkasan -->
+      <section class="mb-6">
+        <h2 class="section-title">Ringkasan Diri</h2>
+        <p>
+          Saya adalah individu yang proaktif dan autodidak, dengan pengalaman mendalam di dunia investasi kripto dan saham sejak tahun 2020. 
+          Perjalanan ini telah membentuk ketajaman analitis saya dalam membaca tren pasar, mengelola risiko, dan menemukan peluang strategis. 
+          Saat ini saya mengembangkan keterampilan teknis dalam pemrograman (HTML, CSS, JavaScript) untuk merancang aplikasi analisis data, 
+          automasi, dan visualisasi portofolio yang mendukung pengambilan keputusan investasi berbasis teknologi.
+        </p>
+      </section>
 
-      <div class="exp-item">
-        <h4>Instruktur & Analis Komunitas Kripto</h4>
-        <div class="exp-meta">2020 — Sekarang</div>
-        <ul style="margin-top:8px;color:#243447;line-height:1.6">
-          <li>Membimbing pemain baru di ekosistem kripto (Axie Infinity) dengan strategi dan pemahaman fundamental.</li>
-          <li>Berpartisipasi dalam forum komunitas, mengikuti tren pasar, dan menyusun strategi investasi pribadi.</li>
-        </ul>
-      </div>
-
-      <div class="exp-item">
-        <h4>Barista</h4>
-        <div class="exp-meta">2023 — Sekarang</div>
-        <ul style="margin-top:8px;color:#243447;line-height:1.6">
-          <li>Menyajikan produk minuman kopi dengan standar kualitas tinggi.</li>
-          <li>Meningkatkan pengalaman pelanggan melalui interaksi ramah dan layanan efisien.</li>
-        </ul>
-      </div>
-
-      <div class="exp-item">
-        <h4>Pengusaha — Salad Buah (UMKM)</h4>
-        <div class="exp-meta">2022 — 2023</div>
-        <ul style="margin-top:8px;color:#243447;line-height:1.6">
-          <li>Mengelola operasional usaha kecil: produksi, pemasaran, hingga membangun loyalitas pelanggan.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="card" aria-labelledby="projects-title">
-      <h2 id="projects-title" class="section-title">Proyek</h2>
-      <div class="projects">
-        <div class="proj">
-          <strong>Aplikasi Pelacak Harga Kripto (Web)</strong>
-          <div class="muted" style="font-size:13px">Aplikasi web sederhana untuk menampilkan harga kripto real-time dari API publik.</div>
-          <div style="margin-top:8px">
-            <a class="btn ghost" href="#demo-crypto">Demo</a>
-            <a class="btn" href="https://github.com/ademiando/crypto-tracker" target="_blank" rel="noopener">GitHub</a>
-          </div>
+      <!-- Pengalaman -->
+      <section class="mb-6">
+        <h2 class="section-title">Pengalaman</h2>
+        <div class="mb-4">
+          <h3 class="font-semibold">Instruktur & Analis Komunitas Kripto <span class="text-gray-500">(2020 – Sekarang)</span></h3>
+          <p>
+            Membimbing anggota baru memahami strategi investasi serta konsep fundamental. 
+            Aktif dalam forum komunitas untuk berbagi wawasan pasar dan mengembangkan strategi portofolio pribadi.
+          </p>
         </div>
-
-        <div class="proj">
-          <strong>Agregator Berita Investasi</strong>
-          <div class="muted" style="font-size:13px">Halaman web untuk mengumpulkan berita ekonomi makro dan kripto dari sumber terpercaya.</div>
-          <div style="margin-top:8px">
-            <a class="btn ghost" href="#demo-news">Demo</a>
-            <a class="btn" href="https://github.com/ademiando/news-aggregator" target="_blank" rel="noopener">GitHub</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="card" aria-labelledby="education-title">
-      <h2 id="education-title" class="section-title">Pendidikan</h2>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div>
-          <strong>Ilmu Pemerintahan — Universitas Muhammadiyah Yogyakarta</strong>
-          <div class="exp-meta">2018 — 2020 (Studi tidak selesai)</div>
+        <div class="mb-4">
+          <h3 class="font-semibold">Barista <span class="text-gray-500">(2023 – Sekarang)</span></h3>
+          <p>
+            Menyajikan kopi dengan standar kualitas tinggi sekaligus membangun pengalaman pelanggan yang hangat melalui interaksi personal 
+            dan pelayanan yang efisien.
+          </p>
         </div>
         <div>
-          <strong>Studi Agama — UIN Sunan Kalijaga</strong>
-          <div class="exp-meta">2018 — 2020 (Studi tidak selesai)</div>
+          <h3 class="font-semibold">Pengusaha Salad Buah <span class="text-gray-500">(2022 – 2023)</span></h3>
+          <p>
+            Mengelola bisnis kecil dari produksi hingga pemasaran, menjaga kepuasan pelanggan, serta membangun loyalitas melalui konsistensi dan layanan.
+          </p>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="card" aria-labelledby="extras-title">
-      <h2 id="extras-title" class="section-title">Tindakan</h2>
-      <div class="actions">
-        <button class="btn" onclick="copyEmail()">Salin Email</button>
-        <button class="btn ghost" onclick="scrollToSection('projects-title')">Lihat Proyek</button>
-        <button class="btn ghost" onclick="scrollToSection('experience-title')">Lihat Pengalaman</button>
-      </div>
-    </section>
+      <!-- Proyek -->
+      <section class="mb-6">
+        <h2 class="section-title">Proyek</h2>
+        <div class="mb-4">
+          <h3 class="font-semibold">Aplikasi Pelacak Harga Kripto (Web)</h3>
+          <p>
+            Aplikasi web sederhana untuk menampilkan harga kripto secara <em>real-time</em> menggunakan API publik.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-semibold">Agregator Berita Investasi</h3>
+          <p>
+            Platform yang mengumpulkan berita utama terkait ekonomi makro dan kripto dari sumber terpercaya, 
+            untuk mendukung analisis fundamental dalam pengambilan keputusan.
+          </p>
+        </div>
+      </section>
 
-  </main>
-</div>
+      <!-- Keterampilan -->
+      <section class="mb-6">
+        <h2 class="section-title">Keterampilan</h2>
+        <p>
+          Analisis Pasar, Manajemen Portofolio, Komunikasi Komunitas, HTML, CSS, JavaScript, Git, Vercel, 
+          Manajemen Waktu, Kerja Tim, Layanan Pelanggan, Berpikir Analitis.
+        </p>
+      </section>
 
-  </div>  <script>
-    const btn = document.getElementById('toggle-theme');
-    const printBtn = document.getElementById('print-btn');
-    const saved = localStorage.getItem('cv-theme');
-    if(saved) document.documentElement.setAttribute('data-theme', saved);
+      <!-- Minat -->
+      <section>
+        <h2 class="section-title">Minat & Hobi</h2>
+        <p>
+          Mendaki gunung, riset ekonomi makro, filsafat, politik, dan investasi jangka panjang.
+        </p>
+      </section>
+    </div>
+  </div>
 
-    btn.addEventListener('click', ()=>{
-      const current = document.documentElement.getAttribute('data-theme');
-      const next = current === 'dark' ? '' : 'dark';
-      if(next) document.documentElement.setAttribute('data-theme', next); else document.documentElement.removeAttribute('data-theme');
-      localStorage.setItem('cv-theme', next);
-      btn.setAttribute('aria-pressed', next === 'dark');
+  <script>
+    const content = {
+      id: document.getElementById("content").innerHTML,
+      en: `
+      <section class="mb-6">
+        <h2 class="section-title">Summary</h2>
+        <p>
+          I am a proactive and self-taught individual with extensive experience in cryptocurrency and stock investments since 2020. 
+          This journey has sharpened my analytical skills in reading market trends, managing risks, and identifying strategic opportunities. 
+          Currently, I am developing technical expertise in programming (HTML, CSS, JavaScript) to design data analysis tools, 
+          automation systems, and portfolio visualization that bridge financial insight with technology.
+        </p>
+      </section>
+
+      <section class="mb-6">
+        <h2 class="section-title">Experience</h2>
+        <div class="mb-4">
+          <h3 class="font-semibold">Crypto Community Instructor & Analyst <span class="text-gray-500">(2020 – Present)</span></h3>
+          <p>
+            Guided newcomers through investment strategies and fundamental concepts. 
+            Actively engaged in community forums to share insights and consistently develop personal portfolio strategies.
+          </p>
+        </div>
+        <div class="mb-4">
+          <h3 class="font-semibold">Barista <span class="text-gray-500">(2023 – Present)</span></h3>
+          <p>
+            Delivered high-quality coffee while creating warm customer experiences through personal interaction and efficient service.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-semibold">Fruit Salad Entrepreneur <span class="text-gray-500">(2022 – 2023)</span></h3>
+          <p>
+            Managed a small business from production to marketing, maintained customer satisfaction, and built loyalty through consistency and care.
+          </p>
+        </div>
+      </section>
+
+      <section class="mb-6">
+        <h2 class="section-title">Projects</h2>
+        <div class="mb-4">
+          <h3 class="font-semibold">Crypto Price Tracker (Web)</h3>
+          <p>
+            A simple web application that displays real-time cryptocurrency prices using public APIs.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-semibold">Investment News Aggregator</h3>
+          <p>
+            A platform that compiles key news on macroeconomics and crypto from reliable sources, 
+            supporting fundamental analysis for decision-making.
+          </p>
+        </div>
+      </section>
+
+      <section class="mb-6">
+        <h2 class="section-title">Skills</h2>
+        <p>
+          Market Analysis, Portfolio Management, Community Communication, HTML, CSS, JavaScript, Git, Vercel, 
+          Time Management, Teamwork, Customer Service, Analytical Thinking.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="section-title">Interests</h2>
+        <p>
+          Hiking, macroeconomic research, philosophy, politics, and long-term investing.
+        </p>
+      </section>
+      `
+    };
+
+    document.getElementById("lang").addEventListener("change", e => {
+      document.getElementById("content").innerHTML = content[e.target.value];
     });
-
-    printBtn.addEventListener('click', ()=>{ window.print(); });
-
-    function copyEmail(){
-      navigator.clipboard.writeText('ademiandoo@gmail.com').then(()=>{
-        alert('Email tersalin: ademiandoo@gmail.com');
-      });
-    }
-    function scrollToSection(id){
-      const el = document.getElementById(id);
-      if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
-    }
-  </script></body>
+  </script>
+</body>
 </html>
