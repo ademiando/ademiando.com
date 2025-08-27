@@ -1,245 +1,232 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CV — Ade Oftomiando</title>
-  <meta name="description" content="CV profesional Ade Oftomiando — ringkasan, pengalaman, proyek, pendidikan, keterampilan, dan minat." />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV - Ade Oftomiando</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    :root{
-      --bg:#f6f8fb; --card:#ffffff; --muted:#6b7280; --accent:#0f74ff; --glass: rgba(255,255,255,0.6);
-      --radius:12px; --shadow: 0 6px 24px rgba(17,24,39,0.08);
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
     }
-    [data-theme="dark"]{ --bg:#0b1020; --card:#071226; --muted:#9aa6bf; --accent:#5fb0ff; --glass: rgba(255,255,255,0.03); }
-    *{box-sizing:border-box}
-    html,body{height:100%; margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); color:var(--muted); -webkit-font-smoothing:antialiased}
-    .container{max-width:1000px;margin:28px auto;padding:20px}
-    .grid{display:grid;grid-template-columns:320px 1fr;gap:20px}
-    @media (max-width:820px){.grid{grid-template-columns:1fr}}/* Sidebar */
-.card{background:linear-gradient(180deg,var(--card),var(--glass));padding:22px;border-radius:var(--radius);box-shadow:var(--shadow)}
-.profile{display:flex;flex-direction:column;gap:8px}
-h1{margin:0;font-size:22px;color:var(--accent)}
-.muted{color:var(--muted);font-size:14px}
-.contact{margin-top:12px;display:flex;flex-direction:column;gap:6px}
-.chip{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;background:rgba(0,0,0,0.03);font-size:13px}
-.section-title{font-weight:700;color:var(--accent);margin:12px 0}
-
-/* Main */
-.main{display:flex;flex-direction:column;gap:14px}
-.summary p{color:#243447;line-height:1.5;margin:0}
-.exp-item{border-left:3px solid rgba(15,116,255,0.12);padding:12px 14px;margin-bottom:8px;border-radius:8px;background:linear-gradient(180deg,rgba(15,116,255,0.03),transparent)}
-.exp-item h4{margin:0;color:#0b1220}
-.exp-meta{font-size:13px;color:var(--muted);margin-top:6px}
-
-/* Projects */
-.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.proj{padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(15,116,255,0.03),transparent);box-shadow:0 4px 14px rgba(2,6,23,0.04)}
-.proj a{display:inline-block;margin-right:8px;margin-top:8px;text-decoration:none}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;border:0;background:var(--accent);color:white;font-weight:600;cursor:pointer}
-.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted)}
-
-/* Skills */
-.skill-list{display:flex;flex-wrap:wrap;gap:8px}
-.skill{padding:8px 10px;border-radius:999px;background:rgba(0,0,0,0.04);font-size:13px}
-
-/* Footer actions */
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-
-a{color:inherit}
-.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,0,0,0.04),transparent);margin:8px 0;border-radius:99px}
-
-button:focus, a:focus{outline:3px solid rgba(15,116,255,0.15);outline-offset:3px}
-  /* Color themes */
-:root, [data-color="blue"]{ --accent:#0f74ff; }
-[data-color="green"]{ --accent:#1ba97f; }
-[data-color="purple"]{ --accent:#7a5cff; }
-[data-color="amber"]{ --accent:#e29b00; }
-[data-color="slate"]{ --accent:#64748b; }
-
+    .container {
+      max-width: 850px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+      font-weight: 700;
+    }
+    header p {
+      margin: 5px 0;
+      font-size: 1em;
+      color: #666;
+    }
+    .contact {
+      margin-top: 10px;
+      font-size: 0.95em;
+    }
+    .contact a {
+      margin: 0 8px;
+      text-decoration: none;
+      color: #333;
+    }
+    h2 {
+      border-bottom: 2px solid #eee;
+      padding-bottom: 5px;
+      margin-top: 30px;
+      color: #444;
+      font-size: 1.3em;
+    }
+    .section {
+      margin-top: 20px;
+    }
+    .job {
+      margin-bottom: 20px;
+    }
+    .job h3 {
+      margin: 0;
+      font-size: 1.1em;
+      font-weight: 600;
+    }
+    .job span {
+      font-size: 0.9em;
+      color: #666;
+    }
+    ul {
+      margin: 8px 0 0 20px;
+    }
+    .controls {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+    .controls button {
+      background: #444;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 10px;
+      font-size: 0.9em;
+    }
+    .controls button:hover {
+      background: #222;
+    }
+    /* Print styling */
+    @media print {
+      body {
+        background: #fff;
+      }
+      .controls {
+        display: none;
+      }
+      .container {
+        box-shadow: none;
+        border-radius: 0;
+        margin: 0;
+        padding: 20px;
+      }
+      @page {
+        size: A4;
+        margin: 1.5cm;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="container" id="cv-root">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <div>
-        <strong class="muted">Curriculum Vitae — Profesional</strong>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <label class="muted" for="color-select" style="font-size:13px">Warna:</label>
-        <select id="color-select" aria-label="Pilih warna tema" style="padding:8px 10px;border-radius:10px;border:1px solid rgba(0,0,0,0.08);background:var(--card);color:#111827">
-          <option value="blue">Biru</option>
-          <option value="green">Hijau</option>
-          <option value="purple">Ungu</option>
-          <option value="amber">Amber</option>
-          <option value="slate">Slate</option>
-        </select>
-        <button class="btn ghost" id="toggle-theme" aria-pressed="false">Toggle Tema</button>
-        <button class="btn" id="print-btn">Cetak / Simpan PDF</button>
-      </div>
-    </div><div class="grid">
-  <!-- SIDEBAR -->
-  <aside class="card" aria-label="Informasi kontak dan ringkasan singkat">
-    <div class="profile">
+  <div class="controls">
+    <button onclick="toggleLang()"><i class="fa-solid fa-globe"></i> Bahasa</button>
+    <button onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button>
+  </div>
+  <div class="container" id="cv">
+
+    <header>
       <h1>Ade Oftomiando</h1>
-      <div class="muted">Wonosobo, Indonesia • 10 Mei 1999</div>
-    </div>
-
-    <div class="contact" role="list">
-      <div class="chip" role="listitem"><strong>Email</strong>&nbsp;&nbsp;<span style="margin-left:auto">ademiandoo@gmail.com</span></div>
-      <div class="chip" role="listitem"><strong>Telepon</strong>&nbsp;&nbsp;<span style="margin-left:auto">0857-2695-1002</span></div>
-      <div class="chip" role="listitem"><strong>GitHub</strong>&nbsp;&nbsp;<a href="https://github.com/ademiando" target="_blank" rel="noopener">@ademiando</a></div>
-    </div>
-
-    <div class="divider" aria-hidden></div>
-    <div>
-      <div class="section-title">Ringkasan Diri</div>
-      <p style="color:#223047;font-size:14px;line-height:1.5">Individu proaktif dan autodidak dengan pengalaman investasi kripto dan pasar saham sejak 2020. Saat ini mengembangkan keterampilan pemrograman web (HTML, CSS, JavaScript) untuk membangun aplikasi analisis data, automasi, dan visualisasi portofolio demi mendukung keputusan investasi yang lebih tepat dan terukur.</p>
-    </div>
-
-    <div class="divider" aria-hidden></div>
-    <div>
-      <div class="section-title">Keterampilan</div>
-      <div class="skill-list">
-        <span class="skill">Analisis Pasar Kripto</span>
-        <span class="skill">Manajemen Portofolio</span>
-        <span class="skill">HTML</span>
-        <span class="skill">CSS</span>
-        <span class="skill">JavaScript</span>
-        <span class="skill">Git & GitHub</span>
-        <span class="skill">Vercel</span>
-        <span class="skill">Komunikasi Komunitas</span>
-        <span class="skill">Pelayanan Pelanggan</span>
+      <p>Wonosobo, Indonesia | 10 Mei 1999</p>
+      <div class="contact">
+        <a href="https://wa.me/6285726951002"><i class="fa-brands fa-whatsapp"></i> 0857-2695-1002</a> |
+        <a href="mailto:ademiandoo@gmail.com"><i class="fa-solid fa-envelope"></i> ademiandoo@gmail.com</a> |
+        <a href="https://github.com/ademiando"><i class="fa-brands fa-github"></i> ademiando</a>
       </div>
-    </div>
+    </header>
 
-    <div class="divider" aria-hidden></div>
-    <div>
-      <div class="section-title">Minat</div>
-      <p class="muted" style="margin:0;font-size:14px">Mendaki gunung, mendalami ekonomi makro, filsafat, politik, serta riset dan investasi pasar.</p>
-    </div>
-  </aside>
+    <!-- Ringkasan -->
+    <section class="section" id="summary">
+      <h2>Ringkasan</h2>
+      <p>
+        Individu yang proaktif dan autodidak dengan pengalaman di dunia investasi kripto dan saham sejak 2020. 
+        Berpengalaman membaca tren pasar, mengelola risiko, serta memanfaatkan peluang investasi secara strategis. 
+        Saat ini mendalami keterampilan pemrograman (HTML, CSS, JavaScript) untuk membangun aplikasi analisis data, 
+        automasi, dan visualisasi portofolio — mengintegrasikan keuangan dengan teknologi.
+      </p>
+    </section>
 
-  <!-- MAIN -->
-  <main class="main">
-    <section class="card" aria-labelledby="experience-title">
-      <h2 id="experience-title" class="section-title">Pengalaman</h2>
+    <!-- Pengalaman -->
+    <section class="section" id="experience">
+      <h2>Pengalaman</h2>
 
-      <div class="exp-item">
-        <h4>Instruktur & Analis Komunitas Kripto</h4>
-        <div class="exp-meta">2020 — Sekarang</div>
-        <ul style="margin-top:8px;color:#243447;line-height:1.6">
-          <li>Membimbing pemain baru di ekosistem kripto (Axie Infinity) dengan strategi dan pemahaman fundamental.</li>
-          <li>Berpartisipasi dalam forum komunitas, mengikuti tren pasar, dan menyusun strategi investasi pribadi.</li>
+      <div class="job">
+        <h3>Instruktur & Analis Komunitas Kripto</h3>
+        <span>2020 – 2022</span>
+        <ul>
+          <li>Membimbing anggota baru dalam memahami konsep fundamental dan strategi investasi di ekosistem kripto.</li>
+          <li>Aktif dalam forum komunitas untuk berbagi analisis pasar dan peluang investasi.</li>
+          <li>Mengelola portofolio pribadi dan melakukan evaluasi strategi secara berkala.</li>
         </ul>
       </div>
 
-      <div class="exp-item">
-        <h4>Barista</h4>
-        <div class="exp-meta">2023 — Sekarang</div>
-        <ul style="margin-top:8px;color:#243447;line-height:1.6">
-          <li>Menyajikan produk minuman kopi dengan standar kualitas tinggi.</li>
-          <li>Meningkatkan pengalaman pelanggan melalui interaksi ramah dan layanan efisien.</li>
+      <div class="job">
+        <h3>Pengusaha Salad Buah</h3>
+        <span>2022 – 2023</span>
+        <ul>
+          <li>Mengelola bisnis kecil secara menyeluruh, mulai dari produksi, pemasaran, hingga layanan pelanggan.</li>
+          <li>Membangun loyalitas pelanggan dan mencapai target penjualan secara konsisten.</li>
         </ul>
       </div>
 
-      <div class="exp-item">
-        <h4>Pengusaha — Salad Buah (UMKM)</h4>
-        <div class="exp-meta">2022 — 2023</div>
-        <ul style="margin-top:8px;color:#243447;line-height:1.6">
-          <li>Mengelola operasional usaha kecil: produksi, pemasaran, hingga membangun loyalitas pelanggan.</li>
+      <div class="job">
+        <h3>Barista</h3>
+        <span>2023 – Sekarang</span>
+        <ul>
+          <li>Menyajikan kopi dengan standar kualitas tinggi.</li>
+          <li>Menciptakan pengalaman pelanggan yang positif melalui interaksi yang ramah dan layanan yang efisien.</li>
         </ul>
       </div>
     </section>
 
-    <section class="card" aria-labelledby="projects-title">
-      <h2 id="projects-title" class="section-title">Proyek</h2>
-      <div class="projects">
-        <div class="proj">
-          <strong>Aplikasi Pelacak Harga Kripto (Web)</strong>
-          <div class="muted" style="font-size:13px">Aplikasi web sederhana untuk menampilkan harga kripto real-time dari API publik.</div>
-          <div style="margin-top:8px">
-            <a class="btn ghost" href="#demo-crypto">Demo</a>
-            <a class="btn" href="https://github.com/ademiando/crypto-tracker" target="_blank" rel="noopener">GitHub</a>
-          </div>
-        </div>
-
-        <div class="proj">
-          <strong>Agregator Berita Investasi</strong>
-          <div class="muted" style="font-size:13px">Halaman web untuk mengumpulkan berita ekonomi makro dan kripto dari sumber terpercaya.</div>
-          <div style="margin-top:8px">
-            <a class="btn ghost" href="#demo-news">Demo</a>
-            <a class="btn" href="https://github.com/ademiando/news-aggregator" target="_blank" rel="noopener">GitHub</a>
-          </div>
-        </div>
+    <!-- Proyek -->
+    <section class="section" id="projects">
+      <h2>Proyek</h2>
+      <div class="job">
+        <h3>Aplikasi Pelacak Harga Kripto (Web)</h3>
+        <ul>
+          <li>Membangun aplikasi web sederhana untuk menampilkan harga kripto secara real-time dari API publik.</li>
+        </ul>
+      </div>
+      <div class="job">
+        <h3>Agregator Berita Investasi</h3>
+        <ul>
+          <li>Mengembangkan platform web untuk mengumpulkan berita ekonomi dan kripto dari berbagai sumber terpercaya.</li>
+        </ul>
       </div>
     </section>
 
-    <section class="card" aria-labelledby="education-title">
-      <h2 id="education-title" class="section-title">Pendidikan</h2>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div>
-          <strong>Ilmu Pemerintahan — Universitas Muhammadiyah Yogyakarta</strong>
-          <div class="exp-meta">2018 — 2020 (Studi tidak selesai)</div>
-        </div>
-        <div>
-          <strong>Studi Agama — UIN Sunan Kalijaga</strong>
-          <div class="exp-meta">2018 — 2020 (Studi tidak selesai)</div>
-        </div>
-      </div>
+    <!-- Keterampilan -->
+    <section class="section" id="skills">
+      <h2>Keterampilan</h2>
+      <ul>
+        <li>Analisis Pasar Kripto & Saham</li>
+        <li>Manajemen Portofolio</li>
+        <li>Komunikasi Komunitas</li>
+        <li>HTML, CSS, JavaScript</li>
+        <li>Git & GitHub</li>
+        <li>Vercel Deployment</li>
+        <li>Manajemen Waktu</li>
+        <li>Kerja Tim</li>
+        <li>Pelayanan Pelanggan</li>
+        <li>Berpikir Analitis</li>
+        <li>Bahasa Inggris (Intermediate)</li>
+      </ul>
     </section>
 
-    <section class="card" aria-labelledby="extras-title">
-      <h2 id="extras-title" class="section-title">Tindakan</h2>
-      <div class="actions">
-        <button class="btn" onclick="copyEmail()">Salin Email</button>
-        <button class="btn ghost" onclick="scrollToSection('projects-title')">Lihat Proyek</button>
-        <button class="btn ghost" onclick="scrollToSection('experience-title')">Lihat Pengalaman</button>
-      </div>
+    <!-- Minat -->
+    <section class="section" id="interests">
+      <h2>Minat</h2>
+      <p>Mendaki gunung, riset ekonomi makro, filsafat, politik, serta investasi jangka panjang.</p>
     </section>
+  </div>
 
-  </main>
-</div>
+  <script>
+    let lang = "id";
+    function toggleLang() {
+      lang = lang === "id" ? "en" : "id";
+      document.getElementById("summary").querySelector("h2").innerText = lang === "id" ? "Ringkasan" : "Summary";
+      document.getElementById("experience").querySelector("h2").innerText = lang === "id" ? "Pengalaman" : "Experience";
+      document.getElementById("projects").querySelector("h2").innerText = lang === "id" ? "Proyek" : "Projects";
+      document.getElementById("skills").querySelector("h2").innerText = lang === "id" ? "Keterampilan" : "Skills";
+      document.getElementById("interests").querySelector("h2").innerText = lang === "id" ? "Minat" : "Interests";
 
-  </div>  <script>
-    const btn = document.getElementById('toggle-theme');
-    const colorSelect = document.getElementById('color-select');
-    const printBtn = document.getElementById('print-btn');
-
-    // Load saved prefs
-    const savedTheme = localStorage.getItem('cv-theme');
-    const savedColor = localStorage.getItem('cv-color');
-    if(savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
-    if(savedColor){
-      document.documentElement.setAttribute('data-color', savedColor);
-      if(colorSelect) colorSelect.value = savedColor;
+      // Summary
+      document.getElementById("summary").querySelector("p").innerText =
+        lang === "id"
+          ? "Individu yang proaktif dan autodidak dengan pengalaman di dunia investasi kripto dan saham sejak 2020. Berpengalaman membaca tren pasar, mengelola risiko, serta memanfaatkan peluang investasi secara strategis. Saat ini mendalami keterampilan pemrograman (HTML, CSS, JavaScript) untuk membangun aplikasi analisis data, automasi, dan visualisasi portofolio — mengintegrasikan keuangan dengan teknologi."
+          : "A proactive and self-taught individual with experience in cryptocurrency and stock investments since 2020. Skilled in analyzing market trends, managing risks, and identifying strategic investment opportunities. Currently developing programming skills (HTML, CSS, JavaScript) to build tools for data analysis, automation, and portfolio visualization — integrating finance with technology.";
     }
-
-    btn.addEventListener('click', ()=>{
-      const current = document.documentElement.getAttribute('data-theme');
-      const next = current === 'dark' ? '' : 'dark';
-      if(next) document.documentElement.setAttribute('data-theme', next); else document.documentElement.removeAttribute('data-theme');
-      localStorage.setItem('cv-theme', next);
-      btn.setAttribute('aria-pressed', next === 'dark');
-    });
-
-    // Color switcher
-    colorSelect.addEventListener('change', (e)=>{
-      const val = e.target.value;
-      document.documentElement.setAttribute('data-color', val);
-      localStorage.setItem('cv-color', val);
-    });
-
-    printBtn.addEventListener('click', ()=>{ window.print(); });
-
-    function copyEmail(){
-      navigator.clipboard.writeText('ademiandoo@gmail.com').then(()=>{
-        alert('Email tersalin: ademiandoo@gmail.com');
-      });
-    }
-    function scrollToSection(id){
-      const el = document.getElementById(id);
-      if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
-    }
-  </script></body>
+  </script>
+</body>
 </html>
