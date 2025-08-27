@@ -2,234 +2,166 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ade Oftomiando - CV</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>CV Ade Miando</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
-      background: var(--bg, #fff);
-      color: var(--text, #222);
-      line-height: 1.6;
+      background: #fff;
+      color: #333;
     }
     .container {
       max-width: 900px;
       margin: auto;
-      padding: 2rem;
-      background: #fff;
+      padding: 20px;
     }
     header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 20px;
     }
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-      font-weight: bold;
+    h1 {
+      font-size: 28px;
+      margin-bottom: 5px;
     }
-    header p {
-      margin: 0.2rem 0;
-      color: #555;
+    h2 {
+      font-size: 20px;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 5px;
+      margin-top: 25px;
+      margin-bottom: 10px;
     }
-    .contact a {
+    ul { padding-left: 20px; }
+    li { margin-bottom: 5px; }
+    a {
       color: inherit;
       text-decoration: none;
-      margin: 0 0.5rem;
     }
-    section {
-      margin-bottom: 1.5rem;
-    }
-    section h2 {
-      font-size: 1.3rem;
-      border-bottom: 2px solid #ddd;
-      padding-bottom: 0.3rem;
-      margin-bottom: 1rem;
-    }
-    ul {
-      padding-left: 1.2rem;
-    }
-    .tools {
+    .controls {
       position: fixed;
-      top: 1rem;
-      right: 1rem;
+      top: 10px;
+      right: 10px;
       display: flex;
-      gap: 0.5rem;
+      gap: 10px;
       z-index: 1000;
     }
-    .tools button {
-      border: none;
-      background: #eee;
-      padding: 0.5rem 0.7rem;
+    .controls button, .controls input[type=color] {
+      padding: 6px 10px;
+      border: 1px solid #ccc;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 1rem;
+      background: #f9f9f9;
     }
-    .tools input[type="color"] {
-      border: none;
-      padding: 0;
-      width: 36px;
-      height: 36px;
-      border-radius: 6px;
-      cursor: pointer;
+    .contact i {
+      margin-right: 8px;
+      color: #555;
     }
-    footer {
+    .footer {
       text-align: center;
-      margin-top: 2rem;
+      margin-top: 30px;
     }
-    footer img {
-      width: 70px;
-      opacity: 0.8;
+    .footer img {
+      width: 80px;
+      height: 80px;
     }
     @media print {
-      .tools { display: none; }
-      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .controls { display: none; }
     }
   </style>
 </head>
 <body>
-  <div class="tools">
-    <button onclick="toggleLang()"><i class="fa-solid fa-globe"></i></button>
-    <input type="color" id="colorPicker" onchange="changeColor(this.value)">
+  <div class="controls">
+    <button onclick="toggleLanguage()"><i class="fa-solid fa-globe"></i></button>
+    <input type="color" id="colorPicker" value="#333333" onchange="changeColor(this.value)">
     <button onclick="window.print()"><i class="fa-solid fa-print"></i></button>
   </div>
 
   <div class="container" id="cv">
     <header>
-      <h1>Ade Oftomiando</h1>
-      <p>Wonosobo, Indonesia | 10 Mei 1999</p>
-      <div class="contact">
-        <a href="https://wa.me/6285726951002" target="_blank"><i class="fa-brands fa-whatsapp"></i> 0857 2695 1002</a> |
-        <a href="mailto:ademiandoo@gmail.com"><i class="fa-solid fa-envelope"></i> ademiandoo@gmail.com</a> |
-        <a href="https://github.com/ademiando" target="_blank"><i class="fa-brands fa-github"></i> ademiando</a>
-      </div>
+      <h1>Ade Miando</h1>
+      <p class="contact">
+        <a href="https://wa.me/6281234567890" target="_blank"><i class="fab fa-whatsapp"></i> +62 812-3456-7890</a> | 
+        <a href="mailto:ademiandoo@gmail.com"><i class="fa-solid fa-envelope"></i> ademiandoo@gmail.com</a> | 
+        <a href="https://github.com/ademiando" target="_blank"><i class="fab fa-github"></i> ademiando</a>
+      </p>
     </header>
 
+    <!-- Ringkasan -->
     <section id="summary">
-      <h2 data-lang="id">Ringkasan Diri</h2>
-      <h2 data-lang="en" style="display:none;">Summary</h2>
-      <p data-lang="id">
-        Individu proaktif dan autodidak dengan pengalaman di pasar kripto dan saham sejak 2020.
-        Memiliki ketertarikan mendalam pada teknologi, data, dan otomasi untuk mendukung perjalanan investasi yang lebih akurat dan terstruktur.
-        Saat ini fokus membangun aplikasi analisis portofolio, integrasi API, serta sistem otomatisasi berbasis web.
+      <h2>Ringkasan Diri</h2>
+      <p class="id">
+        Profesional dengan ketertarikan mendalam pada teknologi dan inovasi digital untuk mendukung perjalanan investasi. 
+        Memiliki pengalaman dalam pengembangan web modern, instruksi komunitas, serta membangun solusi berbasis data yang efisien.
       </p>
-      <p data-lang="en" style="display:none;">
-        A proactive and self-taught individual with hands-on experience in the crypto and stock markets since 2020.
-        Deeply passionate about technology, data, and automation to strengthen an accurate and structured investment journey.
-        Currently focused on building portfolio analysis applications, API integrations, and web-based automation systems.
+      <p class="en" style="display:none;">
+        A professional with a deep interest in technology and digital innovation to support the investment journey. 
+        Experienced in modern web development, community instruction, and building efficient data-driven solutions.
       </p>
     </section>
 
+    <!-- Pengalaman -->
     <section id="experience">
-      <h2 data-lang="id">Pengalaman</h2>
-      <h2 data-lang="en" style="display:none;">Experience</h2>
+      <h2>Pengalaman</h2>
       <ul>
-        <li data-lang="id">
-          <strong>Instruktur & Analis Komunitas Kripto (2020–2022)</strong><br>
-          Membimbing pemain baru di ekosistem <em>Axie Infinity</em>: strategi permainan, analisis ROI, serta pengelolaan tim.<br>
-          Melatih komunitas dengan pendekatan edukatif, memandu strategi investasi awal, dan aktif dalam forum diskusi kripto.
+        <li class="id">
+          <strong>Instruktur & Mentor Komunitas Gaming</strong> (2020 – 2022)<br>
+          Membimbing komunitas Axie Infinity, melatih strategi permainan, mengatur manajemen tim, serta membantu pemain baru memahami mekanisme ekonomi digital berbasis blockchain. 
+          Berperan sebagai mentor dan fasilitator diskusi strategi untuk komunitas lokal.
         </li>
-        <li data-lang="en" style="display:none;">
-          <strong>Crypto Community Instructor & Analyst (2020–2022)</strong><br>
-          Guided new players in the <em>Axie Infinity</em> ecosystem: gameplay strategies, ROI analysis, and team management.<br>
-          Trained community members with an educational approach, mentoring early-stage investment strategies, and actively engaging in crypto forums.
+        <li class="en" style="display:none;">
+          <strong>Instructor & Gaming Community Mentor</strong> (2020 – 2022)<br>
+          Guided the Axie Infinity community, trained gameplay strategies, managed team coordination, and assisted newcomers in understanding blockchain-based digital economies. 
+          Acted as a mentor and facilitator for local community discussions.
         </li>
-        <li data-lang="id">
-          <strong>Barista (2023–Sekarang)</strong><br>
-          Menyajikan produk kopi dengan standar kualitas tinggi sekaligus meningkatkan pengalaman pelanggan melalui layanan personal.
+        <li class="id">
+          <strong>Pengembang Web – Proyek Bloomberg Tracker</strong><br>
+          Membangun situs pelacak portofolio investasi tanpa login, di mana pengguna dapat menyimpan data secara independen menggunakan Supabase. 
+          Proyek ini terintegrasi dengan lab untuk uji coba trading, analisis pola pasar historis, eksekusi order menggunakan kode robotik, serta mendukung koneksi wallet (DEX/CEX). 
+          Fitur tambahan berupa kurasi berita relevan sesuai portofolio investasi.
         </li>
-        <li data-lang="en" style="display:none;">
-          <strong>Barista (2023–Present)</strong><br>
-          Delivering high-quality coffee beverages while enhancing customer experience through personalized service.
-        </li>
-        <li data-lang="id">
-          <strong>Pengusaha Salad Buah (2022–2023)</strong><br>
-          Mengelola bisnis kecil, mulai dari produksi hingga pemasaran, serta membangun loyalitas pelanggan.
-        </li>
-        <li data-lang="en" style="display:none;">
-          <strong>Fruit Salad Entrepreneur (2022–2023)</strong><br>
-          Managed a small business from production to marketing while successfully building customer loyalty.
+        <li class="en" style="display:none;">
+          <strong>Web Developer – Bloomberg Tracker Project</strong><br>
+          Developed an investment portfolio tracking site without login, enabling users to store data independently with Supabase. 
+          Integrated with a lab for trading simulations, historical market analysis, robotic order execution, and wallet connections (DEX/CEX). 
+          Included an additional feature: curated news relevant to user portfolios.
         </li>
       </ul>
     </section>
 
-    <section id="projects">
-      <h2 data-lang="id">Proyek</h2>
-      <h2 data-lang="en" style="display:none;">Project</h2>
-      <p data-lang="id">
-        <strong>Aplikasi Pelacak Portofolio Investasi (Bloomberg-style)</strong><br>
-        Platform web untuk memantau portofolio tanpa login, menyimpan data secara independen dengan Supabase,
-        menyediakan halaman <em>lab</em> untuk simulasi trading & analisis pola historis, integrasi berita yang relevan dengan portofolio, 
-        serta eksekusi order melalui koneksi langsung ke wallet DEX/CEX.
-      </p>
-      <p data-lang="en" style="display:none;">
-        <strong>Investment Portfolio Tracker (Bloomberg-style)</strong><br>
-        A web platform to track portfolios without login, independently storing data with Supabase,
-        providing a <em>lab</em> page for trading simulations & historical pattern analysis, integrated news tailored to portfolios,
-        and live order execution via direct wallet connections to DEX/CEX.
-      </p>
-    </section>
-
+    <!-- Keterampilan -->
     <section id="skills">
-      <h2 data-lang="id">Keterampilan</h2>
-      <h2 data-lang="en" style="display:none;">Skills</h2>
-      <ul data-lang="id">
-        <li>Analisis Pasar Kripto & Saham</li>
-        <li>Manajemen Portofolio</li>
-        <li>HTML, CSS, JavaScript</li>
-        <li>Git & GitHub</li>
-        <li>Vercel & Supabase</li>
-        <li>Automasi & API Integration</li>
-        <li>Manajemen Waktu & Kerja Tim</li>
-        <li>Pelayanan Pelanggan</li>
-        <li>Berpikir Analitis</li>
+      <h2>Keterampilan</h2>
+      <ul class="id">
+        <li>Pengembangan Web (HTML, CSS, JavaScript, React)</li>
+        <li>Integrasi Basis Data (Supabase, PostgreSQL)</li>
+        <li>Trading & Analisis Pasar</li>
+        <li>Komunikasi & Mentoring Komunitas</li>
+        <li>Kemahiran Bahasa: Indonesia & Inggris</li>
       </ul>
-      <ul data-lang="en" style="display:none;">
-        <li>Crypto & Stock Market Analysis</li>
-        <li>Portfolio Management</li>
-        <li>HTML, CSS, JavaScript</li>
-        <li>Git & GitHub</li>
-        <li>Vercel & Supabase</li>
-        <li>Automation & API Integration</li>
-        <li>Time Management & Teamwork</li>
-        <li>Customer Service</li>
-        <li>Analytical Thinking</li>
+      <ul class="en" style="display:none;">
+        <li>Web Development (HTML, CSS, JavaScript, React)</li>
+        <li>Database Integration (Supabase, PostgreSQL)</li>
+        <li>Trading & Market Analysis</li>
+        <li>Community Communication & Mentoring</li>
+        <li>Language Skills: Indonesian & English</li>
       </ul>
     </section>
 
-    <section id="interests">
-      <h2 data-lang="id">Minat</h2>
-      <h2 data-lang="en" style="display:none;">Interests</h2>
-      <p data-lang="id">
-        Mendaki gunung, ekonomi makro, filsafat, politik, serta riset pasar dan investasi rutin.
-      </p>
-      <p data-lang="en" style="display:none;">
-        Hiking, macroeconomics, philosophy, politics, and regular market research & investing.
-      </p>
-    </section>
-
-    <footer>
-      <p>Scan untuk versi online:</p>
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://ademiando.com/cv" alt="QR CV">
-    </footer>
+    <div class="footer">
+      <p>Scan to access CV online:</p>
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://ademiando.com/cv" alt="QR Code">
+    </div>
   </div>
 
   <script>
-    let currentLang = "id";
-    function toggleLang() {
-      currentLang = currentLang === "id" ? "en" : "id";
-      document.querySelectorAll("[data-lang]").forEach(el => {
-        if (el.getAttribute("data-lang") === currentLang) {
-          el.style.display = "";
-        } else {
-          el.style.display = "none";
-        }
-      });
+    function toggleLanguage() {
+      document.querySelectorAll('.id').forEach(el => el.style.display = (el.style.display === 'none') ? '' : 'none');
+      document.querySelectorAll('.en').forEach(el => el.style.display = (el.style.display === 'none') ? '' : 'none');
     }
     function changeColor(color) {
-      document.body.style.setProperty("--bg", color);
-      document.body.style.setProperty("--text", "#000");
+      document.body.style.color = color;
+      document.querySelectorAll('h1,h2,strong,i').forEach(el => el.style.color = color);
     }
   </script>
 </body>
