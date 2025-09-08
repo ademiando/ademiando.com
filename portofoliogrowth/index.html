@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Portofolio Growth Chart</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body { background: #f4f7fb; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; }
+    h2 { margin-top: 1em; margin-bottom: 0.3em; color: #333; font-weight: 600;}
+    #chart { width: 100%; max-width: 920px; margin: 0 auto; }
+    .legend { display: flex; flex-wrap: wrap; justify-content: center; margin: 14px 0 2px; gap: 14px; }
+    .legend-item { display: flex; align-items: center; cursor: pointer; user-select: none; font-size: 16px; margin: 0 5px; }
+    .legend-color { width: 20px; height: 5px; margin-right: 8px; border-radius:3px; }
+    .legend-item.active { font-weight: bold; }
+    .legend-item.inactive { opacity: 0.35; }
+    .tooltip {
+      position: absolute;
+      background: #fff;
+      border: 1px solid #bbb;
+      padding: 11px 14px;
+      border-radius: 7px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.13);
+      font-size: 15px;
+      color: #333;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 10;
+      transition: opacity 0.14s;
+    }
+    @media (max-width: 700px) {
+      #chart svg { width: 98vw !important; height: 62vw !important; }
+      .legend { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <h2>Grafik Pertumbuhan Portofolio</h2>
+  <div class="legend" id="legend"></div>
+  <div id="chart"></div>
+  <div class="tooltip" id="tooltip"></div>
+  <script>
+  // --- DATA DUMMY (ganti sesuai data Anda) ---
+  // Format: tanggal, all, crypto, stock, bond, nonliquid
+  const portfolioData = [
+    { date: '2024-01', all: 100, crypto: 30, stock: 40, bond: 20, nonliquid: 10 },
+    { date: '2024-02', all: 106, crypto: 32, stock: 42, bond: 22, nonliquid: 10 },
+    { date: '2024-03', all: 111, crypto: 34, stock: 44, bond: 23, nonliquid: 10 },
+    { date: '2024-04', all: 115, crypto: 37, stock: 46, bond: 22, nonliquid: 10 },
+    { date: '2024-05', all: 119, crypto: 38, stock: 49, bond: 22, nonliquid: 10 },
+    { date: '2024-06', all: 130, crypto: 46, stock: 58, bond: 15, nonliquid: 11 },
+    { date: '2024-07', all: 126, crypto: 42, stock: 57, bond: 15, nonliquid: 12 },
+    { date: '2024-08', all: 138, crypto: 48, stock: 61, bond: 16, nonliquid: 13 },
+    { date: '2024-09', all: 142, crypto: 53, stock: 64, bond: 13, nonliquid: 12 },
+    { date: '2024-10', all: 149, crypto: 57, stock: 67, bond: 15, nonliquid: 10 },
+    { date: '2024-11', all: 155, crypto: 61, stock: 69, bond: 16, nonliquid: 9 },
+    { date: '2024-12', all: 160, crypto: 64, stock: 72, bond: 15, nonliquid: 9 },
+    { date: '2025-01', all: 164, crypto: 66, stock: 73, bond: 15, nonliquid: 10 },
+    { date: '2025-02', all: 168, crypto: 68, stock: 76, bond: 14, nonliquid: 10 },
+    { date: '2025-03', all: 173, crypto: 73, stock: 77, bond: 13, nonliquid: 10 },
+    { date: '2025-04', all: 170, crypto: 70, stock: 76, bond: 13, nonliquid: 11 },
+    { date: '2025-05', all: 175, crypto: 74, stock: 79, bond: 12, nonliquid: 10 },
+    { date: '2025-06', all: 181, crypto: 78, stock: 82, bond: 11, nonliquid: 10 },
+    { date: '2025-07', all: 188, crypto: 83, stock: 85, bond: 10, nonliquid: 10 },
+    { date: '2025-08', all: 192, crypto: 87, stock: 87, bond: 9, nonliquid: 9 }
+  ];
+
+  // --- KONFIGURASI INSTRUMEN & WARNA ---
+  const instruments = [
+    { key: 'all', label: 'All', color: '#1976d2', type: 'area' },
+    { key: 'crypto', label: 'Crypto', color: '#ff9800', type: 'line' },
+    { key: 'stock', label: 'Stock', color: '#43a047', type: 'line' },
+    { key: 'bond', label: 'Bond', color: '#8e24aa', type: 'line' },
+    { key: 'nonliquid', label: 'Nonliquid', color: '#e53935', type: 'line' }
+  ];
+
+  // --- DIMENSI CHART ---
+  function getChartSize() {
+    const w = Math.min(window.innerWidth, 900), h = Math.max(380, Math.round(w * 0.6));
+    return { width: w, height: h, margin: { top: 42, right: 42, bottom: 56, left: 62 } };
+  }
+
+  function drawChart() {
+    // Clear chart
+    d3.select("#chart").selectAll("*").remove();
+
+    // Responsive
+    const { width, height, margin } = getChartSize();
+    const chartWidth = width - margin.left - margin.right;
+    const chartHeight = height - margin.top - margin.bottom;
+
+    // Parse date
+    const parseDate = d3.timeParse('%Y-%m');
+    portfolioData.forEach(d => d._date = parseDate(d.date));
+
+    // Scales
+    const x = d3.scaleTime()
+      .domain(d3.extent(portfolioData, d => d._date))
+      .range([0, chartWidth]);
+    const y = d3.scaleLinear()
+      .domain([0, d3.max(portfolioData, d => Math.max(...instruments.map(i => d[i.key]))) * 1.12])
+      .nice()
+      .range([chartHeight, 0]);
+
+    // SVG
+    const svg = d3.select("#chart").append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    const g = svg.append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    // --- AXIS ---
+    g.append("g")
+      .attr("transform", `translate(0,${chartHeight})`)
+      .call(d3.axisBottom(x).tickFormat(d3.timeFormat('%b %Y')).ticks(6))
+      .selectAll("text")
+      .attr("transform", "rotate(-28)")
+      .style("text-anchor", "end");
+    g.append("g")
+      .call(d3.axisLeft(y).ticks(8));
+
+    // --- GRID ---
+    g.append("g")
+      .selectAll("line.horizontal")
+      .data(y.ticks(8))
+      .enter()
+      .append("line")
+      .attr("class", "horizontal")
+      .attr("x1", 0).attr("x2", chartWidth)
+      .attr("y1", d => y(d)).attr("y2", d => y(d))
+      .attr("stroke", "#e5e5e5").attr("stroke-width", 1).attr("opacity", 0.5);
+
+    // --- AREA (ALL) ---
+    const area = d3.area()
+      .x(d => x(d._date))
+      .y0(chartHeight)
+      .y1(d => y(d.all))
+      .curve(d3.curveMonotoneX);
+
+    if (active['all']) {
+      g.append("path")
+        .datum(portfolioData)
+        .attr("fill", instruments[0].color)
+        .attr("opacity", 0.18)
+        .attr("d", area);
+    }
+
+    // --- LINE & CIRCLES ---
+    instruments.filter(i => i.key !== 'all').forEach((inst, idx) => {
+      if (!active[inst.key]) return;
+
+      // Line
+      const line = d3.line()
+        .x(d => x(d._date))
+        .y(d => y(d[inst.key]))
+        .curve(d3.curveMonotoneX);
+
+      g.append("path")
+        .datum(portfolioData)
+        .attr("fill", "none")
+        .attr("stroke", inst.color)
+        .attr("stroke-width", 3)
+        .attr("d", line)
+        .attr("filter", "url(#shadow)");
+
+      // Circles
+      g.selectAll(`.circle-${inst.key}`)
+        .data(portfolioData)
+        .enter().append("circle")
+        .attr("class", `circle-${inst.key}`)
+        .attr("cx", d => x(d._date))
+        .attr("cy", d => y(d[inst.key]))
+        .attr("r", 4.6)
+        .attr("fill", inst.color)
+        .attr("opacity", 0.85)
+        .on("mousemove", (event, d) => showTooltip(event, d, inst))
+        .on("mouseleave", hideTooltip);
+    });
+
+    // --- SHADOW EFFECT ---
+    svg.append("defs").append("filter")
+      .attr("id", "shadow")
+      .append("feDropShadow")
+      .attr("dx", 0).attr("dy", 2)
+      .attr("stdDeviation", 1.9)
+      .attr("flood-color", "#888")
+      .attr("flood-opacity", 0.18);
+
+    // --- AREA LINE (ALL) ---
+    if (active['all']) {
+      const allLine = d3.line()
+        .x(d => x(d._date))
+        .y(d => y(d.all))
+        .curve(d3.curveMonotoneX);
+
+      g.append("path")
+        .datum(portfolioData)
+        .attr("fill", "none")
+        .attr("stroke", instruments[0].color)
+        .attr("stroke-width", 2.2)
+        .attr("d", allLine);
+
+      // Circles for all
+      g.selectAll(".circle-all")
+        .data(portfolioData)
+        .enter().append("circle")
+        .attr("class", "circle-all")
+        .attr("cx", d => x(d._date))
+        .attr("cy", d => y(d.all))
+        .attr("r", 4.3)
+        .attr("fill", instruments[0].color)
+        .attr("opacity", 0.75)
+        .on("mousemove", (event, d) => showTooltip(event, d, instruments[0]))
+        .on("mouseleave", hideTooltip);
+    }
+
+    // --- INTERAKTIF TRACKING LINE ---
+    svg.on("mousemove", function(event) {
+      const [mx, my] = d3.pointer(event, this);
+      const tx = mx - margin.left;
+      if (tx < 0 || tx > chartWidth) return hideTooltip();
+
+      // Find nearest date
+      const x0 = x.invert(tx);
+      const nearest = portfolioData.reduce((a, b) =>
+        Math.abs(b._date - x0) < Math.abs(a._date - x0) ? b : a);
+
+      // Show tooltip for active instrument
+      const activeKeys = instruments.filter(i => active[i.key]).map(i => i.key);
+      // Prioritas: yang di-hover, atau default ke 'all'
+      showTooltip(event, nearest, instruments.find(i => active[i.key]));
+    });
+
+    // --- LABEL AXIS ---
+    svg.append("text")
+      .attr("x", margin.left + chartWidth / 2)
+      .attr("y", height - 10)
+      .attr("text-anchor", "middle")
+      .attr("fill", "#444")
+      .attr("font-size", "17px")
+      .attr("font-weight", "600")
+      .text("Periode");
+
+    svg.append("text")
+      .attr("x", 18)
+      .attr("y", margin.top - 16)
+      .attr("text-anchor", "start")
+      .attr("fill", "#444")
+      .attr("font-size", "17px")
+      .attr("font-weight", "600")
+      .text("Nilai Portofolio");
+
+  }
+
+  // --- LEGEND INTERAKTIF ---
+  let active = { all: true, crypto: true, stock: true, bond: true, nonliquid: true };
+
+  function drawLegend() {
+    const legend = d3.select("#legend");
+    legend.selectAll("*").remove();
+
+    instruments.forEach(inst => {
+      legend.append("div")
+        .attr("class", `legend-item ${active[inst.key] ? 'active' : 'inactive'}`)
+        .on("click", () => {
+          active[inst.key] = !active[inst.key];
+          drawLegend();
+          drawChart();
+        })
+        .html(`<span class="legend-color" style="background:${inst.color}"></span> ${inst.label}`);
+    });
+  }
+
+  // --- TOOLTIP LOGIC ---
+  const tooltip = d3.select("#tooltip");
+  function showTooltip(event, d, inst) {
+    let html = `<b>${inst.label}</b> <br>
+      <span style="color:#1976d2;font-weight:600;">${d.date}</span><br>
+      Nilai: <span style="color:${inst.color};font-weight:600;">${d[inst.key]}</span>`;
+    if (inst.key === 'all') {
+      html += `<br>
+        <span style="font-size:13px;opacity:0.75;">Crypto: ${d.crypto}, Stock: ${d.stock}, Bond: ${d.bond}, Nonliquid: ${d.nonliquid}</span>`;
+    }
+    tooltip.html(html)
+      .style("opacity", 1)
+      .style("left", (event.pageX + 12) + "px")
+      .style("top", (event.pageY - 32) + "px");
+  }
+  function hideTooltip() {
+    tooltip.style("opacity", 0);
+  }
+
+  // --- RESPONSIVE ---
+  window.addEventListener('resize', () => {
+    drawChart();
+  });
+
+  // --- INIT ---
+  drawLegend();
+  drawChart();
+
+  </script>
+</body>
+</html>
