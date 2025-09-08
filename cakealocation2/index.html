@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Premium Portofolio Cake Allocation</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      background: linear-gradient(120deg, #f4f8fb 55%, #e8eaf6 100%);
+      font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    h2 {
+      margin-top: 2em;
+      margin-bottom: 0.7em;
+      font-weight: 700;
+      color: #222;
+      font-size: 2.1em;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 6px #e3e7ef;
+    }
+    #chart {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 80vh;
+    }
+    .tooltip {
+      position: absolute;
+      background: rgba(255,255,255,0.92);
+      border: 1.5px solid #a3b1c6;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 32px rgba(60,60,120,0.15);
+      pointer-events: none;
+      font-size: 17px;
+      color: #222;
+      opacity: 0;
+      transition: opacity 0.18s;
+      z-index: 10;
+      min-width: 180px;
+    }
+    .slice {
+      cursor: pointer;
+      stroke-width: 0;
+      filter: drop-shadow(0 2px 12px #b9c6e6a0);
+      transition: filter 0.2s, stroke-width 0.2s;
+    }
+    .slice:hover {
+      filter: drop-shadow(0 4px 24px #1e88e5c0) brightness(1.17);
+      stroke: #1976d2;
+      stroke-width: 3.2px;
+    }
+    .label-group {
+      pointer-events: none;
+    }
+    .label-bg {
+      fill: #fff;
+      opacity: 0.80;
+      rx: 9px;
+      ry: 9px;
+      filter: drop-shadow(0 2px 8px #e3e7ef);
+    }
+    .label-name {
+      font-weight: 700;
+      font-size: 16.5px;
+      fill: #1976d2;
+      letter-spacing: 0.2px;
+    }
+    .label-percent {
+      font-size: 15px;
+      fill: #222;
+      font-weight: 500;
+      letter-spacing: 0.09px;
+    }
+    .label-nominal {
+      font-size: 14px;
+      fill: #8e24aa;
+      font-weight: 500;
+    }
+    .center-label {
+      font-size: 27px;
+      fill: #333;
+      text-anchor: middle;
+      font-weight: 700;
+      pointer-events: none;
+      dominant-baseline: middle;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 12px #eaedf5;
+    }
+    @media (max-width: 600px) {
+      #chart svg { width: 98vw !important; height: 98vw !important; }
+      .center-label { font-size: 19px; }
+      .label-name { font-size: 13px; }
+      .label-percent { font-size: 12px; }
+      .label-nominal { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <h2>Premium Portofolio Cake Allocation</h2>
+  <div id="chart"></div>
+  <div class="tooltip" id="tooltip"></div>
+  <script>
+  // --- DATA ALLOKASI PORTOFOLIO ---
+  // Bisa diganti sesuai data Anda
+  const data = [
+    { name: "Tech Stocks", value: 34000000 },
+    { name: "Crypto", value: 22000000 },
+    { name: "Gold", value: 42000000 },
+    { name: "Cash", value: 18000000 },
+    { name: "Property", value: 36000000 },
+    { name: "Startup", value: 26000000 }
+  ];
+
+  // --- KONFIGURASI ---
+  const width = 650, height = 650, innerRadius = 90, maxRadius = 230;
+  const gap = 0.08; // radian gap slice
+  const pad = 19; // for label background
+
+  // --- WARNA GRADIENT PREMIUM ---
+  const gradients = [
+    ["#1e88e5", "#64b5f6"],
+    ["#ff9800", "#ffd600"],
+    ["#8e24aa", "#ce93d8"],
+    ["#43a047", "#a5d6a7"],
+    ["#ef5350", "#ffb3b3"],
+    ["#00897b", "#80cbc4"]
+  ];
+
+  // --- HITUNG TOTAL, PERSEN ---
+  const total = data.reduce((acc, d) => acc + d.value, 0);
+  data.forEach(d => d.percent = d.value / total * 100);
+
+  // --- SCALES ---
+  const radiusScale = d3.scaleLinear()
+    .domain([0, d3.max(data, d => d.value)])
+    .range([innerRadius, maxRadius]);
+
+  // --- PIE ---
+  const pie = d3.pie()
+    .value(d => 1) // slice sama rata, radius beda
+    .sort(null);
+
+  const arcs = pie(data);
+
+  // --- SVG ---
+  const svg = d3.select("#chart").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+  const g = svg.append("g")
+    .attr("transform", `translate(${width/2},${height/2})`);
+
+  // --- DEFINISI GRADIENT SLICE ---
+  const defs = svg.append("defs");
+  gradients.forEach((grad, i) => {
+    const id = `grad${i}`;
+    const linear = defs.append("linearGradient")
+      .attr("id", id)
+      .attr("x1", "0%").attr("y1", "0%")
+      .attr("x2", "100%").attr("y2", "100%");
+    linear.append("stop").attr("offset", "0%").attr("stop-color", grad[0]);
+    linear.append("stop").attr("offset", "100%").attr("stop-color", grad[1]);
+  });
+
+  // --- ARC GENERATOR ---
+  function arcGen(d, i, outerR = null) {
+    return d3.arc()
+      .innerRadius(innerRadius)
+      .outerRadius(outerR || radiusScale(data[i].value))
+      .padAngle(gap)
+      .cornerRadius(18)(d);
+  }
+
+  // --- ANIMASI ENTRANCE ---
+  g.selectAll("path")
+    .data(arcs)
+    .enter().append("path")
+      .attr("class", "slice")
+      .attr("fill", (d, i) => `url(#grad${i})`)
+      .attr("d", d => arcGen(d, d.index, innerRadius))
+      .each(function(d, i) { this._current = d; })
+      .transition()
+      .duration(1200)
+      .attrTween("d", function(d, i) {
+        const interpolate = d3.interpolate(innerRadius, radiusScale(data[i].value));
+        return function(t) { return arcGen(d, i, interpolate(t)); };
+      });
+
+  // --- LABELS GROUP (nama, persen, nominal) ---
+  const labelGroups = g.selectAll(".label-group")
+    .data(arcs)
+    .enter().append("g")
+    .attr("class", "label-group")
+    .attr("transform", function(d, i) {
+      const r = radiusScale(data[i].value) + pad;
+      const angle = (d.startAngle + d.endAngle) / 2 - Math.PI/2;
+      const x = Math.cos(angle) * r;
+      const y = Math.sin(angle) * r;
+      return `translate(${x},${y})`;
+    });
+
+  // --- LABEL BACKGROUND RECT ---
+  labelGroups.append("rect")
+    .attr("class", "label-bg")
+    .attr("x", -52)
+    .attr("y", -32)
+    .attr("width", 104)
+    .attr("height", 62);
+
+  // --- LABEL NAMA ---
+  labelGroups.append("text")
+    .attr("class", "label-name")
+    .attr("x", 0)
+    .attr("y", -10)
+    .attr("text-anchor", "middle")
+    .text(d => d.data.name);
+
+  // --- LABEL PERSEN ---
+  labelGroups.append("text")
+    .attr("class", "label-percent")
+    .attr("x", 0)
+    .attr("y", 13)
+    .attr("text-anchor", "middle")
+    .text(d => `${d.data.percent.toFixed(1)}%`);
+
+  // --- LABEL NOMINAL (IDR) ---
+  function formatRupiah(num) {
+    return "Rp " + num.toLocaleString('id-ID');
+  }
+  labelGroups.append("text")
+    .attr("class", "label-nominal")
+    .attr("x", 0)
+    .attr("y", 28)
+    .attr("text-anchor", "middle")
+    .text(d => formatRupiah(d.data.value));
+
+  // --- CENTER LABEL (TOTAL PORTOFOLIO) ---
+  g.append("text")
+    .attr("class", "center-label")
+    .attr("y", 0)
+    .text(`Total\n${formatRupiah(total)}`);
+
+  // --- TOOLTIP LOGIC ---
+  const tooltip = d3.select("#tooltip");
+  g.selectAll(".slice")
+    .on("mousemove", function(event, d) {
+      const i = d.index;
+      d3.select(this)
+        .transition()
+        .duration(180)
+        .attr("filter", "drop-shadow(0 4px 32px #1e88e5b0) brightness(1.22)")
+        .attr("d", arcGen(d, i, radiusScale(data[i].value) + 18));
+      tooltip
+        .style("opacity", 1)
+        .html(`
+          <div style="font-weight:700;font-size:18px;color:${gradients[i][0]};">${d.data.name}</div>
+          <div style="margin-top:6px;font-size:16px;">
+            <b>${d.data.percent.toFixed(2)}%</b> &mdash; <span style="color:#8e24aa">${formatRupiah(d.data.value)}</span>
+          </div>
+          <div style="font-size:13px;color:#555;margin-top:4px;">
+            dari total <b>${formatRupiah(total)}</b>
+          </div>
+        `)
+        .style("left", (event.pageX + 18) + "px")
+        .style("top", (event.pageY - 40) + "px");
+    })
+    .on("mouseleave", function(event, d) {
+      const i = d.index;
+      d3.select(this)
+        .transition()
+        .duration(240)
+        .attr("filter", "drop-shadow(0 2px 12px #b9c6e6a0)")
+        .attr("d", arcGen(d, i));
+      tooltip.style("opacity", 0);
+    })
+    .on("click", function(event, d) {
+      const i = d.index;
+      const midAngle = (d.startAngle + d.endAngle) / 2 - Math.PI/2;
+      const xOff = Math.cos(midAngle) * 28;
+      const yOff = Math.sin(midAngle) * 28;
+      d3.select(this)
+        .transition().duration(320)
+        .attr("transform", `translate(${xOff},${yOff})`)
+        .transition().duration(320)
+        .attr("transform", `translate(0,0)`);
+    });
+
+  // --- RESPONSIVE ---
+  function responsive() {
+    const size = Math.min(window.innerWidth, 650);
+    svg.attr("width", size).attr("height", size);
+    g.attr("transform", `translate(${size/2},${size/2})`);
+  }
+  window.addEventListener('resize', responsive);
+  responsive();
+
+  </script>
+</body>
+</html>
