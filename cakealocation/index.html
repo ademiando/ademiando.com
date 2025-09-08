@@ -1,119 +1,203 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Portfolio Alokasi Cake</title>
+  <meta charset="UTF-8">
+  <title>Portofolio Alokasi Cake Interaktif</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
-    .slice {
-      cursor: pointer;
-      transition: filter 0.2s;
+    body {
+      background: #f7f8fa;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
     }
-    .slice:hover {
-      filter: brightness(1.2);
-      stroke: #333;
-      stroke-width: 2px;
+    h2 {
+      margin-top: 2em;
+      margin-bottom: 0.5em;
+      font-weight: 600;
+      color: #333;
+    }
+    #chart {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 80vh;
     }
     .tooltip {
       position: absolute;
-      background: white;
-      border: 1px solid #aaa;
-      padding: 8px;
-      border-radius: 5px;
+      background: #fff;
+      border: 1px solid #bbb;
+      padding: 10px 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
       pointer-events: none;
+      font-size: 15px;
+      color: #333;
+      opacity: 0;
+      transition: opacity 0.18s;
+      z-index: 10;
+    }
+    .slice {
+      cursor: pointer;
+      transition: filter 0.18s, stroke-width 0.18s;
+    }
+    .slice:hover {
+      filter: brightness(1.16) drop-shadow(0 0 8px #ffb300);
+      stroke: #333;
+      stroke-width: 3px;
+    }
+    .label {
+      font-weight: 500;
       font-size: 14px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      fill: #444;
+      pointer-events: none;
+      text-shadow: 0 1px 4px #fff, 0 2px 8px #eee;
+    }
+    .center-label {
+      font-size: 22px;
+      fill: #666;
+      text-anchor: middle;
+      font-weight: 600;
+      pointer-events: none;
+    }
+    @media (max-width: 600px) {
+      #chart svg { width: 98vw !important; height: 98vw !important; }
     }
   </style>
 </head>
 <body>
-<div id="chart"></div>
-<script>
-// Data contoh
-const data = [
-  { name: "Cake A", value: 30 },
-  { name: "Cake B", value: 50 },
-  { name: "Cake C", value: 80 },
-  { name: "Cake D", value: 45 },
-  { name: "Cake E", value: 70 }
-];
+  <h2>Portofolio Alokasi Cake Interaktif</h2>
+  <div id="chart"></div>
+  <div class="tooltip" id="tooltip"></div>
 
-// Ukuran chart
-const width = 500, height = 500, innerRadius = 80, maxRadius = 200;
-const gap = 0.07; // gap antar slice (radian)
+  <script>
+  // --- DATA PORTOFOLIO ---
+  // Ganti data di bawah sesuai kebutuhan
+  const data = [
+    { name: "Tech Stocks", value: 30 },
+    { name: "Crypto", value: 50 },
+    { name: "Gold", value: 80 },
+    { name: "Cash", value: 45 },
+    { name: "Property", value: 70 },
+    { name: "Startup", value: 55 }
+  ];
 
-// Skala radius
-const radiusScale = d3.scaleLinear()
-  .domain([0, d3.max(data, d => d.value)])
-  .range([innerRadius, maxRadius]);
+  // --- UKURAN CHART ---
+  const width = 520, height = 520, innerRadius = 80, maxRadius = 210;
+  const gap = 0.07; // radian gap antar slice
 
-// Pie generator
-const pie = d3.pie()
-  .value(d => 1) // slice sama rata
-  .sort(null);
+  // --- SKALA RADIUS ---
+  const radiusScale = d3.scaleLinear()
+    .domain([0, d3.max(data, d => d.value)])
+    .range([innerRadius, maxRadius]);
 
-// Arc generator custom
-const arcs = pie(data);
+  // --- PIE GENERATOR (slice sama rata, tapi radius beda) ---
+  const pie = d3.pie()
+    .value(d => 1)
+    .sort(null);
 
-const arcGen = d3.arc()
-  .innerRadius(innerRadius)
-  .outerRadius((d, i) => radiusScale(data[i].value))
-  .padAngle(gap)
-  .cornerRadius(8);
+  const arcs = pie(data);
 
-const svg = d3.select("#chart").append("svg")
-  .attr("width", width)
-  .attr("height", height);
+  // --- ARC GENERATOR ---
+  function arcGen(d, i) {
+    return d3.arc()
+      .innerRadius(innerRadius)
+      .outerRadius(radiusScale(data[i].value))
+      .padAngle(gap)
+      .cornerRadius(12)(d);
+  }
 
-const g = svg.append("g")
-  .attr("transform", `translate(${width/2},${height/2})`);
+  // --- SVG ---
+  const svg = d3.select("#chart").append("svg")
+    .attr("width", width)
+    .attr("height", height);
 
-// Animasi masuk
-g.selectAll("path")
-  .data(arcs)
-  .enter().append("path")
-    .attr("class", "slice")
-    .attr("fill", (d, i) => d3.schemeCategory10[i % 10])
-    .attr("d", d => arcGen({ ...d, outerRadius: innerRadius }))
-    .transition()
-    .duration(1200)
-    .attrTween("d", function(d, i) {
-      const interpolate = d3.interpolate(innerRadius, radiusScale(data[i].value));
-      return function(t) {
-        return arcGen({ ...d, outerRadius: interpolate(t) });
-      };
+  const g = svg.append("g")
+    .attr("transform", `translate(${width/2},${height/2})`);
+
+  // --- WARNA PALETTE ---
+  const colors = d3.schemeSet2.concat(d3.schemeSet1);
+
+  // --- DRAW SLICES + ANIMASI ENTRANCE ---
+  g.selectAll("path")
+    .data(arcs)
+    .enter().append("path")
+      .attr("class", "slice")
+      .attr("fill", (d, i) => colors[i % colors.length])
+      .attr("d", d => d3.arc()
+        .innerRadius(innerRadius)
+        .outerRadius(innerRadius)
+        .padAngle(gap)
+        .cornerRadius(12)(d)
+      )
+      .each(function(d, i) { this._current = d; })
+      .transition()
+      .duration(1100)
+      .attrTween("d", function(d, i) {
+        const interpolate = d3.interpolate(innerRadius, radiusScale(data[i].value));
+        return function(t) {
+          return d3.arc()
+            .innerRadius(innerRadius)
+            .outerRadius(interpolate(t))
+            .padAngle(gap)
+            .cornerRadius(12)(d);
+        };
+      });
+
+  // --- LABELS (NAMA ALLOKASI) ---
+  g.selectAll(".label")
+    .data(arcs)
+    .enter().append("text")
+      .attr("class", "label")
+      .attr("transform", function(d, i) {
+        const r = radiusScale(data[i].value) + 18;
+        const angle = (d.startAngle + d.endAngle) / 2 - Math.PI/2;
+        const x = Math.cos(angle) * r;
+        const y = Math.sin(angle) * r;
+        return `translate(${x},${y})`;
+      })
+      .attr("text-anchor", "middle")
+      .attr("alignment-baseline", "middle")
+      .text(d => d.data.name);
+
+  // --- CENTER LABEL (TOTAL) ---
+  const total = d3.sum(data, d => d.value);
+  g.append("text")
+    .attr("class", "center-label")
+    .attr("y", 12)
+    .text(`Total: ${total}`);
+
+  // --- TOOLTIP LOGIC ---
+  const tooltip = d3.select("#tooltip");
+  g.selectAll(".slice")
+    .on("mousemove", function(event, d) {
+      tooltip
+        .style("opacity", 1)
+        .html(`<b>${d.data.name}</b><br>Alokasi: <span style="color:#1976d2;font-weight:600;">${d.data.value}</span>`)
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 30) + "px");
+    })
+    .on("mouseleave", function() {
+      tooltip.style("opacity", 0);
     });
 
-// Tooltip
-const tooltip = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
+  // --- ANIMASI INTERAKTIF (EXPLODE) ---
+  g.selectAll(".slice")
+    .on("click", function(event, d) {
+      const midAngle = (d.startAngle + d.endAngle) / 2 - Math.PI/2;
+      const xOff = Math.cos(midAngle) * 36;
+      const yOff = Math.sin(midAngle) * 36;
+      d3.select(this)
+        .transition()
+        .duration(340)
+        .attr("transform", `translate(${xOff},${yOff})`)
+        .transition()
+        .duration(340)
+        .attr("transform", `translate(0,0)`);
+    });
 
-g.selectAll("path")
-  .on("mouseover", function(event, d) {
-    d3.select(this).attr("fill", "#ff9800");
-    tooltip.transition().duration(200).style("opacity", 1);
-    tooltip.html(`<strong>${d.data.name}</strong><br/>Alokasi: ${d.data.value}`)
-      .style("left", (event.pageX + 10) + "px")
-      .style("top", (event.pageY - 20) + "px");
-  })
-  .on("mouseout", function(event, d, i) {
-    d3.select(this).attr("fill", d3.schemeCategory10[i % 10]);
-    tooltip.transition().duration(200).style("opacity", 0);
-  });
-
-// Interaktif: klik slice -> explode efek
-g.selectAll("path")
-  .on("click", function(event, d) {
-    const midAngle = (d.startAngle + d.endAngle) / 2;
-    const xOff = Math.cos(midAngle - Math.PI/2) * 30;
-    const yOff = Math.sin(midAngle - Math.PI/2) * 30;
-    d3.select(this)
-      .transition()
-      .duration(400)
-      .attr("transform", `translate(${xOff},${yOff})`)
-      .transition()
-      .duration(400)
-      .attr("transform", `translate(0,0)`);
-  });
-
-</script>
+  </script>
 </body>
 </html>
