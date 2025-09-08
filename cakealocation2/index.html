@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Premium Portfolio Allocation Chart</title>
+  <title>Portfolio Allocation Cake Chart</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
@@ -21,27 +21,94 @@
       font-size: 2.1em;
       letter-spacing: 0.5px;
       text-shadow: 0 2px 6px #e3e7ef;
+      text-align: center;
     }
-    #chart {
+    #chart-container {
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 0;
+      position: relative;
       min-height: 80vh;
+      width: 100%;
     }
-    .tooltip {
+    #chart {
+      position: relative;
+      z-index: 2;
+      flex: 0 0 650px;
+      max-width: 680px;
+      min-width: 320px;
+      margin: 0 auto;
+    }
+    .cards {
       position: absolute;
-      background: rgba(255,255,255,0.97);
-      border: 1.5px solid #b2b7c6;
-      padding: 16px 22px;
-      border-radius: 13px;
-      box-shadow: 0 4px 28px rgba(60,60,120,0.16);
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
-      font-size: 16px;
+      z-index: 3;
+    }
+    .allocation-card {
+      position: absolute;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 28px rgba(60,60,120,0.13);
+      border: 1.5px solid #e5e9f6;
+      min-width: 124px;
+      min-height: 60px;
+      padding: 22px 18px 18px 18px;
+      font-size: 1.07em;
       color: #222;
-      opacity: 0;
-      transition: opacity 0.17s;
+      pointer-events: all;
+      transition: box-shadow .16s;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .allocation-card:hover {
+      box-shadow: 0 8px 32px rgba(60,60,120,0.18);
+      border-color: #bbcaf0;
       z-index: 10;
-      min-width: 170px;
+    }
+    .card-code {
+      font-weight: 700;
+      font-size: 1.13em;
+      letter-spacing: 0.5px;
+      color: #1976d2;
+      margin-bottom: 7px;
+    }
+    .card-value {
+      font-size: 1em;
+      color: #8e24aa;
+      font-weight: 500;
+    }
+    .card-percent-bullet {
+      position: absolute;
+      top: -16px;
+      right: -16px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #eee;
+      box-shadow: 0 2px 8px #e3e7ef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.09em;
+      color: #fff;
+      border: 4px solid #fff;
+      z-index: 2;
+      transition: box-shadow 0.12s;
+    }
+    .arrow-line {
+      stroke-width: 2.5px;
+      fill: none;
+      marker-end: url(#arrowhead);
+      opacity: 0.88;
     }
     .slice {
       cursor: pointer;
@@ -54,42 +121,31 @@
       stroke: #1976d2;
       stroke-width: 3px;
     }
-    .label-group {
+    .center-value {
+      font-size: 2.2em;
+      font-weight: 700;
+      fill: #333;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 12px #eaedf5;
       pointer-events: none;
     }
-    .label-bg {
-      fill: #fff;
-      opacity: 0.82;
-      rx: 11px;
-      ry: 11px;
-      filter: drop-shadow(0 1px 7px #e3e7ef);
-    }
-    .label-code {
-      font-weight: 700;
-      font-size: 17px;
-      fill: #1976d2;
-      letter-spacing: 0.2px;
-    }
-    .label-percent {
-      font-size: 15px;
-      fill: #222;
-      font-weight: 500;
-      letter-spacing: 0.09px;
-    }
-    @media (max-width: 600px) {
-      #chart svg { width: 98vw !important; height: 98vw !important; }
-      .label-code { font-size: 13px; }
-      .label-percent { font-size: 11px; }
+    @media (max-width: 700px) {
+      #chart { max-width: 96vw; }
+      .allocation-card { min-width: 88px; font-size: .98em; padding: 15px 12px 12px 12px;}
+      .card-percent-bullet { width: 33px; height: 33px; top: -11px; right: -11px; font-size: .95em;}
     }
   </style>
 </head>
 <body>
   <h2>Portfolio Allocation</h2>
-  <div id="chart"></div>
-  <div class="tooltip" id="tooltip"></div>
+  <div id="chart-container">
+    <div id="chart"></div>
+    <svg class="cards"></svg>
+  </div>
   <script>
-  // --- DATA: asset code, value ---
-  // value in USD (change as needed)
+  // --- DATA ---
   const data = [
     { code: "AAPL", value: 34000 },      // Apple Stock
     { code: "BTC", value: 22000 },       // Bitcoin
@@ -100,11 +156,10 @@
   ];
 
   // --- CONFIG ---
-  const width = 650, height = 650, innerRadius = 90, maxRadius = 230;
-  const gap = 0.08; // radian gap slice
-  const pad = 21; // for label background
+  const width = 650, height = 650, innerRadius = 90, maxRadius = 230, cardPad = 100;
+  const gap = 0.08;
 
-  // --- COLOR GRADIENTS ---
+  // --- COLORS ---
   const gradients = [
     ["#1976d2", "#64b5f6"],
     ["#ff9800", "#ffd600"],
@@ -114,7 +169,7 @@
     ["#00897b", "#80cbc4"]
   ];
 
-  // --- CALCULATE PERCENTAGES ---
+  // --- MATH ---
   const total = data.reduce((acc, d) => acc + d.value, 0);
   data.forEach(d => d.percent = d.value / total * 100);
 
@@ -125,12 +180,11 @@
 
   // --- PIE ---
   const pie = d3.pie()
-    .value(d => 1) // slice sama rata, radius beda
+    .value(d => 1)
     .sort(null);
-
   const arcs = pie(data);
 
-  // --- SVG ---
+  // --- SVG CHART ---
   const svg = d3.select("#chart").append("svg")
     .attr("width", width)
     .attr("height", height);
@@ -138,7 +192,7 @@
   const g = svg.append("g")
     .attr("transform", `translate(${width/2},${height/2})`);
 
-  // --- GRADIENT DEFINITIONS ---
+  // --- GRADIENTS ---
   const defs = svg.append("defs");
   gradients.forEach((grad, i) => {
     const id = `grad${i}`;
@@ -150,6 +204,22 @@
     linear.append("stop").attr("offset", "100%").attr("stop-color", grad[1]);
   });
 
+  // --- ARROWHEAD MARKER ---
+  const cardSvg = d3.select(".cards")
+    .attr("width", width)
+    .attr("height", height);
+  cardSvg.append("defs").append("marker")
+    .attr("id", "arrowhead")
+    .attr("viewBox", "0 0 10 10")
+    .attr("refX", 8)
+    .attr("refY", 5)
+    .attr("markerWidth", 7)
+    .attr("markerHeight", 7)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("d", "M 0 2 L 8 5 L 0 8 Z")
+    .attr("fill", "#888");
+
   // --- ARC GENERATOR ---
   function arcGen(d, i, outerR = null) {
     return d3.arc()
@@ -159,7 +229,7 @@
       .cornerRadius(18)(d);
   }
 
-  // --- ANIMASI ENTRANCE: CHART ROTATES IN ---
+  // --- ENTRANCE ANIMATION: ROTATE IN ---
   g.attr("transform", `translate(${width/2},${height/2}) rotate(-120)`);
   setTimeout(() => {
     g.transition()
@@ -182,66 +252,108 @@
         return function(t) { return arcGen(d, i, interpolate(t)); };
       });
 
-  // --- LABELS: CODE & PERCENT (INSIDE SLICE) ---
-  const labelGroups = g.selectAll(".label-group")
-    .data(arcs)
-    .enter().append("g")
-    .attr("class", "label-group")
-    .attr("transform", function(d, i) {
-      const r = radiusScale(data[i].value) + pad;
-      const angle = (d.startAngle + d.endAngle) / 2 - Math.PI/2;
-      const x = Math.cos(angle) * r;
-      const y = Math.sin(angle) * r;
-      return `translate(${x},${y})`;
-    });
-
-  // --- LABEL BG RECT ---
-  labelGroups.append("rect")
-    .attr("class", "label-bg")
-    .attr("x", -50)
-    .attr("y", -24)
-    .attr("width", 100)
-    .attr("height", 48);
-
-  // --- ASSET CODE ---
-  labelGroups.append("text")
-    .attr("class", "label-code")
-    .attr("x", 0)
-    .attr("y", -3)
-    .attr("text-anchor", "middle")
-    .text(d => d.data.code);
-
-  // --- PERCENTAGE ---
-  labelGroups.append("text")
-    .attr("class", "label-percent")
-    .attr("x", 0)
-    .attr("y", 15)
-    .attr("text-anchor", "middle")
-    .text(d => `${d.data.percent.toFixed(1)}%`);
-
-  // --- TOOLTIP LOGIC ---
+  // --- CENTER VALUE ---
   function formatUSD(num) {
     return "$" + num.toLocaleString('en-US');
   }
-  const tooltip = d3.select("#tooltip");
+  g.append("text")
+    .attr("class", "center-value")
+    .attr("y", 6)
+    .text(formatUSD(total));
+
+  // --- DYNAMIC CARDS LAYOUT ---
+  // Position cards circumferentially but not touching the chart
+  function cardPosition(angle, idx, totalCards) {
+    // Angle in radians, 0 = east
+    let r = Math.max(maxRadius + cardPad, width/2.15);
+    const baseAngle = angle;
+    // Spread cards more evenly for visual clarity
+    if (angle < Math.PI/2) r += 20;
+    if (angle > Math.PI/2 && angle < Math.PI) r -= 18;
+    if (angle > Math.PI) r += 8;
+    if (angle > Math.PI*1.5) r -= 12;
+    const x = Math.cos(baseAngle) * r + width/2;
+    const y = Math.sin(baseAngle) * r + height/2;
+    return {x, y};
+  }
+
+  // --- RENDER CARDS + ARROWS ---
+  function drawCardsAndArrows() {
+    // Remove previous cards
+    d3.selectAll(".allocation-card").remove();
+    cardSvg.selectAll(".arrow-line").remove();
+
+    arcs.forEach((d, i) => {
+      // Angle for slice
+      const angle = (d.startAngle + d.endAngle)/2 - Math.PI/2;
+      // Position for card
+      const {x, y} = cardPosition(angle, i, arcs.length);
+
+      // Card HTML
+      const card = document.createElement("div");
+      card.className = "allocation-card";
+      card.style.left = `${x}px`;
+      card.style.top = `${y}px`;
+
+      // Colored percent bullet
+      const bullet = document.createElement("div");
+      bullet.className = "card-percent-bullet";
+      bullet.textContent = `${data[i].percent.toFixed(1)}%`;
+      bullet.style.background = `linear-gradient(120deg, ${gradients[i][0]} 60%, ${gradients[i][1]} 100%)`;
+      card.appendChild(bullet);
+
+      // Asset code
+      const code = document.createElement("div");
+      code.className = "card-code";
+      code.textContent = data[i].code;
+      card.appendChild(code);
+
+      // Asset value
+      const value = document.createElement("div");
+      value.className = "card-value";
+      value.textContent = formatUSD(data[i].value);
+      card.appendChild(value);
+
+      document.body.appendChild(card);
+
+      // Arrow line: from bullet center to slice edge (radial)
+      // Find bullet center
+      const bulletRect = bullet.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+      const bulletCenter = {
+        x: cardRect.left + bullet.offsetLeft + bullet.offsetWidth/2 - window.scrollX,
+        y: cardRect.top + bullet.offsetTop + bullet.offsetHeight/2 - window.scrollY
+      };
+
+      // Find slice edge (on the chart)
+      const sliceR = radiusScale(data[i].value);
+      const chartCenter = {x: width/2, y: height/2};
+      const sliceEdge = {
+        x: chartCenter.x + Math.cos(angle) * sliceR,
+        y: chartCenter.y + Math.sin(angle) * sliceR
+      };
+
+      // Draw arrow
+      cardSvg.append("line")
+        .attr("class", "arrow-line")
+        .attr("x1", bulletCenter.x)
+        .attr("y1", bulletCenter.y)
+        .attr("x2", sliceEdge.x)
+        .attr("y2", sliceEdge.y)
+        .attr("stroke", gradients[i][0])
+        .attr("marker-end", "url(#arrowhead)");
+    });
+  }
+
+  // --- HOVER INTERACTION: enlarge slice ---
   g.selectAll(".slice")
-    .on("mousemove", function(event, d) {
+    .on("mouseover", function(event, d) {
       const i = d.index;
       d3.select(this)
         .transition()
         .duration(180)
-        .attr("filter", "drop-shadow(0 4px 32px #1976d2b0) brightness(1.22)")
+        .attr("filter", "drop-shadow(0 4px 32px #1976d2b0) brightness(1.18)")
         .attr("d", arcGen(d, i, radiusScale(data[i].value) + 18));
-      tooltip
-        .style("opacity", 1)
-        .html(`
-          <div style="font-weight:700;font-size:18px;color:${gradients[i][0]};">${d.data.code}</div>
-          <div style="margin-top:8px;font-size:16px;">
-            <b>${d.data.percent.toFixed(2)}%</b> &mdash; <span style="color:#8e24aa">${formatUSD(d.data.value)}</span>
-          </div>
-        `)
-        .style("left", (event.pageX + 18) + "px")
-        .style("top", (event.pageY - 40) + "px");
     })
     .on("mouseleave", function(event, d) {
       const i = d.index;
@@ -250,28 +362,24 @@
         .duration(240)
         .attr("filter", "drop-shadow(0 2px 12px #b9c6e6a0)")
         .attr("d", arcGen(d, i));
-      tooltip.style("opacity", 0);
-    })
-    .on("click", function(event, d) {
-      const i = d.index;
-      const midAngle = (d.startAngle + d.endAngle) / 2 - Math.PI/2;
-      const xOff = Math.cos(midAngle) * 28;
-      const yOff = Math.sin(midAngle) * 28;
-      d3.select(this)
-        .transition().duration(320)
-        .attr("transform", `translate(${xOff},${yOff})`)
-        .transition().duration(320)
-        .attr("transform", `translate(0,0)`);
     });
 
   // --- RESPONSIVE ---
   function responsive() {
     const size = Math.min(window.innerWidth, 650);
     svg.attr("width", size).attr("height", size);
+    cardSvg.attr("width", size).attr("height", size);
     g.attr("transform", `translate(${size/2},${size/2})`);
+    setTimeout(() => drawCardsAndArrows(), 200);
   }
+
   window.addEventListener('resize', responsive);
-  responsive();
+
+  // --- INIT ---
+  setTimeout(() => {
+    drawCardsAndArrows();
+    responsive();
+  }, 600);
 
   </script>
 </body>
