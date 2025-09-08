@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Premium Portofolio Cake Allocation</title>
+  <title>Premium Portfolio Allocation Chart</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
     body {
-      background: linear-gradient(120deg, #f4f8fb 55%, #e8eaf6 100%);
+      background: linear-gradient(120deg, #f5f7fa 60%, #e3eafc 100%);
       font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
       margin: 0;
       padding: 0;
@@ -30,43 +30,43 @@
     }
     .tooltip {
       position: absolute;
-      background: rgba(255,255,255,0.92);
-      border: 1.5px solid #a3b1c6;
-      padding: 16px 24px;
-      border-radius: 12px;
-      box-shadow: 0 4px 32px rgba(60,60,120,0.15);
+      background: rgba(255,255,255,0.97);
+      border: 1.5px solid #b2b7c6;
+      padding: 16px 22px;
+      border-radius: 13px;
+      box-shadow: 0 4px 28px rgba(60,60,120,0.16);
       pointer-events: none;
-      font-size: 17px;
+      font-size: 16px;
       color: #222;
       opacity: 0;
-      transition: opacity 0.18s;
+      transition: opacity 0.17s;
       z-index: 10;
-      min-width: 180px;
+      min-width: 170px;
     }
     .slice {
       cursor: pointer;
       stroke-width: 0;
       filter: drop-shadow(0 2px 12px #b9c6e6a0);
-      transition: filter 0.2s, stroke-width 0.2s;
+      transition: filter 0.22s, stroke-width 0.22s;
     }
     .slice:hover {
-      filter: drop-shadow(0 4px 24px #1e88e5c0) brightness(1.17);
+      filter: drop-shadow(0 4px 24px #1976d2c0) brightness(1.15);
       stroke: #1976d2;
-      stroke-width: 3.2px;
+      stroke-width: 3px;
     }
     .label-group {
       pointer-events: none;
     }
     .label-bg {
       fill: #fff;
-      opacity: 0.80;
-      rx: 9px;
-      ry: 9px;
-      filter: drop-shadow(0 2px 8px #e3e7ef);
+      opacity: 0.82;
+      rx: 11px;
+      ry: 11px;
+      filter: drop-shadow(0 1px 7px #e3e7ef);
     }
-    .label-name {
+    .label-code {
       font-weight: 700;
-      font-size: 16.5px;
+      font-size: 17px;
       fill: #1976d2;
       letter-spacing: 0.2px;
     }
@@ -76,54 +76,37 @@
       font-weight: 500;
       letter-spacing: 0.09px;
     }
-    .label-nominal {
-      font-size: 14px;
-      fill: #8e24aa;
-      font-weight: 500;
-    }
-    .center-label {
-      font-size: 27px;
-      fill: #333;
-      text-anchor: middle;
-      font-weight: 700;
-      pointer-events: none;
-      dominant-baseline: middle;
-      letter-spacing: 0.5px;
-      text-shadow: 0 2px 12px #eaedf5;
-    }
     @media (max-width: 600px) {
       #chart svg { width: 98vw !important; height: 98vw !important; }
-      .center-label { font-size: 19px; }
-      .label-name { font-size: 13px; }
-      .label-percent { font-size: 12px; }
-      .label-nominal { font-size: 11px; }
+      .label-code { font-size: 13px; }
+      .label-percent { font-size: 11px; }
     }
   </style>
 </head>
 <body>
-  <h2>Premium Portofolio Cake Allocation</h2>
+  <h2>Portfolio Allocation</h2>
   <div id="chart"></div>
   <div class="tooltip" id="tooltip"></div>
   <script>
-  // --- DATA ALLOKASI PORTOFOLIO ---
-  // Bisa diganti sesuai data Anda
+  // --- DATA: asset code, value ---
+  // value in USD (change as needed)
   const data = [
-    { name: "Tech Stocks", value: 34000000 },
-    { name: "Crypto", value: 22000000 },
-    { name: "Gold", value: 42000000 },
-    { name: "Cash", value: 18000000 },
-    { name: "Property", value: 36000000 },
-    { name: "Startup", value: 26000000 }
+    { code: "AAPL", value: 34000 },      // Apple Stock
+    { code: "BTC", value: 22000 },       // Bitcoin
+    { code: "GLD", value: 42000 },       // Gold
+    { code: "USD", value: 18000 },       // Cash
+    { code: "PROP", value: 36000 },      // Property
+    { code: "START", value: 26000 }      // Startup
   ];
 
-  // --- KONFIGURASI ---
+  // --- CONFIG ---
   const width = 650, height = 650, innerRadius = 90, maxRadius = 230;
   const gap = 0.08; // radian gap slice
-  const pad = 19; // for label background
+  const pad = 21; // for label background
 
-  // --- WARNA GRADIENT PREMIUM ---
+  // --- COLOR GRADIENTS ---
   const gradients = [
-    ["#1e88e5", "#64b5f6"],
+    ["#1976d2", "#64b5f6"],
     ["#ff9800", "#ffd600"],
     ["#8e24aa", "#ce93d8"],
     ["#43a047", "#a5d6a7"],
@@ -131,7 +114,7 @@
     ["#00897b", "#80cbc4"]
   ];
 
-  // --- HITUNG TOTAL, PERSEN ---
+  // --- CALCULATE PERCENTAGES ---
   const total = data.reduce((acc, d) => acc + d.value, 0);
   data.forEach(d => d.percent = d.value / total * 100);
 
@@ -155,7 +138,7 @@
   const g = svg.append("g")
     .attr("transform", `translate(${width/2},${height/2})`);
 
-  // --- DEFINISI GRADIENT SLICE ---
+  // --- GRADIENT DEFINITIONS ---
   const defs = svg.append("defs");
   gradients.forEach((grad, i) => {
     const id = `grad${i}`;
@@ -176,7 +159,15 @@
       .cornerRadius(18)(d);
   }
 
-  // --- ANIMASI ENTRANCE ---
+  // --- ANIMASI ENTRANCE: CHART ROTATES IN ---
+  g.attr("transform", `translate(${width/2},${height/2}) rotate(-120)`);
+  setTimeout(() => {
+    g.transition()
+      .duration(1200)
+      .attr("transform", `translate(${width/2},${height/2}) rotate(0)`);
+  }, 80);
+
+  // --- DRAW SLICES ---
   g.selectAll("path")
     .data(arcs)
     .enter().append("path")
@@ -191,7 +182,7 @@
         return function(t) { return arcGen(d, i, interpolate(t)); };
       });
 
-  // --- LABELS GROUP (nama, persen, nominal) ---
+  // --- LABELS: CODE & PERCENT (INSIDE SLICE) ---
   const labelGroups = g.selectAll(".label-group")
     .data(arcs)
     .enter().append("g")
@@ -204,48 +195,34 @@
       return `translate(${x},${y})`;
     });
 
-  // --- LABEL BACKGROUND RECT ---
+  // --- LABEL BG RECT ---
   labelGroups.append("rect")
     .attr("class", "label-bg")
-    .attr("x", -52)
-    .attr("y", -32)
-    .attr("width", 104)
-    .attr("height", 62);
+    .attr("x", -50)
+    .attr("y", -24)
+    .attr("width", 100)
+    .attr("height", 48);
 
-  // --- LABEL NAMA ---
+  // --- ASSET CODE ---
   labelGroups.append("text")
-    .attr("class", "label-name")
+    .attr("class", "label-code")
     .attr("x", 0)
-    .attr("y", -10)
+    .attr("y", -3)
     .attr("text-anchor", "middle")
-    .text(d => d.data.name);
+    .text(d => d.data.code);
 
-  // --- LABEL PERSEN ---
+  // --- PERCENTAGE ---
   labelGroups.append("text")
     .attr("class", "label-percent")
     .attr("x", 0)
-    .attr("y", 13)
+    .attr("y", 15)
     .attr("text-anchor", "middle")
     .text(d => `${d.data.percent.toFixed(1)}%`);
 
-  // --- LABEL NOMINAL (IDR) ---
-  function formatRupiah(num) {
-    return "Rp " + num.toLocaleString('id-ID');
-  }
-  labelGroups.append("text")
-    .attr("class", "label-nominal")
-    .attr("x", 0)
-    .attr("y", 28)
-    .attr("text-anchor", "middle")
-    .text(d => formatRupiah(d.data.value));
-
-  // --- CENTER LABEL (TOTAL PORTOFOLIO) ---
-  g.append("text")
-    .attr("class", "center-label")
-    .attr("y", 0)
-    .text(`Total\n${formatRupiah(total)}`);
-
   // --- TOOLTIP LOGIC ---
+  function formatUSD(num) {
+    return "$" + num.toLocaleString('en-US');
+  }
   const tooltip = d3.select("#tooltip");
   g.selectAll(".slice")
     .on("mousemove", function(event, d) {
@@ -253,17 +230,14 @@
       d3.select(this)
         .transition()
         .duration(180)
-        .attr("filter", "drop-shadow(0 4px 32px #1e88e5b0) brightness(1.22)")
+        .attr("filter", "drop-shadow(0 4px 32px #1976d2b0) brightness(1.22)")
         .attr("d", arcGen(d, i, radiusScale(data[i].value) + 18));
       tooltip
         .style("opacity", 1)
         .html(`
-          <div style="font-weight:700;font-size:18px;color:${gradients[i][0]};">${d.data.name}</div>
-          <div style="margin-top:6px;font-size:16px;">
-            <b>${d.data.percent.toFixed(2)}%</b> &mdash; <span style="color:#8e24aa">${formatRupiah(d.data.value)}</span>
-          </div>
-          <div style="font-size:13px;color:#555;margin-top:4px;">
-            dari total <b>${formatRupiah(total)}</b>
+          <div style="font-weight:700;font-size:18px;color:${gradients[i][0]};">${d.data.code}</div>
+          <div style="margin-top:8px;font-size:16px;">
+            <b>${d.data.percent.toFixed(2)}%</b> &mdash; <span style="color:#8e24aa">${formatUSD(d.data.value)}</span>
           </div>
         `)
         .style("left", (event.pageX + 18) + "px")
